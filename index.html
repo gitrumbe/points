@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Points test</title>
+<style>
+  :root{--bg:#F2F4F9;--card:#fff;--ink:#1A2132;--ink2:#525C75;--line:#D8DEEA;--good:#1E9A60;--good-soft:#DBF2E6;--bad:#C0392B;--bad-soft:#FCE2DD;--wait:#C46F12;--wait-soft:#FCEAD3;--accent:#3D55D0}
+  @media (prefers-color-scheme: dark){:root{--bg:#0F121A;--card:#181C28;--ink:#EDF0F7;--ink2:#A8B0C3;--line:#2F3749;--good:#4CCB8C;--good-soft:#143326;--bad:#FF7A6B;--bad-soft:#3A1A17;--wait:#F2A54C;--wait-soft:#3A2914;--accent:#8597FF;color-scheme:dark}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 "Segoe UI",system-ui,sans-serif;padding:24px 16px 48px}
+  .wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--card);border-radius:20px;padding:22px;box-shadow:0 6px 18px rgba(20,28,50,.08)}
+  h1{font-size:30px;margin:0}
+  h2{font-size:19px;margin:0 0 10px}
+  p{margin:0;color:var(--ink2)}
+  .row{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;margin-top:8px;background:var(--wait-soft)}
+  .row.ok{background:var(--good-soft)} .row.bad{background:var(--bad-soft)}
+  .mark{font-size:22px;font-weight:800;line-height:1;min-width:22px;color:var(--wait)}
+  .ok .mark{color:var(--good)} .bad .mark{color:var(--bad)}
+  .row b{display:block}
+  .row span.d{display:block;font-size:14px;color:var(--ink2);word-break:break-word}
+  .who{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .who button,.btn{font:inherit;font-weight:600;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px 16px;cursor:pointer}
+  .who button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:#fff}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  input{font:inherit;width:100%;margin-top:12px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .small{font-size:13px;color:var(--ink2);margin-top:10px}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1 id="verdict">Testing…</h1>
+    <p id="verdict-sub">This page checks that the points dashboard will work on this device.</p>
+  </div>
+
+  <div class="card" id="setup">
+    <h2>1. Who's using this device?</h2>
+    <p>Pick a name and type any 4 numbers. This is a pretend PIN for the test.</p>
+    <div class="who" role="group" aria-label="Who is using this device">
+      <button type="button" data-name="Ayla" aria-pressed="false">Ayla</button>
+      <button type="button" data-name="Lani" aria-pressed="false">Lani</button>
+      <button type="button" data-name="Parent" aria-pressed="false">Parent</button>
+    </div>
+    <input id="pin" inputmode="numeric" maxlength="4" placeholder="4-number PIN" aria-label="PIN" autocomplete="off">
+    <div class="actions"><button class="btn primary" id="save" type="button">Remember this device</button></div>
+  </div>
+
+  <div class="card" id="remembered" hidden>
+    <h2>1. Device remembered</h2>
+    <div class="row ok"><span class="mark">✓</span><div><b id="rem-name"></b><span class="d" id="rem-when"></span></div></div>
+    <p class="small">Close this window completely and open the link again. If it still says this without asking for a PIN, remembering works.</p>
+    <div class="actions"><button class="btn" id="forget" type="button">Forget this device</button></div>
+  </div>
+
+  <div class="card">
+    <h2>2. Talking to the Points Tracker</h2>
+    <div id="results">
+      <div class="row" id="r-read"><span class="mark">…</span><div><b>Read from the tracker</b><span class="d">Checking…</span></div></div>
+      <div class="row" id="r-send"><span class="mark">…</span><div><b>Send to the script</b><span class="d">Checking…</span></div></div>
+      <div class="row" id="r-anon"><span class="mark">…</span><div><b>Google account kept out of it</b><span class="d">Checking…</span></div></div>
+    </div>
+    <div class="actions"><button class="btn" id="rerun" type="button">Run again</button></div>
+    <p class="small" id="device"></p>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwCP0_gIRx9SBVgbQefe_6npaC0qwEIx9vGfDe86V6_PQ1vdiVfjxoGZKpqrB-HIvg/exec';
+const KEY = 'points-test-device';
+
+function store(get, val){
+  try { if (get) return JSON.parse(localStorage.getItem(KEY) || 'null');
+        if (val === null) localStorage.removeItem(KEY); else localStorage.setItem(KEY, JSON.stringify(val)); return true; }
+  catch (e) { return null; }
+}
+
+let picked = '';
+document.querySelectorAll('.who button').forEach(b => b.addEventListener('click', () => {
+  picked = b.dataset.name;
+  document.querySelectorAll('.who button').forEach(x => x.setAttribute('aria-pressed', x === b));
+}));
+document.getElementById('save').addEventListener('click', () => {
+  const pin = document.getElementById('pin').value.trim();
+  if (!picked) { alertRow('Pick a name first.'); return; }
+  if (!/^\d{4}$/.test(pin)) { alertRow('Type 4 numbers for the PIN.'); return; }
+  const ok = store(false, { name: picked, since: new Date().toLocaleString('en-NZ') });
+  if (!ok) { alertRow('This browser would not save it. Is it a private window?'); return; }
+  showDevice(); runTests();
+});
+document.getElementById('forget').addEventListener('click', () => { store(false, null); showDevice(); verdict(); });
+document.getElementById('rerun').addEventListener('click', runTests);
+
+function alertRow(msg){ const s = document.getElementById('verdict-sub'); s.textContent = msg; s.style.color = 'var(--bad)'; }
+
+function showDevice(){
+  const d = store(true);
+  document.getElementById('setup').hidden = !!d;
+  document.getElementById('remembered').hidden = !d;
+  if (d) {
+    document.getElementById('rem-name').textContent = 'This device is ' + d.name + "'s";
+    document.getElementById('rem-when').textContent = 'Remembered since ' + d.since;
+  }
+}
+
+function setRow(id, state, detail){
+  const r = document.getElementById(id);
+  r.className = 'row ' + (state === true ? 'ok' : state === false ? 'bad' : '');
+  r.querySelector('.mark').textContent = state === true ? '✓' : state === false ? '✗' : '…';
+  r.querySelector('.d').textContent = detail;
+  r.dataset.state = state === true ? 'ok' : state === false ? 'bad' : 'wait';
+}
+
+async function runTests(){
+  ['r-read','r-send','r-anon'].forEach(id => setRow(id, null, 'Checking…'));
+  verdict();
+  try {
+    const res = await fetch(SCRIPT_URL + '?api=1&t=' + Date.now(), { credentials: 'omit' });
+    const data = await res.json();
+    if (data.ok) setRow('r-read', true, 'Read: "' + data.sheet + '"');
+    else setRow('r-read', false, data.error || 'The script answered but could not read the tracker.');
+    setRow('r-anon', !data.account, data.account
+      ? 'Google saw an account (' + data.account + '). Tell Claude.'
+      : 'The script ran without seeing any Google account, so the under-13 block can’t apply.');
+  } catch (e) {
+    setRow('r-read', false, 'Could not reach the script: ' + e.message);
+    setRow('r-anon', false, 'Could not check, because the script did not answer.');
+  }
+  try {
+    const d = store(true);
+    const res = await fetch(SCRIPT_URL, { method: 'POST', credentials: 'omit',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ from: d ? d.name : 'not set up yet' }) });
+    const data = await res.json();
+    setRow('r-send', !!data.ok, data.ok ? 'The script got "' + data.received + '" and answered.' : 'The script did not accept it.');
+  } catch (e) {
+    setRow('r-send', false, 'Could not send: ' + e.message);
+  }
+  verdict();
+}
+
+function verdict(){
+  const states = ['r-read','r-send','r-anon'].map(id => document.getElementById(id).dataset.state);
+  const d = store(true);
+  const v = document.getElementById('verdict'), s = document.getElementById('verdict-sub');
+  s.style.color = '';
+  if (states.includes('wait')) { v.textContent = 'Testing…'; s.textContent = 'This page checks that the points dashboard will work on this device.'; return; }
+  if (states.includes('bad')) { v.textContent = 'Something is blocked'; s.textContent = 'Take a screenshot of this page and send it to Claude.'; return; }
+  if (!d) { v.textContent = 'Nearly there'; s.textContent = 'The connection works. Now do step 1 to test remembering this device.'; return; }
+  v.textContent = 'All good!'; s.textContent = 'This device will work with the points dashboard.';
+}
+
+document.getElementById('device').textContent = 'Page address: ' + location.host + location.pathname;
+showDevice();
+runTests();
+</script>
+</body>
+</html>
