@@ -11,121 +11,1324 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Lexend:wght@400;500;600&display=swap">
-<style>:root{--bg:#F2F4F9;--surface:#FFFFFF;--surface-2:#E9EDF5;--line:#D8DEEA;--ink:#1A2132;--ink-2:#525C75;--ink-3:#8790A5;--gold:#F0AE14;--gold-deep:#B97F00;--gold-soft:#FFF0C7;--gold-ink:#3D2A00;--good:#1E9A60;--good-soft:#DBF2E6;--wait:#C46F12;--wait-soft:#FCEAD3;--ayla:#D23F76;--ayla-soft:#FBE0EA;--lani:#2A9150;--lani-soft:#DCF1E2;--parent:#3D55D0;--parent-soft:#E1E6FA;--accent:var(--parent);--accent-soft:var(--parent-soft);--on-accent:#FFFFFF;--shadow:0 1px 2px rgba(20,28,50,.06), 0 6px 18px rgba(20,28,50,.06);--f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;--f-body:"Lexend","Segoe UI",system-ui,sans-serif;--r-lg:22px;--r-md:14px}@media (prefers-color-scheme: dark){:root:not([data-theme=light]){--bg:#0F121A;--surface:#181C28;--surface-2:#232A3A;--line:#2F3749;--ink:#EDF0F7;--ink-2:#A8B0C3;--ink-3:#737C92;--gold:#F6C244;--gold-deep:#C99520;--gold-soft:#372C10;--gold-ink:#2A1D00;--good:#4CCB8C;--good-soft:#143326;--wait:#F2A54C;--wait-soft:#3A2914;--ayla:#F2709F;--ayla-soft:#3E1C2A;--lani:#5CCB7F;--lani-soft:#173322;--parent:#8597FF;--parent-soft:#212849;--on-accent:#0F121A;--shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.25);color-scheme:dark}}:root[data-theme=dark]{--bg:#0F121A;--surface:#181C28;--surface-2:#232A3A;--line:#2F3749;--ink:#EDF0F7;--ink-2:#A8B0C3;--ink-3:#737C92;--gold:#F6C244;--gold-deep:#C99520;--gold-soft:#372C10;--gold-ink:#2A1D00;--good:#4CCB8C;--good-soft:#143326;--wait:#F2A54C;--wait-soft:#3A2914;--ayla:#F2709F;--ayla-soft:#3E1C2A;--lani:#5CCB7F;--lani-soft:#173322;--parent:#8597FF;--parent-soft:#212849;--on-accent:#0F121A;--shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.25);color-scheme:dark}[data-who=ayla]{--accent:var(--ayla);--accent-soft:var(--ayla-soft)}[data-who=lani]{--accent:var(--lani);--accent-soft:var(--lani-soft)}[data-who=parent]{--accent:var(--parent);--accent-soft:var(--parent-soft)}*,*:before,*:after{box-sizing:border-box}body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}.app{max-width:1140px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px 64px;display:flex;flex-direction:column;gap:18px}button{font:inherit;color:inherit}:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.05;text-wrap:balance}p{margin:0}.lbl{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}.hint{display:block;font-size:13px;color:var(--ink-2)}.num{font-family:var(--f-display);font-weight:800;font-variant-numeric:tabular-nums;line-height:1}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-top:10px}.brand{display:flex;align-items:center;gap:10px;font:800 21px var(--f-display)}.pv{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.pvs{display:inline-flex;background:var(--surface-2);border-radius:99px;padding:4px;gap:2px}.pvb{display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;border-radius:99px;padding:7px 14px;font-weight:600;font-size:14px;cursor:pointer;color:var(--ink-2)}.pvb[aria-pressed=true]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}.dot{width:10px;height:10px;border-radius:50%}.dot-ayla{background:var(--ayla)}.dot-lani{background:var(--lani)}.dot-parent{background:var(--parent)}.note{font-size:13px;color:var(--ink-2);background:var(--surface-2);border-radius:12px;padding:9px 14px}.link{background:none;border:0;padding:0;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-size:13px;font-weight:500}.coin{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:26px;color:#7a5200;background:radial-gradient(circle at 34% 30%,#ffe69a,#f3b21c 58%,#c88a06);box-shadow:inset 0 -3px #0000001f,0 2px 6px #c88a0659}.coin.sm{width:30px;height:30px;font-size:16px}.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px 24px;align-items:end}.eyebrow{font-size:14px;font-weight:500;color:var(--ink-2);margin-bottom:6px}.hello h1{font-size:clamp(38px,6vw,56px);font-weight:800}.nm{color:var(--accent)}.stats{display:flex;flex-wrap:wrap;gap:12px}.stat{flex:1 1 150px;background:var(--surface);border-radius:var(--r-lg);padding:14px 18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px;min-width:0}.stat.money{flex-direction:row;align-items:center;gap:14px;background:var(--gold-soft)}.stat.money .num{font-size:44px;color:var(--ink)}.stat.money .lbl{color:var(--ink-2);display:block;margin-top:4px}.stat.money>div{min-width:0}.stat .num.sm{font-size:30px}.stat small{font-size:16px;font-weight:600;color:var(--ink-3)}.bar{height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden}.bar i{display:block;height:100%;width:calc(var(--p)*100%);background:var(--accent);border-radius:inherit;transition:width .4s ease}.bar.gold i{background:var(--gold)}@media (max-width:820px){.hero{grid-template-columns:minmax(0,1fr)}}.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}.wd{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 2px 8px;border-radius:16px;background:var(--surface);border:2px solid transparent;cursor:pointer;box-shadow:var(--shadow);min-width:0}.wd:disabled{cursor:default;opacity:.45;box-shadow:none;background:transparent}.wd[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft)}.wdn{font-size:12px;font-weight:600;color:var(--ink-2);text-transform:uppercase;letter-spacing:.05em}.wdd{font:800 22px var(--f-display);line-height:1.1}.mk{height:16px;display:grid;place-items:center;font-size:15px;line-height:1}.mk.full:before{content:"★";color:var(--gold)}.mk.part:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}.mk.wait:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--wait)}.mk.none:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--line)}.is-today .wdn{color:var(--accent)}.tabs{display:inline-flex;align-self:flex-start;background:var(--surface-2);border-radius:99px;padding:4px;gap:2px}.tab{border:0;background:transparent;border-radius:99px;padding:9px 18px;font-weight:600;cursor:pointer;color:var(--ink-2)}.tab[aria-selected=true]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}.rail{display:flex;flex-direction:column;gap:16px;min-width:0}@media (max-width:920px){.layout{grid-template-columns:minmax(0,1fr)}}.routines{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px;align-items:start}.card{background:var(--surface);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px;min-width:0}.card h2{font-size:22px;font-weight:700}.r-head{display:flex;align-items:center;gap:12px}.r-icon{flex:none;width:48px;height:48px;border-radius:15px;background:var(--accent-soft);display:grid;place-items:center;font-size:25px}.r-title{flex:1;min-width:0}.r-title h3{font-size:23px;font-weight:700}.r-note{font-size:13px;color:var(--ink-2)}.ring{--p:0;--c:var(--accent);flex:none;width:56px;height:56px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*360deg),var(--surface-2) 0);display:grid;place-items:center}.ring span{width:44px;height:44px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;font:800 14px var(--f-display);font-variant-numeric:tabular-nums;line-height:1}.ring small{font:600 9px var(--f-body);color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;margin-top:1px}.routine.checked .ring{--c:var(--good)}.routine.done .ring{--c:var(--wait)}.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;font-size:13px;font-weight:600;align-self:flex-start;white-space:nowrap}.chip.todo{background:var(--surface-2);color:var(--ink-2)}.chip.wait{background:var(--wait-soft);color:var(--wait)}.chip.good{background:var(--good-soft);color:var(--good)}.chip.gold{background:var(--gold-soft);color:var(--ink)}.tasks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}.task{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:8px 12px;border:2px solid var(--line);border-radius:var(--r-md);background:var(--surface);font-size:16px;font-weight:500;text-align:left;cursor:pointer;transition:background .15s,border-color .15s}.task:hover:not(:disabled){border-color:var(--accent)}.task:disabled{cursor:default}.box{flex:none;width:30px;height:30px;border-radius:10px;border:2.5px solid var(--ink-3);display:grid;place-items:center;color:var(--on-accent)}.box svg{opacity:0}.task[aria-pressed=true]{background:var(--accent-soft);border-color:transparent}.task[aria-pressed=true] .box{background:var(--accent);border-color:var(--accent)}.task[aria-pressed=true] .box svg{opacity:1}.task[aria-pressed=true] .tl{color:var(--ink-2)}.emo{font-size:21px;flex:none;width:26px;text-align:center}.tl{min-width:0}.routine.checked .task[aria-pressed=true] .box{background:var(--good);border-color:var(--good)}@keyframes pop{0%{transform:scale(.55)}60%{transform:scale(1.18)}to{transform:scale(1)}}@keyframes bounce{0%{transform:scale(.7)}55%{transform:scale(1.12)}to{transform:scale(1)}}@keyframes glow{0%{box-shadow:0 0 0 0 var(--wait)}to{box-shadow:0 0 0 16px transparent}}@keyframes burst{0%{opacity:1;transform:translate(0) scale(.6)}to{opacity:0;transform:translate(var(--x),var(--y)) scale(1.1)}}.task.pop .box{animation:pop .3s ease-out}.routine.celebrate{animation:glow 1.1s ease-out}.routine.celebrate .chip{animation:bounce .55s ease-out}.r-icon{position:relative}.spark{position:absolute;left:50%;top:50%;font-size:16px;color:var(--gold);pointer-events:none;animation:burst .9s ease-out forwards;opacity:0}.pl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}.pl li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line)}.pl li:first-child{border-top:0}.pl .pv-l{min-width:0}.pl .pv-l b{font-weight:500}.pl .pts{font:800 18px var(--f-display);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}.pl .earned .pts{color:var(--good)}.pl .waiting .pts{color:var(--wait)}.pl .todo,.pl .todo .pts{color:var(--ink-3)}.tag{display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}.totals{display:flex;gap:10px;flex-wrap:wrap}.totals>div{flex:1 1 110px;background:var(--surface-2);border-radius:14px;padding:10px 12px}.totals .num{font-size:26px}.goal-top{display:flex;align-items:center;gap:12px}.big-emo{flex:none;width:56px;height:56px;border-radius:16px;background:var(--accent-soft);display:grid;place-items:center;font-size:30px}.goal-top h3{font-size:21px;font-weight:700}.jar-wrap{display:flex;align-items:center;gap:16px}.jar{width:96px;flex:none;height:auto}.jar-lid{fill:var(--ink-3)}.jar-neck{fill:var(--line)}.jar-bg{fill:var(--surface-2)}.jar-fill{fill:var(--gold)}.jar-coin{fill:var(--gold-deep);opacity:.35}.jar-glass{fill:none;stroke:var(--ink-3);stroke-width:3}.jar-shine{fill:none;stroke:var(--surface);stroke-width:5;stroke-linecap:round;opacity:.55}.shop-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}.shop-head h2{font-size:30px;font-weight:800}.shop{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:16px}.reward{gap:12px}.reward.saving{outline:3px solid var(--accent);outline-offset:-3px}.rw-top{display:flex;align-items:center;gap:12px}.rw-top h3{font-size:19px;font-weight:700;line-height:1.15}.rw-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.hist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}.hist li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line)}.hist li:first-child{border-top:0}.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;padding:8px 15px;border-radius:13px;font-weight:600;font-size:14px;border:2px solid transparent;cursor:pointer;white-space:nowrap}.btn.primary{background:var(--accent);color:var(--on-accent)}.btn.good{background:var(--good);color:var(--on-accent)}.btn.gold{background:var(--gold);color:var(--gold-ink)}.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}.btn.ghost:hover{border-color:var(--accent)}.btn.soft{background:var(--accent-soft);color:var(--ink)}.girls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px;align-items:start}.gp-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.av{flex:none;width:46px;height:46px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font:800 22px var(--f-display)}.gp-head h2{font-size:26px;font-weight:800}.gp-stats{display:flex;gap:6px;flex-wrap:wrap}.crow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:12px 0;border-top:1px solid var(--line)}.crow .r-icon{width:40px;height:40px;font-size:20px;border-radius:12px}.ct{flex:1 1 150px;min-width:0}.ct b{font-weight:600}.miss{display:block;font-size:12.5px;color:var(--wait);margin-top:2px}.ca{display:flex;gap:8px 10px;align-items:center;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}.opt{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--line)}.opt.col{flex-direction:column;align-items:stretch}.opt b{font-weight:600}.sw{flex:none;position:relative;width:52px;height:30px;border-radius:99px;background:var(--surface-2);border:2px solid var(--line);cursor:pointer;padding:0}.sw:after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--ink-3);transition:transform .2s}.sw[aria-checked=true]{background:var(--good);border-color:var(--good)}.sw[aria-checked=true]:after{transform:translate(22px);background:var(--on-accent)}.seg{display:flex;gap:8px}.seg button{width:44px;height:44px;border-radius:13px;border:2px solid var(--line);background:var(--surface);font:800 18px var(--f-display);cursor:pointer}.seg button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}.in{width:100%;min-height:42px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 12px;font:400 14px var(--f-body)}.in:focus{outline:none;border-color:var(--accent)}.give{display:flex;gap:8px;align-items:stretch}.give .in{flex:1;min-width:0}.day-total{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--line)}.day-total .num{font-size:28px}.reqs{display:flex;flex-direction:column;gap:10px}.req{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--gold-soft);border-radius:var(--r-lg);padding:14px 16px}.req .big-emo{background:var(--surface)}.req-t{flex:1 1 200px;min-width:0}.req-a{display:flex;gap:8px}.rest{align-items:center;text-align:center;padding:36px 18px}.rest .big-emo{width:72px;height:72px;font-size:38px}[data-who=setup]{--accent:var(--parent);--accent-soft:var(--parent-soft)}.dot-setup{background:var(--ink-3)}.setup{max-width:560px;width:100%;margin:12px auto 0;align-items:center;text-align:center;gap:18px;padding:30px 22px}.setup h1{font-size:clamp(32px,6vw,44px);font-weight:800}.steps{display:flex;gap:6px;justify-content:center}.steps i{width:28px;height:6px;border-radius:99px;background:var(--surface-2)}.steps i.on{background:var(--accent)}.pick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%}.pk{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 8px;border-radius:var(--r-lg);border:2px solid var(--line);background:var(--surface);cursor:pointer;font:700 19px var(--f-display)}.pk:hover{border-color:var(--accent)}.pk .av{width:64px;height:64px;font-size:30px}.pins{display:flex;gap:14px;justify-content:center}.pins i{width:20px;height:20px;border-radius:50%;border:3px solid var(--ink-3)}.pins i.on{background:var(--accent);border-color:var(--accent)}.pins.shake{animation:shake .4s}@keyframes shake{20%,60%{transform:translate(-8px)}40%,80%{transform:translate(8px)}}.pad{display:grid;grid-template-columns:repeat(3,72px);gap:12px;justify-content:center}.pad button{height:72px;border-radius:50%;border:2px solid var(--line);background:var(--surface);font:800 28px var(--f-display);cursor:pointer;color:var(--ink)}.pad button:hover:not(:disabled){border-color:var(--accent)}.pad button:active:not(:disabled){background:var(--accent-soft)}.pad button:disabled{opacity:.35;cursor:default}.pad .ghostkey{border-color:transparent;font-size:22px}.err{color:var(--wait);font-weight:600;min-height:1.4em}.setup .in{text-align:center;font-size:17px;max-width:320px}.lockcard{display:flex;align-items:center;gap:12px;background:var(--surface-2);border-radius:var(--r-md);padding:12px 16px;font-size:14px;color:var(--ink-2)}.dev{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0;border-top:1px solid var(--line)}.dev:first-child{border-top:0}.dev .av{width:38px;height:38px;font-size:17px}.dev-t{flex:1 1 160px;min-width:0}.dev-t b{font-weight:600}.dev-a{display:flex;gap:8px;align-items:center}.section-lbl{display:flex;align-items:center;gap:8px;margin:0 0 10px}.section-lbl .lbl{color:var(--accent)}.routine.focus{border:3px solid var(--accent);box-shadow:var(--shadow),0 0 0 6px var(--accent-soft)}.start{display:flex;flex-direction:column;gap:10px;padding:6px 0 2px}.btn.big{min-height:58px;font-size:18px;border-radius:16px;font-family:var(--f-display);font-weight:800}.rest-list{display:flex;flex-direction:column;gap:10px;margin-top:18px}.mini{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border-radius:var(--r-md);padding:10px 14px;box-shadow:var(--shadow)}.mini .r-icon{width:40px;height:40px;font-size:20px;border-radius:12px}.mini-t{flex:1 1 140px;min-width:0}.mini-t b{font-weight:600}.alldone{align-items:center;text-align:center;padding:28px 18px}.timebar{display:inline-flex;gap:2px;background:var(--surface);border-radius:99px;padding:3px;margin-left:6px;vertical-align:middle}.timebar button{border:0;background:transparent;border-radius:99px;padding:3px 10px;font-size:12px;font-weight:600;cursor:pointer;color:var(--ink-2)}.timebar button[aria-pressed=true]{background:var(--ink);color:var(--bg)}.memcard{display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center;background:var(--accent-soft);border-radius:var(--r-md);padding:20px 16px}.memcard .big-emo{background:var(--surface)}.memcard h4{margin:0;font:800 22px var(--f-display)}.memcard .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.chip.mem{background:var(--parent-soft);color:var(--parent)}.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:16px}.medal{flex:none;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:28px;position:relative;background:var(--surface-2);border:3px dashed var(--line)}.medal.on{background:radial-gradient(circle at 34% 30%,#ffe69a,#f3b21c 58%,#c88a06);border:3px solid var(--gold-deep)}.medal .lv{position:absolute;right:-6px;bottom:-4px;background:var(--ink);color:var(--bg);border-radius:99px;font:800 12px var(--f-display);padding:2px 7px}.b-top{display:flex;align-items:center;gap:14px}.b-top h3{font-size:19px;font-weight:700}.wkrow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.wkd{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px;border-radius:12px;background:var(--surface-2);font-size:12px;font-weight:600;color:var(--ink-2)}.wkd b{font-size:20px;line-height:1}.wkd.on{background:var(--gold-soft);color:var(--ink)}.praise{flex-direction:row;align-items:center;flex-wrap:wrap;background:var(--gold-soft)}.praise .pq{font:700 20px/1.25 var(--f-display);color:var(--ink);margin:2px 0}.praise-t{flex:1 1 220px;min-width:0}#toast{position:fixed;left:50%;transform:translate(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:99px;font-weight:600;font-size:14px;box-shadow:var(--shadow);z-index:20;max-width:calc(100% - 32px)}@media (prefers-reduced-motion: reduce){*,*:before,*:after{animation:none!important;transition:none!important}}.pick.pick4{grid-template-columns:repeat(2,minmax(0,1fr))}@media (min-width:620px){.pick.pick4{grid-template-columns:repeat(4,minmax(0,1fr))}}.app{padding-top:max(8px,env(safe-area-inset-top,0px))}:root{color-scheme:light}body{margin:0}[hidden]{display:none!important}img{max-width:100%}.hwlink{display:block;margin:6px 0 4px 48px;padding:10px 14px;border-radius:var(--r-md);background:var(--accent-soft);color:var(--ink);font:600 15px/1.3 var(--f-body);text-decoration:none;border:1px solid var(--line)}.hwlink:hover{text-decoration:underline}</style>
+<style>
+/* Layout: a game-like daily board. Stats up top, a week strip, routines as big tap targets, and a side rail with today's points, the saving goal and the team jar. Each girl has her own accent colour. */
+:root{
+  --bg:#F2F4F9; --surface:#FFFFFF; --surface-2:#E9EDF5; --line:#D8DEEA;
+  --ink:#1A2132; --ink-2:#525C75; --ink-3:#8790A5;
+  --gold:#F0AE14; --gold-deep:#B97F00; --gold-soft:#FFF0C7; --gold-ink:#3D2A00;
+  --good:#1E9A60; --good-soft:#DBF2E6; --wait:#C46F12; --wait-soft:#FCEAD3;
+  --ayla:#D23F76; --ayla-soft:#FBE0EA; --lani:#2A9150; --lani-soft:#DCF1E2; --parent:#3D55D0; --parent-soft:#E1E6FA;
+  --accent:var(--parent); --accent-soft:var(--parent-soft); --on-accent:#FFFFFF;
+  --shadow:0 1px 2px rgba(20,28,50,.06), 0 6px 18px rgba(20,28,50,.06);
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Lexend","Segoe UI",system-ui,sans-serif;
+  --r-lg:22px; --r-md:14px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0F121A; --surface:#181C28; --surface-2:#232A3A; --line:#2F3749;
+  --ink:#EDF0F7; --ink-2:#A8B0C3; --ink-3:#737C92;
+  --gold:#F6C244; --gold-deep:#C99520; --gold-soft:#372C10; --gold-ink:#2A1D00;
+  --good:#4CCB8C; --good-soft:#143326; --wait:#F2A54C; --wait-soft:#3A2914;
+  --ayla:#F2709F; --ayla-soft:#3E1C2A; --lani:#5CCB7F; --lani-soft:#173322; --parent:#8597FF; --parent-soft:#212849;
+  --on-accent:#0F121A; --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.25);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0F121A; --surface:#181C28; --surface-2:#232A3A; --line:#2F3749;
+  --ink:#EDF0F7; --ink-2:#A8B0C3; --ink-3:#737C92;
+  --gold:#F6C244; --gold-deep:#C99520; --gold-soft:#372C10; --gold-ink:#2A1D00;
+  --good:#4CCB8C; --good-soft:#143326; --wait:#F2A54C; --wait-soft:#3A2914;
+  --ayla:#F2709F; --ayla-soft:#3E1C2A; --lani:#5CCB7F; --lani-soft:#173322; --parent:#8597FF; --parent-soft:#212849;
+  --on-accent:#0F121A; --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+[data-who="ayla"]{--accent:var(--ayla);--accent-soft:var(--ayla-soft)}
+[data-who="lani"]{--accent:var(--lani);--accent-soft:var(--lani-soft)}
+[data-who="parent"]{--accent:var(--parent);--accent-soft:var(--parent-soft)}
+
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+.app{max-width:1140px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px 64px;display:flex;flex-direction:column;gap:18px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.05;text-wrap:balance}
+p{margin:0}
+.lbl{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.hint{display:block;font-size:13px;color:var(--ink-2)}
+.num{font-family:var(--f-display);font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+
+/* top bar */
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-top:10px}
+.brand{display:flex;align-items:center;gap:10px;font:800 21px var(--f-display)}
+.pv{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pvs{display:inline-flex;background:var(--surface-2);border-radius:99px;padding:4px;gap:2px}
+.pvb{display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;border-radius:99px;padding:7px 14px;font-weight:600;font-size:14px;cursor:pointer;color:var(--ink-2)}
+.pvb[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot-ayla{background:var(--ayla)} .dot-lani{background:var(--lani)} .dot-parent{background:var(--parent)}
+.note{font-size:13px;color:var(--ink-2);background:var(--surface-2);border-radius:12px;padding:9px 14px}
+.link{background:none;border:0;padding:0;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-size:13px;font-weight:500}
+
+/* coin */
+.coin{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:26px;color:#7A5200;background:radial-gradient(circle at 34% 30%,#FFE69A,#F3B21C 58%,#C88A06);box-shadow:inset 0 -3px 0 rgba(0,0,0,.12),0 2px 6px rgba(200,138,6,.35)}
+.coin.sm{width:30px;height:30px;font-size:16px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px 24px;align-items:end}
+.eyebrow{font-size:14px;font-weight:500;color:var(--ink-2);margin-bottom:6px}
+.hello h1{font-size:clamp(38px,6vw,56px);font-weight:800}
+.nm{color:var(--accent)}
+.stats{display:flex;flex-wrap:wrap;gap:12px}
+.stat{flex:1 1 150px;background:var(--surface);border-radius:var(--r-lg);padding:14px 18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px;min-width:0}
+.stat.money{flex-direction:row;align-items:center;gap:14px;background:var(--gold-soft)}
+.stat.money .num{font-size:44px;color:var(--ink)}
+.stat.money .lbl{color:var(--ink-2);display:block;margin-top:4px}
+.stat.money > div{min-width:0}
+.stat .num.sm{font-size:30px}
+.stat small{font-size:16px;font-weight:600;color:var(--ink-3)}
+.bar{height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;width:calc(var(--p)*100%);background:var(--accent);border-radius:inherit;transition:width .4s ease}
+.bar.gold i{background:var(--gold)}
+@media (max-width:820px){.hero{grid-template-columns:minmax(0,1fr)}}
+
+/* week strip */
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.wd{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 2px 8px;border-radius:16px;background:var(--surface);border:2px solid transparent;cursor:pointer;box-shadow:var(--shadow);min-width:0}
+.wd:disabled{cursor:default;opacity:.45;box-shadow:none;background:transparent}
+.wd[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.wdn{font-size:12px;font-weight:600;color:var(--ink-2);text-transform:uppercase;letter-spacing:.05em}
+.wdd{font:800 22px var(--f-display);line-height:1.1}
+.mk{height:16px;display:grid;place-items:center;font-size:15px;line-height:1}
+.mk.full::before{content:"★";color:var(--gold)}
+.mk.part::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.mk.wait::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--wait)}
+.mk.none::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--line)}
+.is-today .wdn{color:var(--accent)}
+
+/* tabs */
+.tabs{display:inline-flex;align-self:flex-start;background:var(--surface-2);border-radius:99px;padding:4px;gap:2px}
+.tab{border:0;background:transparent;border-radius:99px;padding:9px 18px;font-weight:600;cursor:pointer;color:var(--ink-2)}
+.tab[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+
+/* layout */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+.rail{display:flex;flex-direction:column;gap:16px;min-width:0}
+@media (max-width:920px){.layout{grid-template-columns:minmax(0,1fr)}}
+.routines{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px;align-items:start}
+.card{background:var(--surface);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px;min-width:0}
+.card h2{font-size:22px;font-weight:700}
+
+/* routine card */
+.r-head{display:flex;align-items:center;gap:12px}
+.r-icon{flex:none;width:48px;height:48px;border-radius:15px;background:var(--accent-soft);display:grid;place-items:center;font-size:25px}
+.r-title{flex:1;min-width:0}
+.r-title h3{font-size:23px;font-weight:700}
+.r-note{font-size:13px;color:var(--ink-2)}
+.ring{--p:0;--c:var(--accent);flex:none;width:56px;height:56px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*360deg),var(--surface-2) 0);display:grid;place-items:center}
+.ring span{width:44px;height:44px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;font:800 14px var(--f-display);font-variant-numeric:tabular-nums;line-height:1}
+.ring small{font:600 9px var(--f-body);color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;margin-top:1px}
+.routine.checked .ring{--c:var(--good)}
+.routine.done .ring{--c:var(--wait)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:99px;font-size:13px;font-weight:600;align-self:flex-start;white-space:nowrap}
+.chip.todo{background:var(--surface-2);color:var(--ink-2)}
+.chip.wait{background:var(--wait-soft);color:var(--wait)}
+.chip.good{background:var(--good-soft);color:var(--good)}
+.chip.gold{background:var(--gold-soft);color:var(--ink)}
+.tasks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.task{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:8px 12px;border:2px solid var(--line);border-radius:var(--r-md);background:var(--surface);font-size:16px;font-weight:500;text-align:left;cursor:pointer;transition:background .15s,border-color .15s}
+.task:hover:not(:disabled){border-color:var(--accent)}
+.task:disabled{cursor:default}
+.box{flex:none;width:30px;height:30px;border-radius:10px;border:2.5px solid var(--ink-3);display:grid;place-items:center;color:var(--on-accent)}
+.box svg{opacity:0}
+.task[aria-pressed="true"]{background:var(--accent-soft);border-color:transparent}
+.task[aria-pressed="true"] .box{background:var(--accent);border-color:var(--accent)}
+.task[aria-pressed="true"] .box svg{opacity:1}
+.task[aria-pressed="true"] .tl{color:var(--ink-2)}
+.emo{font-size:21px;flex:none;width:26px;text-align:center}
+.tl{min-width:0}
+.routine.checked .task[aria-pressed="true"] .box{background:var(--good);border-color:var(--good)}
+
+@keyframes pop{0%{transform:scale(.55)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+@keyframes bounce{0%{transform:scale(.7)}55%{transform:scale(1.12)}100%{transform:scale(1)}}
+@keyframes glow{0%{box-shadow:0 0 0 0 var(--wait)}100%{box-shadow:0 0 0 16px transparent}}
+@keyframes burst{0%{opacity:1;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1.1)}}
+.task.pop .box{animation:pop .3s ease-out}
+.routine.celebrate{animation:glow 1.1s ease-out}
+.routine.celebrate .chip{animation:bounce .55s ease-out}
+.r-icon{position:relative}
+.spark{position:absolute;left:50%;top:50%;font-size:16px;color:var(--gold);pointer-events:none;animation:burst .9s ease-out forwards;opacity:0}
+
+/* points card */
+.pl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.pl li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.pl li:first-child{border-top:0}
+.pl .pv-l{min-width:0}
+.pl .pv-l b{font-weight:500}
+.pl .pts{font:800 18px var(--f-display);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+.pl .earned .pts{color:var(--good)}
+.pl .waiting .pts{color:var(--wait)}
+.pl .todo{color:var(--ink-3)}
+.pl .todo .pts{color:var(--ink-3)}
+.tag{display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.totals{display:flex;gap:10px;flex-wrap:wrap}
+.totals > div{flex:1 1 110px;background:var(--surface-2);border-radius:14px;padding:10px 12px}
+.totals .num{font-size:26px}
+
+/* goal + jar */
+.goal-top{display:flex;align-items:center;gap:12px}
+.big-emo{flex:none;width:56px;height:56px;border-radius:16px;background:var(--accent-soft);display:grid;place-items:center;font-size:30px}
+.goal-top h3{font-size:21px;font-weight:700}
+.jar-wrap{display:flex;align-items:center;gap:16px}
+.jar{width:96px;flex:none;height:auto}
+.jar-lid{fill:var(--ink-3)} .jar-neck{fill:var(--line)} .jar-bg{fill:var(--surface-2)}
+.jar-fill{fill:var(--gold)} .jar-coin{fill:var(--gold-deep);opacity:.35}
+.jar-glass{fill:none;stroke:var(--ink-3);stroke-width:3}
+.jar-shine{fill:none;stroke:var(--surface);stroke-width:5;stroke-linecap:round;opacity:.55}
+
+/* shop */
+.shop-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.shop-head h2{font-size:30px;font-weight:800}
+.shop{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:16px}
+.reward{gap:12px}
+.reward.saving{outline:3px solid var(--accent);outline-offset:-3px}
+.rw-top{display:flex;align-items:center;gap:12px}
+.rw-top h3{font-size:19px;font-weight:700;line-height:1.15}
+.rw-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.hist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.hist li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.hist li:first-child{border-top:0}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;padding:8px 15px;border-radius:13px;font-weight:600;font-size:14px;border:2px solid transparent;cursor:pointer;white-space:nowrap}
+.btn.primary{background:var(--accent);color:var(--on-accent)}
+.btn.good{background:var(--good);color:var(--on-accent)}
+.btn.gold{background:var(--gold);color:var(--gold-ink)}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--accent)}
+.btn.soft{background:var(--accent-soft);color:var(--ink)}
+
+/* parent */
+.girls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px;align-items:start}
+.gp-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.av{flex:none;width:46px;height:46px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font:800 22px var(--f-display)}
+.gp-head h2{font-size:26px;font-weight:800}
+.gp-stats{display:flex;gap:6px;flex-wrap:wrap}
+.crow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:12px 0;border-top:1px solid var(--line)}
+.crow .r-icon{width:40px;height:40px;font-size:20px;border-radius:12px}
+.ct{flex:1 1 150px;min-width:0}
+.ct b{font-weight:600}
+.miss{display:block;font-size:12.5px;color:var(--wait);margin-top:2px}
+.ca{display:flex;gap:8px 10px;align-items:center;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.opt.col{flex-direction:column;align-items:stretch}
+.opt b{font-weight:600}
+.sw{flex:none;position:relative;width:52px;height:30px;border-radius:99px;background:var(--surface-2);border:2px solid var(--line);cursor:pointer;padding:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--ink-3);transition:transform .2s}
+.sw[aria-checked="true"]{background:var(--good);border-color:var(--good)}
+.sw[aria-checked="true"]::after{transform:translateX(22px);background:var(--on-accent)}
+.seg{display:flex;gap:8px}
+.seg button{width:44px;height:44px;border-radius:13px;border:2px solid var(--line);background:var(--surface);font:800 18px var(--f-display);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
+.in{width:100%;min-height:42px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 12px;font:400 14px var(--f-body)}
+.in:focus{outline:none;border-color:var(--accent)}
+.give{display:flex;gap:8px;align-items:stretch}
+.give .in{flex:1;min-width:0}
+.day-total{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--line)}
+.day-total .num{font-size:28px}
+.reqs{display:flex;flex-direction:column;gap:10px}
+.req{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--gold-soft);border-radius:var(--r-lg);padding:14px 16px}
+.req .big-emo{background:var(--surface)}
+.req-t{flex:1 1 200px;min-width:0}
+.req-a{display:flex;gap:8px}
+.rest{align-items:center;text-align:center;padding:36px 18px}
+.rest .big-emo{width:72px;height:72px;font-size:38px}
+
+/* new device setup */
+[data-who="setup"]{--accent:var(--parent);--accent-soft:var(--parent-soft)}
+.dot-setup{background:var(--ink-3)}
+.setup{max-width:560px;width:100%;margin:12px auto 0;align-items:center;text-align:center;gap:18px;padding:30px 22px}
+.setup h1{font-size:clamp(32px,6vw,44px);font-weight:800}
+.steps{display:flex;gap:6px;justify-content:center}
+.steps i{width:28px;height:6px;border-radius:99px;background:var(--surface-2)}
+.steps i.on{background:var(--accent)}
+.pick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%}
+.pk{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 8px;border-radius:var(--r-lg);border:2px solid var(--line);background:var(--surface);cursor:pointer;font:700 19px var(--f-display)}
+.pk:hover{border-color:var(--accent)}
+.pk .av{width:64px;height:64px;font-size:30px}
+.pins{display:flex;gap:14px;justify-content:center}
+.pins i{width:20px;height:20px;border-radius:50%;border:3px solid var(--ink-3)}
+.pins i.on{background:var(--accent);border-color:var(--accent)}
+.pins.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.pad{display:grid;grid-template-columns:repeat(3,72px);gap:12px;justify-content:center}
+.pad button{height:72px;border-radius:50%;border:2px solid var(--line);background:var(--surface);font:800 28px var(--f-display);cursor:pointer;color:var(--ink)}
+.pad button:hover:not(:disabled){border-color:var(--accent)}
+.pad button:active:not(:disabled){background:var(--accent-soft)}
+.pad button:disabled{opacity:.35;cursor:default}
+.pad .ghostkey{border-color:transparent;font-size:22px}
+.err{color:var(--wait);font-weight:600;min-height:1.4em}
+.setup .in{text-align:center;font-size:17px;max-width:320px}
+.lockcard{display:flex;align-items:center;gap:12px;background:var(--surface-2);border-radius:var(--r-md);padding:12px 16px;font-size:14px;color:var(--ink-2)}
+/* devices */
+.dev{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0;border-top:1px solid var(--line)}
+.dev:first-child{border-top:0}
+.dev .av{width:38px;height:38px;font-size:17px}
+.dev-t{flex:1 1 160px;min-width:0}
+.dev-t b{font-weight:600}
+.dev-a{display:flex;gap:8px;align-items:center}
+
+/* right now focus */
+.section-lbl{display:flex;align-items:center;gap:8px;margin:0 0 10px}
+.section-lbl .lbl{color:var(--accent)}
+.routine.focus{border:3px solid var(--accent);box-shadow:var(--shadow),0 0 0 6px var(--accent-soft)}
+.start{display:flex;flex-direction:column;gap:10px;padding:6px 0 2px}
+.btn.big{min-height:58px;font-size:18px;border-radius:16px;font-family:var(--f-display);font-weight:800}
+.rest-list{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.mini{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border-radius:var(--r-md);padding:10px 14px;box-shadow:var(--shadow)}
+.mini .r-icon{width:40px;height:40px;font-size:20px;border-radius:12px}
+.mini-t{flex:1 1 140px;min-width:0}
+.mini-t b{font-weight:600}
+.alldone{align-items:center;text-align:center;padding:28px 18px}
+.timebar{display:inline-flex;gap:2px;background:var(--surface);border-radius:99px;padding:3px;margin-left:6px;vertical-align:middle}
+.timebar button{border:0;background:transparent;border-radius:99px;padding:3px 10px;font-size:12px;font-weight:600;cursor:pointer;color:var(--ink-2)}
+.timebar button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+/* memory mode */
+.memcard{display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center;background:var(--accent-soft);border-radius:var(--r-md);padding:20px 16px}
+.memcard .big-emo{background:var(--surface)}
+.memcard h4{margin:0;font:800 22px var(--f-display)}
+.memcard .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.chip.mem{background:var(--parent-soft);color:var(--parent)}
+/* badges */
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:16px}
+.medal{flex:none;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:28px;position:relative;background:var(--surface-2);border:3px dashed var(--line)}
+.medal.on{background:radial-gradient(circle at 34% 30%,#FFE69A,#F3B21C 58%,#C88A06);border:3px solid var(--gold-deep)}
+.medal .lv{position:absolute;right:-6px;bottom:-4px;background:var(--ink);color:var(--bg);border-radius:99px;font:800 12px var(--f-display);padding:2px 7px}
+.b-top{display:flex;align-items:center;gap:14px}
+.b-top h3{font-size:19px;font-weight:700}
+.wkrow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.wkd{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px;border-radius:12px;background:var(--surface-2);font-size:12px;font-weight:600;color:var(--ink-2)}
+.wkd b{font-size:20px;line-height:1}
+.wkd.on{background:var(--gold-soft);color:var(--ink)}
+/* praise notes */
+.praise{flex-direction:row;align-items:center;flex-wrap:wrap;background:var(--gold-soft)}
+.praise .pq{font:700 20px/1.25 var(--f-display);color:var(--ink);margin:2px 0}
+.praise-t{flex:1 1 220px;min-width:0}
+
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:99px;font-weight:600;font-size:14px;box-shadow:var(--shadow);z-index:20;max-width:calc(100% - 32px)}
+
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+.pick.pick4{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:620px){.pick.pick4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.app{padding-top:max(8px, env(safe-area-inset-top, 0px))}
+:root{color-scheme:light}
+body{margin:0}
+[hidden]{display:none!important}
+img{max-width:100%}
+.hwlink{display:block;margin:6px 0 4px 48px;padding:10px 14px;border-radius:var(--r-md);background:var(--accent-soft);color:var(--ink);font:600 15px/1.3 var(--f-body);text-decoration:none;border:1px solid var(--line)}
+.hwlink:hover{text-decoration:underline}
+.wk-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px}
+.wk-btn{min-width:48px;font-size:24px;line-height:1;padding:4px 12px}
+.wk-btn:disabled{opacity:.3;cursor:default;border-color:var(--line)}
+.wk-l{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;min-width:0}
+.wk-l b{font-weight:600}
+.backlog{border:2px solid var(--wait-soft)}
+.backlog .lbl{color:var(--wait)}
+.backlog .crow:first-child{border-top:0}
+.card.lost{background:var(--wait-soft)}
+.ded-pick{display:flex;flex-direction:column;gap:8px}
+.ded-r{display:flex;flex-wrap:wrap;gap:8px}
+.ded-r .btn{min-height:40px;white-space:normal;text-align:left}
+.ded-a{display:flex;align-items:center;gap:10px;flex:none}
+.btn.sm{min-height:34px;padding:4px 11px;font-size:13px}
+.pl .lost .pts{color:var(--wait)}
+.pl .fixed,.pl .fixed .pts{color:var(--ink-3)}
+</style>
 </head>
 <body>
 <div class="app" id="app" data-who="setup"></div>
 <div id="toast" role="status" aria-live="polite" hidden></div>
-<script>var PointsCore=function(){var M=[{k:"before",name:"Before school",icon:"🌅",rule:"before"},{k:"after",name:"After school",icon:"🏫",rule:"after"},{k:"night",name:"Night",icon:"🌙",rule:"night"},{k:"chores",name:"Weekly chores",icon:"🏠",rule:"chores"}],W=["before","after","night"],J=[1,5,10,20,40],Q=[5,10,20,40,80],X=[5,10,20,40,60],K=["ayla","lani"],j={ayla:"Ayla",lani:"Lani"};function Y(h){return String(h).padStart(2,"0")}function Z(h){return new Date(h+"T12:00:00Z")}function x(h){return h.getUTCFullYear()+"-"+Y(h.getUTCMonth()+1)+"-"+Y(h.getUTCDate())}function E(h,c){var d=Z(h);return d.setUTCDate(d.getUTCDate()+c),x(d)}function p(h){return Z(h).getUTCDay()}function O(h){var c=p(h);return c>=1&&c<=5}function B(h){return E(h,-((p(h)+6)%7))}function V(h){var c={};return M.forEach(function(d){c[d.k]=(h.tasks[d.k]||[]).map(function(){return!1})}),{t:c,chk:{},nc:!1,behs:[],started:{},mem:{},memDone:{},memOk:{},peeked:{},practiceDone:{}}}function q(h,c){var d=V(h);return c=c||{},["chk","started","mem","memDone","memOk","peeked","practiceDone"].forEach(function(k){d[k]=c[k]||{}}),d.nc=!!c.nc,d.behs=c.behs||[],M.forEach(function(k){var t=c.t&&c.t[k.k]||[];d.t[k.k]=d.t[k.k].map(function(m,o){return!!t[o]})}),d}function $(h,c,d){var k=h.rules,t={before:k.before,after:k.after,night:k.night,chores:k.chores};function m(e){return e>=h.startDate&&e<=d}function o(e,r){return c.days[e]&&c.days[e][r]}function T(e,r){return c.days[e]||(c.days[e]={}),c.days[e][r]||(c.days[e][r]=V(h)),c.days[e][r]}function i(e,r){return e.t[r].length>0&&e.t[r].every(Boolean)}function y(e,r,u){var s=o(e,r);return!!s&&(!!s.chk[u]||i(s,u))}function g(e,r){var u=o(e,r);return!!u&&O(r)&&!!u.chk.before&&!!u.chk.after&&!!u.chk.night}function w(e,r){for(var u=0,s=r,_=0;_<800&&s>=h.startDate;_++){if(O(s))if(g(e,s))u++;else break;s=E(s,-1)}return u}function f(e,r){return g(e,r)&&w(e,r)%k.streakDays===0?k.streakBonus:0}function R(e,r,u){var s=o(e,r);return!!s&&!!s.chk[u]&&!!s.memOk[u]}function A(e,r){return O(r)&&W.every(function(u){return R(e,r,u)})}function n(e,r){for(var u=0;u<5;u++){var s=E(B(r),u);if(s<h.startDate||!A(e,s))return!1}return!0}function a(e,r){var u=o(e,r);if(!u||r<h.startDate)return 0;var s=0;return O(r)&&(["before","after","night"].forEach(function(_){u.chk[_]&&(s+=t[_])}),g(e,r)&&u.nc&&(s+=k.bonus),s+=f(e,r)),u.chk.chores&&(s+=t.chores),p(r)===5&&n(e,r)&&(s+=k.weeklyMaster),s+u.behs.length}function S(e){return Object.keys(c.days[e]||{}).filter(m)}function U(e){return S(e).reduce(function(r,u){return r+a(e,u)},0)}function I(e){return c.spending.filter(function(r){return r.g===e&&r.date>=h.startDate}).reduce(function(r,u){return r+u.cost},0)}function L(e){return U(e)-I(e)}function N(e){for(var r=B(e),u=[],s=0;s<7;s++)u.push(E(r,s));return u}function F(e){return N(d).reduce(function(r,u){return r+(u<=d?a(e,u):0)},0)}function v(e){return S(e).filter(function(r){return r.slice(0,7)===d.slice(0,7)}).reduce(function(r,u){return r+a(e,u)},0)}function P(e){if(g(e,d))return w(e,d);for(var r=E(d,-1);!O(r);)r=E(r,-1);return r<h.startDate?0:w(e,r)}function l(e){return S(e).filter(O).reduce(function(r,u){return Math.max(r,w(e,u))},0)}function b(e){return S(e).filter(function(r){return g(e,r)&&o(e,r).nc}).length}function D(e,r){return S(e).filter(function(u){return R(e,u,r)}).length}function G(e){return S(e).filter(function(r){return A(e,r)}).length}function z(e){return S(e).filter(function(r){return p(r)===5&&n(e,r)}).length}function C(e){var r=p(e),u=[];return O(e)&&M.slice(0,3).forEach(function(s){u.push({r:s,host:e})}),r===5&&u.push({r:M[3],host:e}),r===6&&u.push({r:M[3],host:E(e,-1)}),u}function re(e,r){return O(r)&&!y(e,r,"after")}function H(e,r){return!!e.memDone[r]}function te(e,r){return C(r).filter(function(u){var s=o(e,u.host);return s&&i(s,u.r.k)&&!s.chk[u.r.k]})}function ne(e,r){return C(r).filter(function(u){var s=o(e,u.host);return s&&i(s,u.r.k)&&!s.chk[u.r.k]&&!H(s,u.r.k)})}return{pts:t,R:k,today:d,pk:o,day:T,allDone:i,finished:y,full:g,streakTo:w,streakBonus:f,memOk:R,dailyMaster:A,weeklyMaster:n,dayPts:a,earned:U,spent:I,balance:L,weekDates:N,weekPts:F,monthPts:v,curStreak:P,bestStreak:l,noChaseCount:b,memCount:D,dailyMasterCount:G,weeklyMasterCount:z,routinesFor:C,nightLocked:re,isMemRun:H,waitingOn:te,checkAllList:ne}}function ee(h,c,d,k,t){var m=$(h,c,d),o={ok:!0,error:"",touched:[],changed:{}},T=k.who==="parent";function i(l){return o.ok=!1,o.error=l,o}function y(l,b){var D=l+"|"+b;o.touched.indexOf(D)<0&&o.touched.push(D)}function g(l){return typeof l=="string"&&/^\d{4}-\d{2}-\d{2}$/.test(l)&&l<=d}function w(l,b,D,G){if(!b||!h.tasks[b])return null;if(G){var z=m.routinesFor(d).some(function(C){return C.r.k===b&&C.host===D});return z?m.day(l,D):null}return g(D)?m.day(l,D):null}var f=T?t.g:k.who;if(K.indexOf(f)<0&&["approve","decline","load"].indexOf(t.op)<0)return i("Unknown person");var R=["tick","start","startmem","peek","hide","memdone","practicedone","goal","cashin","noteSeen"],A=["check","checkmem","uncheck","checkall","nochase","give","unbeh","approve","decline","note"];if(R.indexOf(t.op)>=0&&T)return i("That is for the girls’ pages");if(A.indexOf(t.op)>=0&&!T)return i("Only a parent can do that");var n,a=t.r,S;switch(t.op){case"load":return o;case"tick":{if(n=w(f,a,t.host,!0),!n)return i("Only today can be ticked");if(n.chk[a])return i("Already checked by a parent");if(a==="night"&&m.nightLocked(f,t.host))return i("Finish After school first");if(n.mem[a]==="on"||n.mem[a]==="practice")return i("The list is hidden in memory mode");var U=Number(t.i);return U>=0&&U<n.t[a].length?(n.t[a][U]=!!t.on,n.started[a]=!0,y(f,t.host),o):i("Unknown task")}case"start":return n=w(f,a,t.host,!0),n?(n.started[a]=!0,y(f,t.host),o):i("Only today can be started");case"startmem":return n=w(f,a,t.host,!0),n?W.indexOf(a)<0?i("Memory mode is for the daily routines"):a==="night"&&m.nightLocked(f,t.host)?i("Finish After school first"):n.t[a].some(Boolean)||n.chk[a]?i("Memory mode has to be switched on before you start"):(n.mem[a]="on",n.started[a]=!0,y(f,t.host),o):i("Only today can be started");case"peek":return n=w(f,a,t.host,!0),n?n.mem[a]!=="on"&&n.mem[a]!=="practice"?i("Not in memory mode"):(n.mem[a]="peeked",n.peeked[a]=!0,y(f,t.host),o):i("Only today");case"hide":return n=w(f,a,t.host,!0),n?n.mem[a]!=="peeked"?i("Nothing to hide"):(n.mem[a]="practice",y(f,t.host),o):i("Only today");case"memdone":case"practicedone":{if(n=w(f,a,t.host,!0),!n)return i("Only today");var I=t.op==="memdone"?"on":"practice";return n.mem[a]!==I?i("Not in memory mode"):a==="night"&&m.nightLocked(f,t.host)?i("Finish After school first"):(n.t[a]=n.t[a].map(function(){return!0}),t.op==="memdone"?n.memDone[a]=!0:n.practiceDone[a]=!0,y(f,t.host),o)}case"goal":return t.reward&&!h.shop.some(function(l){return l.name===t.reward})?i("Unknown reward"):(c.goal[f]=c.goal[f]===t.reward?null:t.reward||null,o.changed.goal=!0,o);case"cashin":{var L=h.shop.filter(function(l){return l.name===t.reward})[0];return L?c.requests.some(function(l){return l.g===f&&l.reward===L.name&&l.status==="Waiting"})?i("Already asked"):m.balance(f)<L.cost?i("Not enough points yet"):(c.requests.push({id:t.newId,date:d,g:f,reward:L.name,cost:L.cost,status:"Waiting"}),o.changed.requests=!0,o):i("Unknown reward")}case"noteSeen":{var N=c.notes.filter(function(l){return l.id===t.id&&l.g===f})[0];return N?(N.seen=!0,o.changed.notes=!0,o):i("Note not found")}case"check":case"checkmem":case"uncheck":{if(n=w(f,a,t.host,!1),!n)return i("Unknown routine or day");if(t.op==="uncheck")n.chk[a]=!1,n.memOk[a]=!1;else if(t.op==="checkmem"){if(!n.memDone[a])return i("Not a memory run");n.chk[a]=!0,n.memOk[a]=!0}else n.chk[a]=!0,n.memOk[a]=!1;return y(f,t.host),o}case"checkall":return g(t.date)?(m.checkAllList(f,t.date).forEach(function(l){var b=m.day(f,l.host);b.chk[l.r.k]=!0,b.memOk[l.r.k]=!1,y(f,l.host)}),o):i("Unknown day");case"nochase":return g(t.date)?(n=m.day(f,t.date),n.nc=!!t.on,y(f,t.date),o):i("Unknown day");case"give":{if(!g(t.date))return i("Unknown day");var F=String(t.why||"").trim().slice(0,60);return F?(n=m.day(f,t.date),n.behs.length>=m.R.behMax?i("That’s the most for the day"):(n.behs.push({id:t.newId,for:F,by:k.name}),y(f,t.date),o)):i("Add what the point is for")}case"unbeh":return g(t.date)?(n=m.day(f,t.date),n.behs=n.behs.filter(function(l){return l.id!==t.id}),y(f,t.date),o):i("Unknown day");case"approve":case"decline":{var v=c.requests.filter(function(l){return l.id===t.id&&l.status==="Waiting"})[0];if(!v)return i("Request not found");if(t.op==="approve"){if(m.balance(v.g)<v.cost)return i(j[v.g]+" doesn’t have enough points yet");v.status="Approved",c.spending.push({date:d,g:v.g,reward:v.reward,cost:v.cost}),c.goal[v.g]===v.reward&&(c.goal[v.g]=null,o.changed.goal=!0),o.changed.spending=!0}else v.status="Declined";return o.changed.requests=!0,o}case"note":{var P=String(t.text||"").trim().slice(0,140);return P?(c.notes.push({id:t.newId,date:d,g:f,text:P,from:k.name,seen:!1}),o.changed.notes=!0,o):i("Write the note first")}}return i("Unknown action")}return{ROUTINES:M,MEM_ROUT:W,MEM_LEVELS:J,SELF_LEVELS:Q,STREAK_LEVELS:X,GIRLS:K,GIRL_NAMES:j,add:E,dow:p,isWk:O,weekStart:B,blankDay:V,normalizeDay:q,make:$,apply:ee,levelIn:function(h,c){return c.filter(function(d){return h>=d}).length}}}();</script>
-<script>const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyDN1Y8Lr8iHqaa2qeXiA06LfdXH0wOvDcOX1kt5GKsGjmsMJa23n27SHfPHbvUikk0/exec",DEV_KEY="points-device",CACHE_KEY="points-cache",PC=PointsCore,ROUT=PC.ROUTINES,PEOPLE=[{person:"Ayla",who:"ayla",mark:"A"},{person:"Lani",who:"lani",mark:"L"},{person:"Hyrum",who:"parent",mark:"H"},{person:"Maia",who:"parent",mark:"M"}],EMOJI={"Make bed":"🛏️","Get dressed":"👕","Eat breakfast":"🥣","Do breakfast dishes":"🍽️","Brush teeth":"🪥","Face, hair and skin":"🧴","Tidy room":"🧸","Pack bag and lunch box":"🎒","Unpack bag and clean lunch box":"🧽","Make tomorrow's lunch":"🥪","Change out of uniform":"👚",Exercise:"🏃",Homework:"✏️","Eat dinner":"🍝","Do dinner dishes":"🧼",Shower:"🚿","Pyjamas on":"😴","Clean room":"🧹","Vacuum bedroom":"💨","Washing and clothes":"🧺","Clean bathroom":"🛁","Clean kitchen":"🍳","House chore (ask a parent)":"🙋"},SHOP_EMOJI={"Choose dinner or dessert":"🍨","Extra screen time":"📺","One-on-one time with a parent":"💛","Craft session":"✂️","Skatepark or outdoor trip":"🛹","Art supplies":"🎨"},MEM_NAMES={before:"Morning memory",after:"After school memory",night:"Night memory"},CHECK='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"],toD=a=>new Date(a+"T12:00:00"),longDate=a=>{const t=toD(a);return`${DAYS[t.getDay()]} ${t.getDate()} ${MONTHS[t.getMonth()]}`},shortDate=a=>{const t=toD(a);return`${DAYS[t.getDay()].slice(0,3)} ${t.getDate()} ${MONTHS[t.getMonth()].slice(0,3)}`},esc=a=>String(a==null?"":a).replace(/[&<>"']/g,t=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[t]),rid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8),shopEmoji=a=>SHOP_EMOJI[a]||"🎁";function readLS(a){try{return JSON.parse(localStorage.getItem(a)||"null")}catch{return null}}function writeLS(a,t){try{return t===null?localStorage.removeItem(a):localStorage.setItem(a,JSON.stringify(t)),!0}catch{return!1}}let DEV=readLS(DEV_KEY),P=DEV?readLS(CACHE_KEY):null,V={day:null,tab:"today",open:{},peekAsk:null,confirmDev:null,signoutAsk:!1,draft:{},noteDraft:{},fx:null,setup:{step:"who",person:null,pin:"",err:"",shake:!1,busy:!1,notice:""}},queue=[],sending=!1,net="ok",retryTimer=null;const C=()=>PC.make(P.cfg,P.data,P.today),RULES=()=>P.cfg.rules,isParent=()=>P&&P.me.who==="parent",viewDay=()=>V.day||P.today,girlName=a=>PC.GIRL_NAMES[a];function post(a){return fetch(SCRIPT_URL,{method:"POST",credentials:"omit",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(a)}).then(t=>t.json())}function act(a){a.newId=rid();const t=PC.apply(P.cfg,P.data,P.today,P.me,a);return t.ok?(queue.push(a),render(),pump(),!0):(toast(t.error),render(),!1)}function refresh(){queue.some(a=>a.op==="load")||(queue.push({op:"load"}),pump())}function pump(){if(sending||!queue.length||!DEV)return;sending=!0;const a=queue[0];post(Object.assign({token:DEV.token},a)).then(t=>{if(sending=!1,net="ok",t.error==="auth")return signedOut("This device was signed out. Enter your PIN to set it up again.");if(queue.shift(),t.data){P=t;for(const e of queue)e.op!=="load"&&PC.apply(P.cfg,P.data,P.today,P.me,e);writeLS(CACHE_KEY,P)}!t.ok&&t.error&&toast(t.error),render(),pump()}).catch(()=>{sending=!1,net="offline",render(),clearTimeout(retryTimer),retryTimer=setTimeout(pump,8e3)})}function signedOut(a){DEV=null,P=null,queue=[],writeLS(DEV_KEY,null),writeLS(CACHE_KEY,null),V.setup={step:"who",person:null,pin:"",err:"",shake:!1,busy:!1,notice:a||""},render()}function timeSlot(){const a=new Date().getHours();return a<9?"morning":a<15?"school":"after3"}function focusFor(a,t,e){const s=C(),o=n=>e.find(c=>c.r.k===n),i=n=>{const c=o(n);return c&&!s.finished(a,c.host,n)?c:null};if(PC.dow(t)===6)return i("chores");if(!PC.isWk(t))return null;const l=timeSlot();return l==="morning"||l==="school"?i("before")||{school:!0}:i("after")||i("night")||(PC.dow(t)===5?i("chores"):null)}function rTop(){const a=P.me,t=queue.filter(o=>o.op!=="load").length,e=net==="offline"?'<span class="chip wait">Offline · will save when back online</span>':t?'<span class="chip todo">Saving…</span>':"",s=P.today<P.cfg.startDate?`<p class="note"><b>Practice time.</b> Try everything out. Points start counting on ${longDate(P.cfg.startDate)}.</p>`:"";return`<header class="top"><div class="brand"><span class="coin sm" aria-hidden="true">★</span>Points Tracker</div>
-    <div class="pv">${e}<span class="hint" style="display:inline">${esc(a.name)}${isParent()?" · parent":""}</span></div></header>${s}`}function rWeek(a){const t=C();return`<nav class="week" aria-label="Pick a day">${t.weekDates(P.today).map(s=>{const o=s>P.today,i=s===viewDay();let l="none";if(o)l="";else if(a==="parent")l=t.waitingOn("ayla",s).length+t.waitingOn("lani",s).length?"wait":t.full("ayla",s)&&t.full("lani",s)?"full":"none";else{const n=t.pk(a,s);l=t.full(a,s)?"full":n&&(Object.values(n.t).some(c=>c.some(Boolean))||n.behs.length)?"part":"none"}return`<button class="wd${s===P.today?" is-today":""}" data-act="day" data-day="${s}" aria-pressed="${i}" ${o?"disabled":""} aria-label="${longDate(s)}">
-      <span class="wdn">${s===P.today?"Today":DAYS[PC.dow(s)].slice(0,3)}</span><span class="wdd">${toD(s).getDate()}</span><span class="mk ${l}" aria-hidden="true"></span></button>`}).join("")}</nav>`}function jarSVG(a){const s=96*a,o=130-s;let i="";for(let l=0;l<8;l++){const n=123-l*12;if(n-6<o)break;for(let c=0;c<6;c++)i+=`<circle class="jar-coin" cx="${22+c*15+(l%2?7:0)}" cy="${n}" r="5.5"/>`}return`<svg class="jar" viewBox="0 0 120 140" role="img" aria-label="Team jar, ${Math.round(a*100)} percent full">
+<script>
+/**
+ * Points Tracker core logic.
+ * The SAME code runs in the dashboard page and in the Apps Script, so points are
+ * always worked out the same way. No page or Sheet code in here.
+ */
+var PointsCore = (function () {
+  var ROUTINES = [
+    { k: 'before', name: 'Before school', icon: '🌅', rule: 'before' },
+    { k: 'after',  name: 'After school',  icon: '🏫', rule: 'after' },
+    { k: 'night',  name: 'Night',         icon: '🌙', rule: 'night' },
+    { k: 'chores', name: 'Weekly chores', icon: '🏠', rule: 'chores' }
+  ];
+  var MEM_ROUT = ['before', 'after', 'night'];
+  var MEM_LEVELS = [1, 5, 10, 20, 40];
+  var SELF_LEVELS = [5, 10, 20, 40, 80];
+  var STREAK_LEVELS = [5, 10, 20, 40, 60];
+  var GIRLS = ['ayla', 'lani'];
+  var GIRL_NAMES = { ayla: 'Ayla', lani: 'Lani' };
+  // Reasons a parent can take a point away (the girls see these words).
+  var DED_REASONS = ['Lying', 'Rude or disrespectful', 'Ignoring a warning', 'Not following instructions', 'Asked for help before trying'];
+
+  /* ---------- dates (all as 'yyyy-mm-dd' text) ---------- */
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function toD(s) { return new Date(s + 'T12:00:00Z'); }
+  function fmt(d) { return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()); }
+  function add(s, n) { var d = toD(s); d.setUTCDate(d.getUTCDate() + n); return fmt(d); }
+  function dow(s) { return toD(s).getUTCDay(); }
+  function isWk(s) { var w = dow(s); return w >= 1 && w <= 5; }
+  function weekStart(s) { return add(s, -((dow(s) + 6) % 7)); }
+
+  function blankDay(cfg) {
+    var t = {};
+    ROUTINES.forEach(function (r) { t[r.k] = (cfg.tasks[r.k] || []).map(function () { return false; }); });
+    return { t: t, chk: {}, nc: false, behs: [], deds: [], started: {}, mem: {}, memDone: {}, memOk: {}, peeked: {}, practiceDone: {} };
+  }
+  // Make a stored day match the current task lists (tasks can be edited in the Sheet).
+  function normalizeDay(cfg, d) {
+    var b = blankDay(cfg);
+    d = d || {};
+    ['chk', 'started', 'mem', 'memDone', 'memOk', 'peeked', 'practiceDone'].forEach(function (key) { b[key] = d[key] || {}; });
+    b.nc = !!d.nc;
+    b.behs = d.behs || [];
+    b.deds = d.deds || [];
+    ROUTINES.forEach(function (r) {
+      var src = (d.t && d.t[r.k]) || [];
+      b.t[r.k] = b.t[r.k].map(function (_, i) { return !!src[i]; });
+    });
+    return b;
+  }
+
+  /**
+   * Build the calculator for one snapshot of data.
+   * cfg:  { rules, tasks, shop, startDate }
+   * data: { days:{ayla:{date:day}, lani:{...}}, spending:[], requests:[], notes:[], goal:{} }
+   */
+  function make(cfg, data, today) {
+    var R = cfg.rules;
+    var pts = { before: R.before, after: R.after, night: R.night, chores: R.chores };
+    function inRange(s) { return s >= cfg.startDate && s <= today; }
+    function pk(g, s) { return data.days[g] && data.days[g][s]; }
+    function day(g, s) {
+      if (!data.days[g]) data.days[g] = {};
+      if (!data.days[g][s]) data.days[g][s] = blankDay(cfg);
+      return data.days[g][s];
+    }
+    function allDone(d, k) { return d.t[k].length > 0 && d.t[k].every(Boolean); }
+    function finished(g, host, k) { var d = pk(g, host); return !!d && (!!d.chk[k] || allDone(d, k)); }
+    function full(g, s) { var d = pk(g, s); return !!d && isWk(s) && !!d.chk.before && !!d.chk.after && !!d.chk.night; }
+    function streakTo(g, s) {
+      var n = 0, cur = s;
+      for (var i = 0; i < 800 && cur >= cfg.startDate; i++) {
+        if (isWk(cur)) { if (full(g, cur)) n++; else break; }
+        cur = add(cur, -1);
+      }
+      return n;
+    }
+    function streakBonus(g, s) { return full(g, s) && streakTo(g, s) % R.streakDays === 0 ? R.streakBonus : 0; }
+    function memOk(g, s, k) { var d = pk(g, s); return !!d && !!d.chk[k] && !!d.memOk[k]; }
+    function dailyMaster(g, s) { return isWk(s) && MEM_ROUT.every(function (k) { return memOk(g, s, k); }); }
+    function weeklyMaster(g, fri) {
+      for (var i = 0; i < 5; i++) { var s = add(weekStart(fri), i); if (s < cfg.startDate || !dailyMaster(g, s)) return false; }
+      return true;
+    }
+    function dayPts(g, s) {
+      var d = pk(g, s); if (!d || s < cfg.startDate) return 0;
+      var p = 0;
+      if (isWk(s)) {
+        ['before', 'after', 'night'].forEach(function (k) { if (d.chk[k]) p += pts[k]; });
+        if (full(g, s) && d.nc) p += R.bonus;
+        p += streakBonus(g, s);
+      }
+      if (d.chk.chores) p += pts.chores;
+      if (dow(s) === 5 && weeklyMaster(g, s)) p += R.weeklyMaster;
+      return p + d.behs.length;
+    }
+    function daysOf(g) { return Object.keys(data.days[g] || {}).filter(inRange); }
+    function earned(g) { return daysOf(g).reduce(function (a, s) { return a + dayPts(g, s); }, 0); }
+    function spent(g) { return data.spending.filter(function (x) { return x.g === g && x.date >= cfg.startDate; }).reduce(function (a, x) { return a + x.cost; }, 0); }
+    // Points taken away only come off the points to spend (not the team jar, week, streaks or badges).
+    function lostOn(g, s) { var d = pk(g, s); if (!d || s < cfg.startDate) return 0; return d.deds.filter(function (x) { return !x.fixed; }).length; }
+    function lost(g) { return daysOf(g).reduce(function (a, s) { return a + lostOn(g, s); }, 0); }
+    function balance(g) { return earned(g) - spent(g) - lost(g); }
+    function weekDates(s) { var ws = weekStart(s), out = []; for (var i = 0; i < 7; i++) out.push(add(ws, i)); return out; }
+    function weekPts(g) { return weekDates(today).reduce(function (a, s) { return a + (s <= today ? dayPts(g, s) : 0); }, 0); }
+    function monthPts(g) { return daysOf(g).filter(function (s) { return s.slice(0, 7) === today.slice(0, 7); }).reduce(function (a, s) { return a + dayPts(g, s); }, 0); }
+    function curStreak(g) {
+      if (full(g, today)) return streakTo(g, today);
+      var s = add(today, -1); while (!isWk(s)) s = add(s, -1);
+      return s < cfg.startDate ? 0 : streakTo(g, s);
+    }
+    function bestStreak(g) { return daysOf(g).filter(isWk).reduce(function (m, s) { return Math.max(m, streakTo(g, s)); }, 0); }
+    function noChaseCount(g) { return daysOf(g).filter(function (s) { return full(g, s) && pk(g, s).nc; }).length; }
+    function memCount(g, k) { return daysOf(g).filter(function (s) { return memOk(g, s, k); }).length; }
+    function dailyMasterCount(g) { return daysOf(g).filter(function (s) { return dailyMaster(g, s); }).length; }
+    function weeklyMasterCount(g) { return daysOf(g).filter(function (s) { return dow(s) === 5 && weeklyMaster(g, s); }).length; }
+    function routinesFor(s) {
+      var w = dow(s), out = [];
+      if (isWk(s)) ROUTINES.slice(0, 3).forEach(function (r) { out.push({ r: r, host: s }); });
+      if (w === 5) out.push({ r: ROUTINES[3], host: s });
+      if (w === 6) out.push({ r: ROUTINES[3], host: add(s, -1) }); // Saturday-morning chores count for Friday
+      return out;
+    }
+    function nightLocked(g, s) { return isWk(s) && !finished(g, s, 'after'); }
+    function isMemRun(d, k) { return !!d.memDone[k]; }
+    function waitingOn(g, s) {
+      return routinesFor(s).filter(function (x) { var d = pk(g, x.host); return d && allDone(d, x.r.k) && !d.chk[x.r.k]; });
+    }
+    function checkAllList(g, s) {
+      return routinesFor(s).filter(function (x) { var d = pk(g, x.host); return d && allDone(d, x.r.k) && !d.chk[x.r.k] && !isMemRun(d, x.r.k); });
+    }
+    return {
+      pts: pts, R: R, today: today, pk: pk, day: day, allDone: allDone, finished: finished, full: full,
+      streakTo: streakTo, streakBonus: streakBonus, memOk: memOk, dailyMaster: dailyMaster, weeklyMaster: weeklyMaster,
+      dayPts: dayPts, earned: earned, spent: spent, balance: balance, lostOn: lostOn, lost: lost, weekDates: weekDates, weekPts: weekPts, monthPts: monthPts,
+      curStreak: curStreak, bestStreak: bestStreak, noChaseCount: noChaseCount, memCount: memCount,
+      dailyMasterCount: dailyMasterCount, weeklyMasterCount: weeklyMasterCount, routinesFor: routinesFor,
+      nightLocked: nightLocked, isMemRun: isMemRun, waitingOn: waitingOn, checkAllList: checkAllList
+    };
+  }
+
+  /**
+   * Apply one action to the data. Used for the instant update on the page and,
+   * with the same rules, by the script before saving to the Sheet.
+   * me: { who:'ayla'|'lani'|'parent', name:'Ayla'|'Hyrum'|... }
+   * Returns { ok, error, touched:[ 'g|date' ], changed:{spending,requests,notes,goal} }.
+   */
+  function apply(cfg, data, today, me, op) {
+    var C = make(cfg, data, today);
+    var res = { ok: true, error: '', touched: [], changed: {} };
+    var parent = me.who === 'parent';
+    function fail(msg) { res.ok = false; res.error = msg; return res; }
+    function touch(g, s) { var key = g + '|' + s; if (res.touched.indexOf(key) < 0) res.touched.push(key); }
+    function validDate(s) { return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && s <= today; }
+    function routineSlot(g, r, host, forGirl) {
+      if (!r || !cfg.tasks[r]) return null;
+      if (forGirl) {
+        var ok = C.routinesFor(today).some(function (x) { return x.r.k === r && x.host === host; });
+        return ok ? C.day(g, host) : null;
+      }
+      return validDate(host) ? C.day(g, host) : null;
+    }
+    var g = parent ? op.g : me.who;
+    if (GIRLS.indexOf(g) < 0 && ['approve', 'decline', 'load'].indexOf(op.op) < 0) return fail('Unknown person');
+    var girlOps = ['tick', 'start', 'startmem', 'peek', 'hide', 'memdone', 'practicedone', 'goal', 'cashin', 'noteSeen'];
+    var parentOps = ['check', 'checkmem', 'uncheck', 'checkall', 'nochase', 'give', 'unbeh', 'take', 'fixded', 'unded', 'approve', 'decline', 'note'];
+    if (girlOps.indexOf(op.op) >= 0 && parent) return fail('That is for the girls’ pages');
+    if (parentOps.indexOf(op.op) >= 0 && !parent) return fail('Only a parent can do that');
+    var d, r = op.r, k;
+    switch (op.op) {
+      case 'load': return res;
+      case 'tick': {
+        d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today can be ticked');
+        if (d.chk[r]) return fail('Already checked by a parent');
+        if (r === 'night' && C.nightLocked(g, op.host)) return fail('Finish After school first');
+        if (d.mem[r] === 'on' || d.mem[r] === 'practice') return fail('The list is hidden in memory mode');
+        var i = Number(op.i); if (!(i >= 0 && i < d.t[r].length)) return fail('Unknown task');
+        d.t[r][i] = !!op.on; d.started[r] = true; touch(g, op.host); return res;
+      }
+      case 'start': {
+        d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today can be started');
+        d.started[r] = true; touch(g, op.host); return res;
+      }
+      case 'startmem': {
+        d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today can be started');
+        if (MEM_ROUT.indexOf(r) < 0) return fail('Memory mode is for the daily routines');
+        if (r === 'night' && C.nightLocked(g, op.host)) return fail('Finish After school first');
+        if (d.t[r].some(Boolean) || d.chk[r]) return fail('Memory mode has to be switched on before you start');
+        d.mem[r] = 'on'; d.started[r] = true; touch(g, op.host); return res;
+      }
+      case 'peek': {
+        d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today');
+        if (d.mem[r] !== 'on' && d.mem[r] !== 'practice') return fail('Not in memory mode');
+        d.mem[r] = 'peeked'; d.peeked[r] = true; touch(g, op.host); return res;
+      }
+      case 'hide': {
+        d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today');
+        if (d.mem[r] !== 'peeked') return fail('Nothing to hide');
+        d.mem[r] = 'practice'; touch(g, op.host); return res;
+      }
+      case 'memdone':
+      case 'practicedone': {
+        d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today');
+        var want = op.op === 'memdone' ? 'on' : 'practice';
+        if (d.mem[r] !== want) return fail('Not in memory mode');
+        if (r === 'night' && C.nightLocked(g, op.host)) return fail('Finish After school first');
+        d.t[r] = d.t[r].map(function () { return true; });
+        if (op.op === 'memdone') d.memDone[r] = true; else d.practiceDone[r] = true;
+        touch(g, op.host); return res;
+      }
+      case 'goal': {
+        if (op.reward && !cfg.shop.some(function (x) { return x.name === op.reward; })) return fail('Unknown reward');
+        data.goal[g] = data.goal[g] === op.reward ? null : (op.reward || null);
+        res.changed.goal = true; return res;
+      }
+      case 'cashin': {
+        var item = cfg.shop.filter(function (x) { return x.name === op.reward; })[0];
+        if (!item) return fail('Unknown reward');
+        if (data.requests.some(function (q) { return q.g === g && q.reward === item.name && q.status === 'Waiting'; })) return fail('Already asked');
+        if (C.balance(g) < item.cost) return fail('Not enough points yet');
+        data.requests.push({ id: op.newId, date: today, g: g, reward: item.name, cost: item.cost, status: 'Waiting' });
+        res.changed.requests = true; return res;
+      }
+      case 'noteSeen': {
+        var n = data.notes.filter(function (x) { return x.id === op.id && x.g === g; })[0];
+        if (!n) return fail('Note not found');
+        n.seen = true; res.changed.notes = true; return res;
+      }
+      case 'check':
+      case 'checkmem':
+      case 'uncheck': {
+        d = routineSlot(g, r, op.host, false); if (!d) return fail('Unknown routine or day');
+        if (op.op === 'uncheck') { d.chk[r] = false; d.memOk[r] = false; }
+        else if (op.op === 'checkmem') { if (!d.memDone[r]) return fail('Not a memory run'); d.chk[r] = true; d.memOk[r] = true; }
+        else { d.chk[r] = true; d.memOk[r] = false; }
+        touch(g, op.host); return res;
+      }
+      case 'checkall': {
+        if (!validDate(op.date)) return fail('Unknown day');
+        C.checkAllList(g, op.date).forEach(function (x) { var dd = C.day(g, x.host); dd.chk[x.r.k] = true; dd.memOk[x.r.k] = false; touch(g, x.host); });
+        return res;
+      }
+      case 'nochase': {
+        if (!validDate(op.date)) return fail('Unknown day');
+        d = C.day(g, op.date); d.nc = !!op.on; touch(g, op.date); return res;
+      }
+      case 'give': {
+        if (!validDate(op.date)) return fail('Unknown day');
+        var why = String(op.why || '').trim().slice(0, 60);
+        if (!why) return fail('Add what the point is for');
+        d = C.day(g, op.date);
+        if (d.behs.length >= C.R.behMax) return fail('That’s the most for the day');
+        d.behs.push({ id: op.newId, for: why, by: me.name }); touch(g, op.date); return res;
+      }
+      case 'unbeh': {
+        if (!validDate(op.date)) return fail('Unknown day');
+        d = C.day(g, op.date); d.behs = d.behs.filter(function (b) { return b.id !== op.id; }); touch(g, op.date); return res;
+      }
+      case 'take': {
+        if (op.date !== today) return fail('Points can only be taken away today');
+        if (DED_REASONS.indexOf(op.why) < 0) return fail('Pick a reason');
+        d = C.day(g, today);
+        if (d.deds.filter(function (x) { return !x.fixed; }).length >= C.R.dedMax) return fail('That’s the most for today');
+        if (today >= cfg.startDate && C.balance(g) < 1) return fail(GIRL_NAMES[g] + ' has no points to lose right now');
+        d.deds.push({ id: op.newId, why: op.why, note: String(op.note || '').trim().slice(0, 80), by: me.name, fixed: false });
+        touch(g, today); return res;
+      }
+      case 'fixded': {
+        if (op.date !== today) return fail('A point can only be given back on the same day');
+        d = C.day(g, today);
+        var x = d.deds.filter(function (y) { return y.id === op.id; })[0];
+        if (!x) return fail('Not found');
+        if (!op.on) {
+          if (d.deds.filter(function (y) { return !y.fixed; }).length >= C.R.dedMax) return fail('That’s the most for today');
+          if (today >= cfg.startDate && C.balance(g) < 1) return fail(GIRL_NAMES[g] + ' has no points to lose right now');
+        }
+        x.fixed = !!op.on; touch(g, today); return res;
+      }
+      case 'unded': {
+        if (!validDate(op.date)) return fail('Unknown day');
+        d = C.day(g, op.date); d.deds = d.deds.filter(function (y) { return y.id !== op.id; }); touch(g, op.date); return res;
+      }
+      case 'approve':
+      case 'decline': {
+        var q = data.requests.filter(function (x) { return x.id === op.id && x.status === 'Waiting'; })[0];
+        if (!q) return fail('Request not found');
+        if (op.op === 'approve') {
+          if (C.balance(q.g) < q.cost) return fail(GIRL_NAMES[q.g] + ' doesn’t have enough points yet');
+          q.status = 'Approved';
+          data.spending.push({ date: today, g: q.g, reward: q.reward, cost: q.cost });
+          if (data.goal[q.g] === q.reward) { data.goal[q.g] = null; res.changed.goal = true; }
+          res.changed.spending = true;
+        } else q.status = 'Declined';
+        res.changed.requests = true; return res;
+      }
+      case 'note': {
+        var text = String(op.text || '').trim().slice(0, 140);
+        if (!text) return fail('Write the note first');
+        data.notes.push({ id: op.newId, date: today, g: g, text: text, from: me.name, seen: false });
+        res.changed.notes = true; return res;
+      }
+    }
+    return fail('Unknown action');
+  }
+
+  return {
+    ROUTINES: ROUTINES, MEM_ROUT: MEM_ROUT, MEM_LEVELS: MEM_LEVELS, SELF_LEVELS: SELF_LEVELS, STREAK_LEVELS: STREAK_LEVELS,
+    GIRLS: GIRLS, GIRL_NAMES: GIRL_NAMES, DED_REASONS: DED_REASONS,
+    add: add, dow: dow, isWk: isWk, weekStart: weekStart, blankDay: blankDay, normalizeDay: normalizeDay,
+    make: make, apply: apply,
+    levelIn: function (n, levels) { return levels.filter(function (x) { return n >= x; }).length; }
+  };
+})();
+
+</script>
+<script>
+/* Points Tracker dashboard page. Talks to the Apps Script; PointsCore (above) does the maths. */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyDN1Y8Lr8iHqaa2qeXiA06LfdXH0wOvDcOX1kt5GKsGjmsMJa23n27SHfPHbvUikk0/exec';
+const DEV_KEY = 'points-device', CACHE_KEY = 'points-cache';
+const PC = PointsCore;
+const ROUT = PC.ROUTINES;
+const PEOPLE = [
+  { person: 'Ayla', who: 'ayla', mark: 'A' }, { person: 'Lani', who: 'lani', mark: 'L' },
+  { person: 'Hyrum', who: 'parent', mark: 'H' }, { person: 'Maia', who: 'parent', mark: 'M' }
+];
+const EMOJI = {
+  'Make bed':'🛏️','Get dressed':'👕','Eat breakfast':'🥣','Do breakfast dishes':'🍽️','Brush teeth':'🪥','Face, hair and skin':'🧴','Tidy room':'🧸','Pack bag and lunch box':'🎒',
+  'Unpack bag and clean lunch box':'🧽',"Make tomorrow's lunch":'🥪','Change out of uniform':'👚','Exercise':'🏃','Homework':'✏️',
+  'Eat dinner':'🍝','Do dinner dishes':'🧼','Shower':'🚿','Pyjamas on':'😴',
+  'Clean room':'🧹','Vacuum bedroom':'💨','Washing and clothes':'🧺','Clean bathroom':'🛁','Clean kitchen':'🍳','House chore (ask a parent)':'🙋'
+};
+const SHOP_EMOJI = { 'Choose dinner or dessert':'🍨','Extra screen time':'📺','One-on-one time with a parent':'💛','Craft session':'✂️','Skatepark or outdoor trip':'🛹','Art supplies':'🎨' };
+const MEM_NAMES = { before:'Morning memory', after:'After school memory', night:'Night memory' };
+const CHECK = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const toD = s => new Date(s + 'T12:00:00');
+const longDate = s => { const d = toD(s); return `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`; };
+const shortDate = s => { const d = toD(s); return `${DAYS[d.getDay()].slice(0,3)} ${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)}`; };
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const shopEmoji = n => SHOP_EMOJI[n] || '🎁';
+
+/* ---------- storage on this device (only the device pass and a copy of the last data) ---------- */
+function readLS(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
+function writeLS(k, v){ try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+let DEV = readLS(DEV_KEY);
+let P = DEV ? readLS(CACHE_KEY) : null;
+let V = { day:null, wk:0, blAll:false, dedOpen:{}, dedNote:{}, tab:'today', open:{}, peekAsk:null, confirmDev:null, signoutAsk:false, draft:{}, noteDraft:{}, fx:null,
+          setup:{ step:'who', person:null, pin:'', err:'', shake:false, busy:false, notice:'' } };
+let queue = [], sending = false, net = 'ok', retryTimer = null;
+
+const C = () => PC.make(P.cfg, P.data, P.today);
+const RULES = () => P.cfg.rules;
+const isParent = () => P && P.me.who === 'parent';
+const viewDay = () => V.day || P.today;
+const girlName = g => PC.GIRL_NAMES[g];
+// how many weeks before this week a date sits (0 = this week)
+const weeksBack = s => Math.round((toD(PC.weekStart(P.today)) - toD(PC.weekStart(s))) / 6048e5);
+function earliestDay(){ let m = P.today; for (const g of PC.GIRLS) for (const s of Object.keys(P.data.days[g] || {})) if (s < m) m = s; return m; }
+
+/* ---------- talking to the script ---------- */
+function post(body){
+  return fetch(SCRIPT_URL, { method:'POST', credentials:'omit', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
+    .then(r => r.json());
+}
+function act(op){
+  op.newId = rid();
+  const res = PC.apply(P.cfg, P.data, P.today, P.me, op);
+  if (!res.ok) { toast(res.error); render(); return false; }
+  queue.push(op); render(); pump(); return true;
+}
+function refresh(){ if (!queue.some(o => o.op === 'load')) { queue.push({ op:'load' }); pump(); } }
+function pump(){
+  if (sending || !queue.length || !DEV) return;
+  sending = true;
+  const op = queue[0];
+  post(Object.assign({ token: DEV.token }, op)).then(resp => {
+    sending = false; net = 'ok';
+    if (resp.error === 'auth') return signedOut('This device was signed out. Enter your PIN to set it up again.');
+    queue.shift();
+    if (resp.data) {
+      P = resp;
+      for (const q of queue) if (q.op !== 'load') PC.apply(P.cfg, P.data, P.today, P.me, q);
+      writeLS(CACHE_KEY, P);
+    }
+    if (!resp.ok && resp.error) toast(resp.error);
+    render(); pump();
+  }).catch(() => {
+    sending = false; net = 'offline'; render();
+    clearTimeout(retryTimer); retryTimer = setTimeout(pump, 8000);
+  });
+}
+function signedOut(msg){
+  DEV = null; P = null; queue = []; writeLS(DEV_KEY, null); writeLS(CACHE_KEY, null);
+  V.setup = { step:'who', person:null, pin:'', err:'', shake:false, busy:false, notice: msg || '' };
+  render();
+}
+
+/* ---------- time of day ---------- */
+function timeSlot(){ const h = new Date().getHours(); return h < 9 ? 'morning' : h < 15 ? 'school' : 'after3'; }
+function focusFor(g, s, list){
+  const c = C(), get = k => list.find(y => y.r.k === k);
+  const open = k => { const x = get(k); return x && !c.finished(g, x.host, k) ? x : null; };
+  if (PC.dow(s) === 6) return open('chores');
+  if (!PC.isWk(s)) return null;
+  const t = timeSlot();
+  if (t === 'morning' || t === 'school') return open('before') || { school:true };
+  return open('after') || open('night') || (PC.dow(s) === 5 ? open('chores') : null);
+}
+
+/* ---------- shared pieces ---------- */
+function rTop(){
+  const me = P.me, pending = queue.filter(o => o.op !== 'load').length;
+  const status = net === 'offline' ? `<span class="chip wait">Offline · will save when back online</span>`
+    : pending ? `<span class="chip todo">Saving…</span>` : '';
+  const start = P.today < P.cfg.startDate ? `<p class="note"><b>Practice time.</b> Try everything out. Points start counting on ${longDate(P.cfg.startDate)}.</p>` : '';
+  return `<header class="top"><div class="brand"><span class="coin sm" aria-hidden="true">★</span>Points Tracker</div>
+    <div class="pv">${status}<span class="hint" style="display:inline">${esc(me.name)}${isParent() ? ' · parent' : ''}</span></div></header>${start}`;
+}
+function rWeek(g){
+  const par = g === 'parent', back = par ? V.wk : 0;
+  const c = C(), dates = c.weekDates(PC.add(P.today, -7 * back));
+  return `${par ? rWkNav(back) : ''}<nav class="week" aria-label="Pick a day">${dates.map(s => {
+    const fut = s > P.today, sel = s === viewDay(); let mk = 'none';
+    if (fut) mk = '';
+    else if (g === 'parent') mk = (c.waitingOn('ayla',s).length + c.waitingOn('lani',s).length) ? 'wait' : (c.full('ayla',s) && c.full('lani',s)) ? 'full' : 'none';
+    else { const d = c.pk(g,s); mk = c.full(g,s) ? 'full' : (d && (Object.values(d.t).some(a => a.some(Boolean)) || d.behs.length)) ? 'part' : 'none'; }
+    return `<button class="wd${s===P.today?' is-today':''}" data-act="day" data-day="${s}" aria-pressed="${sel}" ${fut?'disabled':''} aria-label="${longDate(s)}">
+      <span class="wdn">${s===P.today?'Today':DAYS[PC.dow(s)].slice(0,3)}</span><span class="wdd">${toD(s).getDate()}</span><span class="mk ${mk}" aria-hidden="true"></span></button>`;
+  }).join('')}</nav>`;
+}
+function rWkNav(back){
+  const label = back ? `Week of ${shortDate(PC.weekStart(PC.add(P.today, -7 * back)))}` : 'This week';
+  return `<div class="wk-nav"><button class="btn ghost wk-btn" data-act="wk" data-d="1" aria-label="Previous week" ${back >= weeksBack(earliestDay()) ? 'disabled' : ''}>‹</button>
+    <div class="wk-l"><b>${label}</b>${back ? '<button class="link" data-act="wk" data-d="now">Back to this week</button>' : ''}</div>
+    <button class="btn ghost wk-btn" data-act="wk" data-d="-1" aria-label="Next week" ${back ? '' : 'disabled'}>›</button></div>`;
+}
+function jarSVG(p){
+  const H = 96, top = 34, h = H*p, y = top + H - h; let coins = '';
+  for (let row = 0; row < 8; row++) {
+    const cy = top + H - 7 - row*12; if (cy - 6 < y) break;
+    for (let c = 0; c < 6; c++) coins += `<circle class="jar-coin" cx="${22 + c*15 + (row%2 ? 7 : 0)}" cy="${cy}" r="5.5"/>`;
+  }
+  return `<svg class="jar" viewBox="0 0 120 140" role="img" aria-label="Team jar, ${Math.round(p*100)} percent full">
     <defs><clipPath id="jc"><rect x="14" y="34" width="92" height="96" rx="24"/></clipPath></defs>
     <rect class="jar-lid" x="26" y="10" width="68" height="16" rx="6"/><rect class="jar-neck" x="32" y="24" width="56" height="12" rx="3"/>
-    <g clip-path="url(#jc)"><rect class="jar-bg" x="14" y="34" width="92" height="96"/><rect class="jar-fill" x="14" y="${o}" width="92" height="${s}"/>${i}</g>
-    <rect class="jar-glass" x="14" y="34" width="92" height="96" rx="24"/><path class="jar-shine" d="M28 54 v40"/></svg>`}function rJar(){const a=P.jar.total,t=P.jar.goal,e=Math.min(a/t,1),s=Math.max(t-a,0);return`<section class="card"><div><span class="lbl">Team jar · ${MONTHS[toD(P.today).getMonth()]}</span><h2>Family outing</h2></div>
-    <div class="jar-wrap">${jarSVG(e)}<div><b class="num" style="font-size:34px">${a}</b> <span class="hint" style="display:inline">of ${t}</span>
-    <span class="hint">${s?`${s} more points between Ayla and Lani`:"Full! Time to plan the outing."}</span></div></div></section>`}function badgeCard(a,t,e,s,o,i,l){const n=PC.levelIn(s,o),c=o[n],r=n?o[n-1]:0,p=c?(s-r)/(c-r):1;return`<article class="card"><div class="b-top"><span class="medal${n?" on":""}" aria-hidden="true">${a}${n?`<span class="lv">${n}</span>`:""}</span>
-    <div><h3>${t}</h3><span class="hint">${e}</span></div></div>
-    <div class="bar gold"><i style="width:${Math.round(Math.max(0,Math.min(p,1))*100)}%"></i></div>
-    <p class="hint"><b style="color:var(--ink)">${n?`Level ${n}`:"Not earned yet"}</b> · ${c?`${c-s} more ${c-s===1?i[0]:i[1]} to Level ${n+1}`:"Top level reached!"}${l?` · ${l}`:""}</p></article>`}function rFooter(){return`<p class="hint" style="text-align:center;margin-top:8px">${V.signoutAsk?`Sign this device out? You'll need a PIN to use it again. <button class="link" data-act="selfout-yes">Sign out</button> · <button class="link" data-act="selfout-no">Cancel</button>`:`This device is set up for ${esc(P.me.name)}. <button class="link" data-act="selfout">Sign out of this device</button>`}</p>`}function rSetup(){const a=V.setup,t=`<div class="steps" aria-hidden="true">${["who","pin"].map((n,c)=>`<i class="${c<=["who","pin"].indexOf(a.step)?"on":""}"></i>`).join("")}</div>`,e='<header class="top"><div class="brand"><span class="coin sm" aria-hidden="true">★</span>Points Tracker</div></header>';if(a.step==="who")return e+`<section class="card setup">${t}<h1>Who's this?</h1>
-      ${a.notice?`<div class="lockcard">${esc(a.notice)}</div>`:""}
+    <g clip-path="url(#jc)"><rect class="jar-bg" x="14" y="34" width="92" height="96"/><rect class="jar-fill" x="14" y="${y}" width="92" height="${h}"/>${coins}</g>
+    <rect class="jar-glass" x="14" y="34" width="92" height="96" rx="24"/><path class="jar-shine" d="M28 54 v40"/></svg>`;
+}
+function rJar(){
+  const m = P.jar.total, goal = P.jar.goal, p = Math.min(m / goal, 1), left = Math.max(goal - m, 0);
+  return `<section class="card"><div><span class="lbl">Team jar · ${MONTHS[toD(P.today).getMonth()]}</span><h2>Family outing</h2></div>
+    <div class="jar-wrap">${jarSVG(p)}<div><b class="num" style="font-size:34px">${m}</b> <span class="hint" style="display:inline">of ${goal}</span>
+    <span class="hint">${left ? `${left} more points between Ayla and Lani` : 'Full! Time to plan the outing.'}</span></div></div></section>`;
+}
+function badgeCard(icon, title, desc, n, levels, unit, extra){
+  const lv = PC.levelIn(n, levels), next = levels[lv], prev = lv ? levels[lv-1] : 0, p = next ? (n - prev) / (next - prev) : 1;
+  return `<article class="card"><div class="b-top"><span class="medal${lv ? ' on' : ''}" aria-hidden="true">${icon}${lv ? `<span class="lv">${lv}</span>` : ''}</span>
+    <div><h3>${title}</h3><span class="hint">${desc}</span></div></div>
+    <div class="bar gold"><i style="width:${Math.round(Math.max(0, Math.min(p, 1))*100)}%"></i></div>
+    <p class="hint"><b style="color:var(--ink)">${lv ? `Level ${lv}` : 'Not earned yet'}</b> · ${next ? `${next - n} more ${next - n === 1 ? unit[0] : unit[1]} to Level ${lv + 1}` : 'Top level reached!'}${extra ? ` · ${extra}` : ''}</p></article>`;
+}
+function rFooter(){
+  return `<p class="hint" style="text-align:center;margin-top:8px">${V.signoutAsk
+    ? `Sign this device out? You'll need a PIN to use it again. <button class="link" data-act="selfout-yes">Sign out</button> · <button class="link" data-act="selfout-no">Cancel</button>`
+    : `This device is set up for ${esc(P.me.name)}. <button class="link" data-act="selfout">Sign out of this device</button>`}</p>`;
+}
+
+/* ---------- new device setup ---------- */
+function rSetup(){
+  const st = V.setup;
+  const bar = `<div class="steps" aria-hidden="true">${['who','pin'].map((s,i) => `<i class="${i <= ['who','pin'].indexOf(st.step) ? 'on' : ''}"></i>`).join('')}</div>`;
+  const head = `<header class="top"><div class="brand"><span class="coin sm" aria-hidden="true">★</span>Points Tracker</div></header>`;
+  if (st.step === 'who') {
+    return head + `<section class="card setup">${bar}<h1>Who's this?</h1>
+      ${st.notice ? `<div class="lockcard">${esc(st.notice)}</div>` : ''}
       <p class="hint">Set up this device once. After that it opens straight to your page.</p>
-      <div class="pick pick4">${PEOPLE.map(n=>`<button class="pk" data-who="${n.who}" data-act="pick" data-to="${n.person}"><span class="av" aria-hidden="true">${n.mark}</span>${n.person}</button>`).join("")}</div></section>`;const s=PEOPLE.find(n=>n.person===a.person),o=a.err==="locked",i=[0,1,2,3].map(n=>`<i class="${n<a.pin.length?"on":""}"></i>`).join(""),l=["1","2","3","4","5","6","7","8","9","back","0","who"];return e+`<section class="card setup" data-who="${s.who}">${t}
-    <div class="av" aria-hidden="true" style="width:64px;height:64px;font-size:30px">${s.mark}</div>
-    <h1>Hi ${s.person}</h1><p class="hint">${a.busy?"Checking…":o?"Too many wrong tries.":"Type your PIN"}</p>
-    <div class="pins${a.shake?" shake":""}" role="img" aria-label="${a.pin.length} of 4 numbers typed">${i}</div>
-    <p class="err" role="alert">${o?"":esc(a.err)}</p>
-    ${o?'<div class="lockcard">🔒 Locked for 15 minutes. Try again later, or ask a parent.</div>':`<div class="pad">${l.map(n=>n==="back"?'<button class="ghostkey" data-act="pinback" aria-label="Delete last number">⌫</button>':n==="who"?`<button class="ghostkey" data-act="pinwho" aria-label="Not ${s.person}? Go back">↩</button>`:`<button data-act="digit" data-d="${n}" ${a.busy?"disabled":""}>${n}</button>`).join("")}</div>`}
-    <button class="link" data-act="pinwho">Not ${s.person}? Go back</button></section>`}function deviceName(a){const t=navigator.userAgent;return`${a}'s ${/iPhone|Android.+Mobile|Mobi/i.test(t)?"phone":/iPad|Android/i.test(t)?"tablet":/Windows/i.test(t)?"Surface":"computer"}`}function addDigit(a){const t=V.setup;if(!(t.step!=="pin"||t.busy||t.err==="locked"||t.pin.length>=4)){if(t.pin+=a,t.err="",t.pin.length<4)return render();t.busy=!0,render(),post({op:"pair",person:t.person,pin:t.pin,device:deviceName(t.person)}).then(e=>{if(t.busy=!1,e.ok){DEV={token:e.token,person:e.person,who:e.who,deviceId:e.deviceId},writeLS(DEV_KEY,DEV),V.setup={step:"who",person:null,pin:"",err:"",shake:!1,busy:!1,notice:""},P=null,render(),refresh();return}t.pin="",t.shake=!0,t.err=e.error==="locked"?"locked":e.error==="pin"?`That PIN doesn't match. ${e.left} ${e.left===1?"try":"tries"} left.`:e.error,render()}).catch(()=>{t.busy=!1,t.pin="",t.err="Could not reach the points tracker. Check the internet and try again.",render()})}}function rGirl(a){const t=C(),e=viewDay(),s=t.balance(a),o=t.weekPts(a),i=t.curStreak(a),l=RULES(),n=l.streakDays-i%l.streakDays,c=n===1&&!t.full(a,P.today)?`Finish today for a +${l.streakBonus} bonus`:`${n} more full ${n===1?"day":"days"} for +${l.streakBonus}`;return`<section class="hero">
-      <div class="hello"><p class="eyebrow">${e===P.today?"Today":"Looking back"} · ${longDate(e)}</p><h1>Hi <span class="nm">${girlName(a)}</span></h1></div>
+      <div class="pick pick4">${PEOPLE.map(p => `<button class="pk" data-who="${p.who}" data-act="pick" data-to="${p.person}"><span class="av" aria-hidden="true">${p.mark}</span>${p.person}</button>`).join('')}</div></section>`;
+  }
+  const p = PEOPLE.find(x => x.person === st.person), locked = st.err === 'locked';
+  const dots = [0,1,2,3].map(i => `<i class="${i < st.pin.length ? 'on' : ''}"></i>`).join('');
+  const keys = ['1','2','3','4','5','6','7','8','9','back','0','who'];
+  return head + `<section class="card setup" data-who="${p.who}">${bar}
+    <div class="av" aria-hidden="true" style="width:64px;height:64px;font-size:30px">${p.mark}</div>
+    <h1>Hi ${p.person}</h1><p class="hint">${st.busy ? 'Checking…' : locked ? 'Too many wrong tries.' : 'Type your PIN'}</p>
+    <div class="pins${st.shake ? ' shake' : ''}" role="img" aria-label="${st.pin.length} of 4 numbers typed">${dots}</div>
+    <p class="err" role="alert">${locked ? '' : esc(st.err)}</p>
+    ${locked ? `<div class="lockcard">🔒 Locked for 15 minutes. Try again later, or ask a parent.</div>`
+      : `<div class="pad">${keys.map(k => k === 'back' ? `<button class="ghostkey" data-act="pinback" aria-label="Delete last number">⌫</button>`
+          : k === 'who' ? `<button class="ghostkey" data-act="pinwho" aria-label="Not ${p.person}? Go back">↩</button>`
+          : `<button data-act="digit" data-d="${k}" ${st.busy ? 'disabled' : ''}>${k}</button>`).join('')}</div>`}
+    <button class="link" data-act="pinwho">Not ${p.person}? Go back</button></section>`;
+}
+function deviceName(person){
+  const ua = navigator.userAgent;
+  return `${person}'s ${/iPhone|Android.+Mobile|Mobi/i.test(ua) ? 'phone' : /iPad|Android/i.test(ua) ? 'tablet' : /Windows/i.test(ua) ? 'Surface' : 'computer'}`;
+}
+function addDigit(dg){
+  const st = V.setup;
+  if (st.step !== 'pin' || st.busy || st.err === 'locked' || st.pin.length >= 4) return;
+  st.pin += dg; st.err = '';
+  if (st.pin.length < 4) return render();
+  st.busy = true; render();
+  post({ op:'pair', person: st.person, pin: st.pin, device: deviceName(st.person) }).then(r => {
+    st.busy = false;
+    if (r.ok) {
+      DEV = { token: r.token, person: r.person, who: r.who, deviceId: r.deviceId };
+      writeLS(DEV_KEY, DEV);
+      V.setup = { step:'who', person:null, pin:'', err:'', shake:false, busy:false, notice:'' };
+      P = null; render(); refresh(); return;
+    }
+    st.pin = ''; st.shake = true;
+    st.err = r.error === 'locked' ? 'locked' : r.error === 'pin' ? `That PIN doesn't match. ${r.left} ${r.left === 1 ? 'try' : 'tries'} left.` : r.error;
+    render();
+  }).catch(() => { st.busy = false; st.pin = ''; st.err = 'Could not reach the points tracker. Check the internet and try again.'; render(); });
+}
+
+/* ---------- girl view ---------- */
+function rGirl(g){
+  const c = C(), s = viewDay(), bal = c.balance(g), wk = c.weekPts(g), st = c.curStreak(g), R = RULES();
+  const need = R.streakDays - (st % R.streakDays);
+  const note = need === 1 && !c.full(g, P.today) ? `Finish today for a +${R.streakBonus} bonus` : `${need} more full ${need===1?'day':'days'} for +${R.streakBonus}`;
+  return `<section class="hero">
+      <div class="hello"><p class="eyebrow">${s===P.today ? 'Today' : 'Looking back'} · ${longDate(s)}</p><h1>Hi <span class="nm">${girlName(g)}</span></h1></div>
       <div class="stats">
-        <div class="stat money"><span class="coin" aria-hidden="true">★</span><div><b class="num">${s}</b><span class="lbl">points to spend</span></div></div>
-        <div class="stat"><span class="lbl">This week</span><b class="num sm">${o}<small> / ${l.weekTarget}</small></b><div class="bar" style="--p:${Math.min(o/l.weekTarget,1)}"><i></i></div></div>
-        <div class="stat"><span class="lbl">Streak</span><b class="num sm">🔥 ${i}<small> ${i===1?"day":"days"}</small></b><span class="hint">${c}</span></div>
+        <div class="stat money"><span class="coin" aria-hidden="true">★</span><div><b class="num">${bal}</b><span class="lbl">points to spend</span></div></div>
+        <div class="stat"><span class="lbl">This week</span><b class="num sm">${wk}<small> / ${R.weekTarget}</small></b><div class="bar" style="--p:${Math.min(wk/R.weekTarget,1)}"><i></i></div></div>
+        <div class="stat"><span class="lbl">Streak</span><b class="num sm">🔥 ${st}<small> ${st===1?'day':'days'}</small></b><span class="hint">${note}</span></div>
       </div></section>
-    ${rPraise(a)}
-    ${rWeek(a)}
+    ${rPraise(g)}
+    ${rLost(g)}
+    ${rWeek(g)}
     <div class="tabs" role="tablist">
-      <button class="tab" role="tab" data-act="tab" data-tab="today" aria-selected="${V.tab==="today"}">My day</button>
-      <button class="tab" role="tab" data-act="tab" data-tab="badges" aria-selected="${V.tab==="badges"}">Badges</button>
-      <button class="tab" role="tab" data-act="tab" data-tab="shop" aria-selected="${V.tab==="shop"}">Reward shop</button>
+      <button class="tab" role="tab" data-act="tab" data-tab="today" aria-selected="${V.tab==='today'}">My day</button>
+      <button class="tab" role="tab" data-act="tab" data-tab="badges" aria-selected="${V.tab==='badges'}">Badges</button>
+      <button class="tab" role="tab" data-act="tab" data-tab="shop" aria-selected="${V.tab==='shop'}">Reward shop</button>
     </div>
-    ${V.tab==="shop"?rShop(a):V.tab==="badges"?rBadges(a):rToday(a)}`}function rPraise(a){const t=P.data.notes.filter(e=>e.g===a&&!e.seen).slice(-1)[0];return t?`<section class="card praise"><span class="big-emo" aria-hidden="true" style="background:var(--surface)">💌</span>
-    <div class="praise-t"><span class="lbl">A note for you</span><p class="pq">“${esc(t.text)}”</p><span class="hint">From ${esc(t.from)} · ${shortDate(t.date)}</span></div>
-    <button class="btn gold" data-act="noteSeen" data-id="${esc(t.id)}">Thanks! ❤️</button></section>`:""}function rToday(a){const t=C(),e=viewDay(),s=t.routinesFor(e),o=e!==P.today?`<div class="lockcard" style="margin-bottom:16px">🔒 You're looking at ${DAYS[PC.dow(e)]}. Only today can be ticked. If something's missing, ask a parent to fix it.</div>`:"";let i;if(!s.length)i='<section class="card rest"><div class="big-emo">🌿</div><h2>No routines today</h2><p class="hint">Enjoy your Sunday. Good behaviour points still count.</p></section>';else if(e!==P.today)i=`${o}<div class="routines">${s.map(l=>rRoutine(a,l.r,l.host)).join("")}</div>`;else{const l=focusFor(a,e,s),n=s.filter(r=>!l||l.school||r.r.k!==l.r.k);i=`${l&&l.school?'<section class="card alldone rest"><div class="big-emo">🎒</div><h2>Have a great day at school!</h2><p class="hint">After school starts at 3pm.</p></section>':l?`<div class="section-lbl"><span class="lbl">Right now</span></div>${rRoutine(a,l.r,l.host,!0)}`:'<section class="card alldone rest"><div class="big-emo">🎉</div><h2>All done for now!</h2><p class="hint">Nothing left to do at the moment. Enjoy your free time.</p></section>'}${n.length?`<div class="rest-list"><div class="section-lbl"><span class="lbl">Rest of today</span></div>${n.map(r=>V.open[r.r.k]?rRoutine(a,r.r,r.host):rMini(a,r.r,r.host)).join("")}</div>`:""}`}return`<div class="layout"><div style="min-width:0">${i}</div><aside class="rail">${rPoints(a,e)}${rGoal(a)}${rJar()}</aside></div>`}const ptsOf=a=>P.cfg.rules[a.rule];function rMini(a,t,e){const s=C(),o=s.day(a,e),i=o.t[t.k].filter(Boolean).length,l=o.t[t.k].length,n=ptsOf(t),c=n===1?"point":"points",r=o.chk[t.k]?`<span class="chip good">✓ ${n} ${c} earned</span>`:s.isMemRun(o,t.k)?'<span class="chip mem">🧠 Done from memory · waiting for a check</span>':i===l?'<span class="chip wait">Done · waiting for a check</span>':t.k==="night"&&viewDay()===P.today&&s.nightLocked(a,e)?'<span class="chip todo">🔒 Unlocks after After school</span>':`<span class="chip todo">${i}/${l} tasks · worth ${n} ${c}</span>`;return`<div class="mini"><span class="r-icon" aria-hidden="true">${t.icon}</span><div class="mini-t"><b>${t.name}</b><div>${r}</div></div>
-    <button class="btn ghost" data-act="open" data-r="${t.k}">Show</button></div>`}function rRoutine(a,t,e,s){const o=C(),i=o.day(a,e),l=P.cfg.tasks[t.k],n=i.t[t.k].filter(Boolean).length,c=l.length,r=!!i.chk[t.k],p=o.allDone(i,t.k),d=ptsOf(t),h=r?"checked":p?"done":"todo",m=d===1?"point":"points",u=viewDay()!==P.today,$=c-n,S=PC.MEM_ROUT.includes(t.k),k=i.mem[t.k]==="practice",y=i.mem[t.k]==="on"||k,v=o.isMemRun(i,t.k),M=t.k==="night"&&!u&&!r&&!p&&o.nightLocked(a,e),j=r&&v&&i.memOk[t.k]?`<span class="chip good">🧠 Memory run confirmed · ${d} ${m} earned</span>`:r?`<span class="chip good">✓ Checked · ${d} ${m} earned</span>`:v?`<span class="chip mem">🧠 Done from memory! Worth ${d} ${m} once a parent confirms</span>`:p?`<span class="chip wait">Done! Worth ${d} ${m} once a parent checks</span>`:u?`<span class="chip todo">🔒 ${n} of ${c} tasks ticked · worth ${d} ${m}</span>`:M?`<span class="chip todo">🔒 Unlocks when After school is finished · worth ${d} ${m}</span>`:k?`<span class="chip mem">🧠 Practice run · worth ${d} ${m}</span>`:y?`<span class="chip mem">🧠 Memory mode · worth ${d} ${m}</span>`:`<span class="chip todo">${$} ${$===1?"task":"tasks"} to go · worth ${d} ${m}</span>`,D=V.fx&&V.fx.done===t.k,E=D?[[-34,-30],[34,-28],[-40,10],[40,12],[0,-42],[-18,36],[20,38]].map(([g,w])=>`<span class="spark" style="--x:${g}px;--y:${w}px">★</span>`).join(""):"",b=`data-r="${t.k}" data-host="${e}"`,T=!u&&!r&&n===0&&!i.started[t.k]&&!y&&!M,A=!s&&!u&&V.open[t.k]?`<button class="link" data-act="open" data-r="${t.k}">Hide</button>`:"";let f;if(v)f='<p class="hint">🧠 You did this one from memory, so the list stays hidden.</p>';else if(M)f=`<div class="lockcard">🔒 Finish After school first, then Night unlocks.</div>${A}`;else if(k&&!r&&!u&&!p)f=`<div class="memcard"><span class="big-emo" aria-hidden="true">🧠</span><h4>Practice run</h4>
-      <p class="hint">Keep going from memory. Because you peeked, this one won't count towards your badges, but you still get the normal points. There are ${c} tasks.</p>
-      <div class="btns"><button class="btn primary big" data-act="practicedone" ${b}>Done</button><button class="btn ghost" data-act="peek" ${b}>Peek at the list</button></div></div>`;else if(y&&!r&&!u&&!p){const g=V.peekAsk===t.k;f=`<div class="memcard"><span class="big-emo" aria-hidden="true">🧠</span><h4>Memory mode</h4>
-      <p class="hint">Do your ${t.name.toLowerCase()} routine without the list. There are ${c} tasks. Tap Done when you've finished them all.</p>
-      ${g?`<p><b>Peek at the list?</b> <span class="hint" style="display:inline">This one won't count as a memory run, but you still get the normal points.</span></p>
-        <div class="btns"><button class="btn primary" data-act="peek" ${b}>Show the list</button><button class="btn ghost" data-act="peek-no">Keep going from memory</button></div>`:`<div class="btns"><button class="btn primary big" data-act="memdone" ${b}>Done from memory</button><button class="btn ghost" data-act="peek-ask" data-r="${t.k}">Peek at the list</button></div>`}</div>`}else s&&T?f=`<div class="start"><p class="hint">Ready when you are!</p>
-      <button class="btn primary big" data-act="start" ${b}>Start</button>
-      ${S?`<button class="btn soft big" data-act="startmem" ${b}>🧠 Start from memory</button>`:""}</div>`:f=`${S&&T?`<button class="btn soft" data-act="startmem" ${b}>🧠 Try this one from memory</button>`:i.mem[t.k]==="peeked"&&!r&&!p&&!u?`<button class="btn soft" data-act="hide" ${b}>🙈 Hide the list again</button>`:""}<ul class="tasks">${l.map((w,x)=>{const N=i.t[t.k][x];return`<li><button class="task${V.fx&&V.fx.pop===`${t.k}-${x}`?" pop":""}" data-act="tick" data-r="${t.k}" data-i="${x}" data-host="${e}" aria-pressed="${N}" ${r||u?"disabled":""}>
-        <span class="box">${CHECK}</span><span class="emo" aria-hidden="true">${EMOJI[w]||"⭐"}</span><span class="tl">${esc(w)}</span></button>${w==="Homework"&&!u&&P.homework&&P.homework[a]?`<a class="hwlink" href="${esc(P.homework[a].url)}" target="_blank" rel="noopener">📄 Open tonight's homework: ${esc(P.homework[a].title)}</a>`:""}</li>`}).join("")}</ul>${A}`;return`<article class="card routine ${h}${D?" celebrate":""}${s?" focus":""}">
-    <div class="r-head"><span class="r-icon" aria-hidden="true">${t.icon}${E}</span>
-      <div class="r-title"><h3>${t.name}</h3>${t.k==="chores"?`<p class="r-note">${PC.dow(viewDay())===6?"Saturday morning counts as Friday's chores":"Friday night, or Saturday morning if we’re out"}</p>`:""}</div>
-      <div class="ring" style="--p:${c?n/c:0}" role="img" aria-label="${n} of ${c} tasks ticked"><span>${y&&!v&&!p?"🧠":`${n}/${c}`}<small>tasks</small></span></div></div>
-    ${j}
-    ${f}</article>`}function rPoints(a,t){const e=C(),s=RULES(),o=[];for(const{r,host:p}of e.routinesFor(t)){const d=e.day(a,p);o.push({l:r.name,p:ptsOf(r),st:d.chk[r.k]?"earned":e.allDone(d,r.k)?"waiting":"todo",sub:e.isMemRun(d,r.k)?d.chk[r.k]&&d.memOk[r.k]?"🧠 From memory":d.chk[r.k]?"":"🧠 From memory, waiting to be confirmed":""})}const i=e.day(a,t);if(PC.isWk(t)){o.push({l:"No-chasing bonus",p:s.bonus,st:e.full(a,t)&&i.nc?"earned":"todo",sub:"All three routines with no reminders"});const r=e.streakBonus(a,t);r&&o.push({l:"Streak bonus",p:r,st:"earned",sub:`${e.streakTo(a,t)} full days in a row`}),PC.dow(t)===5&&e.weeklyMaster(a,t)&&o.push({l:"Weekly Master bonus",p:s.weeklyMaster,st:"earned",sub:"🏆 Every routine from memory, Monday to Friday"})}for(const r of i.behs)o.push({l:"Good behaviour",p:1,st:"earned",sub:r.for+(r.by?` · from ${r.by}`:"")});const l=o.filter(r=>r.st==="earned").reduce((r,p)=>r+p.p,0),n=o.filter(r=>r.st==="waiting").reduce((r,p)=>r+p.p,0),c={earned:"Earned",waiting:"Waiting for a check",todo:"Not yet"};return`<section class="card"><div><span class="lbl">${t===P.today?"Today's points":shortDate(t)}</span><h2>Points for the day</h2></div>
-    <ul class="pl">${o.map(r=>`<li class="${r.st}"><span class="pv-l"><b>${r.l}</b>${r.sub?`<span class="hint">${esc(r.sub)}</span>`:""}</span><span class="pts">+${r.p}<span class="tag">${c[r.st]}</span></span></li>`).join("")||'<li><span class="hint">Nothing yet for this day.</span></li>'}</ul>
-    <div class="totals"><div><span class="lbl">Points earned</span><b class="num" style="display:block;color:var(--good)">${l}</b></div><div><span class="lbl">Points waiting for a check</span><b class="num" style="display:block;color:var(--wait)">${n}</b></div></div></section>`}function rGoal(a){const t=P.data.goal[a],e=P.cfg.shop.find(l=>l.name===t);if(!e)return'<section class="card"><div><span class="lbl">Saving for</span><h2>Pick a reward</h2></div><p class="hint">Choose something in the shop to save towards.</p><button class="btn primary" data-act="tab" data-tab="shop">Open the shop</button></section>';const s=C().balance(a),o=Math.min(Math.max(s,0)/e.cost,1),i=Math.max(e.cost-s,0);return`<section class="card"><span class="lbl">Saving for</span>
-    <div class="goal-top"><span class="big-emo" aria-hidden="true">${shopEmoji(e.name)}</span><div><h3>${esc(e.name)}</h3><span class="hint">★ ${e.cost} points</span></div></div>
-    <div class="bar gold" style="--p:${o};height:14px"><i></i></div>
-    <p class="hint"><b style="color:var(--ink)">${Math.max(0,Math.min(s,e.cost))} of ${e.cost}</b> · ${i?`${i} more to go`:"You have enough! Cash it in from the shop."}</p></section>`}function rShop(a){const t=C().balance(a),e=[...P.data.requests.filter(s=>s.g===a&&s.status==="Waiting").map(s=>`<li><span>${shopEmoji(s.reward)} ${esc(s.reward)}</span><span class="chip wait">Asked a parent</span></li>`),...P.data.spending.filter(s=>s.g===a).slice().reverse().map(s=>`<li><span>${shopEmoji(s.reward)} ${esc(s.reward)}<span class="hint">${shortDate(s.date)}</span></span><b class="num" style="font-size:18px">−${s.cost}</b></li>`)];return`<div class="shop-head"><div><h2>Reward shop</h2><p class="hint">You have <b style="color:var(--ink)">★ ${t}</b> to spend. A parent says yes before points come off.</p></div></div>
-    <div class="shop">${P.cfg.shop.map(s=>{const o=P.data.requests.find(c=>c.g===a&&c.reward===s.name&&c.status==="Waiting"),i=P.data.goal[a]===s.name,l=t>=s.cost,n=o?'<span class="chip wait">Asked a parent</span>':l?`<button class="btn gold" data-act="cashin" data-reward="${esc(s.name)}">Cash in ★ ${s.cost}</button>`:`<span class="chip todo">${s.cost-t} more to go</span>`;return`<article class="card reward${i?" saving":""}">
-        <div class="rw-top"><span class="big-emo" aria-hidden="true">${shopEmoji(s.name)}</span><div><h3>${esc(s.name)}</h3><span class="chip gold" style="margin-top:4px">★ ${s.cost}</span></div></div>
-        <div class="bar gold" style="--p:${Math.min(Math.max(t,0)/s.cost,1)}"><i></i></div>
-        <div class="rw-actions"><button class="btn ${i?"soft":"ghost"}" data-act="goal" data-reward="${esc(s.name)}" aria-pressed="${i}">${i?"✓ Saving for this":"Save for this"}</button>${n}</div></article>`}).join("")}</div>
-    <section class="card"><h2>My rewards</h2>${e.length?`<ul class="hist">${e.join("")}</ul>`:'<p class="hint">Nothing cashed in yet.</p>'}</section>`}function rBadges(a){const t=C(),e=t.weekDates(P.today).slice(0,5),s=e[4],o=e.filter(h=>t.dailyMaster(a,h)).length,i=t.noChaseCount(a),l=t.bestStreak(a),n=t.curStreak(a),c=badgeCard("🚀","Self-Starter","Days with no reminders needed",i,PC.SELF_LEVELS,["no-chase day","no-chase days"])+badgeCard("🔥","Streak","Your best run of full weekdays",l,PC.STREAK_LEVELS,["day in a row","days in a row"],`current streak ${n}`),r=PC.MEM_ROUT.map(h=>{const m=ROUT.find($=>$.k===h),u=t.memCount(a,h);return badgeCard(m.icon,MEM_NAMES[h],`${u} confirmed memory ${u===1?"run":"runs"}`,u,PC.MEM_LEVELS,["memory run","memory runs"])}).join(""),p=t.dailyMasterCount(a),d=t.weeklyMasterCount(a);return`<div class="layout"><div style="min-width:0;display:flex;flex-direction:column;gap:16px">
+    ${V.tab === 'shop' ? rShop(g) : V.tab === 'badges' ? rBadges(g) : rToday(g)}`;
+}
+function rPraise(g){
+  const n = P.data.notes.filter(x => x.g === g && !x.seen).slice(-1)[0];
+  if (!n) return '';
+  return `<section class="card praise"><span class="big-emo" aria-hidden="true" style="background:var(--surface)">💌</span>
+    <div class="praise-t"><span class="lbl">A note for you</span><p class="pq">“${esc(n.text)}”</p><span class="hint">From ${esc(n.from)} · ${shortDate(n.date)}</span></div>
+    <button class="btn gold" data-act="noteSeen" data-id="${esc(n.id)}">Thanks! ❤️</button></section>`;
+}
+function rLost(g){
+  const d = C().pk(g, P.today), act = d ? d.deds.filter(x => !x.fixed) : [];
+  if (!act.length) return '';
+  return `<section class="card praise lost"><span class="big-emo" aria-hidden="true" style="background:var(--surface)">💭</span>
+    <div class="praise-t"><span class="lbl">${act.length === 1 ? 'A point was' : act.length + ' points were'} taken away today</span>
+    <ul class="hist">${act.map(x => `<li><span><b>−1 · ${esc(x.why)}</b>${x.note ? `<span class="hint">${esc(x.note)}</span>` : ''}</span></li>`).join('')}</ul>
+    <span class="hint">You can still earn it back today. Make it right (say sorry, fix it, or do it properly), then tell a parent.</span></div></section>`;
+}
+function rToday(g){
+  const c = C(), s = viewDay(), list = c.routinesFor(s);
+  const past = s !== P.today ? `<div class="lockcard" style="margin-bottom:16px">🔒 You're looking at ${DAYS[PC.dow(s)]}. Only today can be ticked. If something's missing, ask a parent to fix it.</div>` : '';
+  let main;
+  if (!list.length) main = `<section class="card rest"><div class="big-emo">🌿</div><h2>No routines today</h2><p class="hint">Enjoy your Sunday. Good behaviour points still count.</p></section>`;
+  else if (s !== P.today) main = `${past}<div class="routines">${list.map(x => rRoutine(g, x.r, x.host)).join('')}</div>`;
+  else {
+    const f = focusFor(g, s, list);
+    const others = list.filter(x => !f || f.school || x.r.k !== f.r.k);
+    const head = f && f.school
+      ? `<section class="card alldone rest"><div class="big-emo">🎒</div><h2>Have a great day at school!</h2><p class="hint">After school starts at 3pm.</p></section>`
+      : f ? `<div class="section-lbl"><span class="lbl">Right now</span></div>${rRoutine(g, f.r, f.host, true)}`
+      : `<section class="card alldone rest"><div class="big-emo">🎉</div><h2>All done for now!</h2><p class="hint">Nothing left to do at the moment. Enjoy your free time.</p></section>`;
+    main = `${head}${others.length ? `<div class="rest-list"><div class="section-lbl"><span class="lbl">Rest of today</span></div>${others.map(x => V.open[x.r.k] ? rRoutine(g, x.r, x.host) : rMini(g, x.r, x.host)).join('')}</div>` : ''}`;
+  }
+  return `<div class="layout"><div style="min-width:0">${main}</div><aside class="rail">${rPoints(g,s)}${rGoal(g)}${rJar()}</aside></div>`;
+}
+const ptsOf = r => P.cfg.rules[r.rule];
+function rMini(g, r, host){
+  const c = C(), d = c.day(g,host), n = d.t[r.k].filter(Boolean).length, tot = d.t[r.k].length, pts = ptsOf(r);
+  const word = pts === 1 ? 'point' : 'points';
+  const chip = d.chk[r.k] ? `<span class="chip good">✓ ${pts} ${word} earned</span>`
+    : c.isMemRun(d,r.k) ? `<span class="chip mem">🧠 Done from memory · waiting for a check</span>`
+    : n === tot ? `<span class="chip wait">Done · waiting for a check</span>`
+    : r.k === 'night' && viewDay() === P.today && c.nightLocked(g, host) ? `<span class="chip todo">🔒 Unlocks after After school</span>`
+    : `<span class="chip todo">${n}/${tot} tasks · worth ${pts} ${word}</span>`;
+  return `<div class="mini"><span class="r-icon" aria-hidden="true">${r.icon}</span><div class="mini-t"><b>${r.name}</b><div>${chip}</div></div>
+    <button class="btn ghost" data-act="open" data-r="${r.k}">Show</button></div>`;
+}
+function rRoutine(g, r, host, focus){
+  const c = C(), d = c.day(g,host), ts = P.cfg.tasks[r.k], n = d.t[r.k].filter(Boolean).length, tot = ts.length, chk = !!d.chk[r.k], done = c.allDone(d, r.k);
+  const pts = ptsOf(r), st = chk ? 'checked' : done ? 'done' : 'todo', word = pts === 1 ? 'point' : 'points';
+  const locked = viewDay() !== P.today, left = tot - n;
+  const memAllowed = PC.MEM_ROUT.includes(r.k), practice = d.mem[r.k] === 'practice';
+  const memOn = d.mem[r.k] === 'on' || practice, memRun = c.isMemRun(d, r.k);
+  const nlock = r.k === 'night' && !locked && !chk && !done && c.nightLocked(g, host);
+  const chip = chk && memRun && d.memOk[r.k] ? `<span class="chip good">🧠 Memory run confirmed · ${pts} ${word} earned</span>`
+    : chk ? `<span class="chip good">✓ Checked · ${pts} ${word} earned</span>`
+    : memRun ? `<span class="chip mem">🧠 Done from memory! Worth ${pts} ${word} once a parent confirms</span>`
+    : done ? `<span class="chip wait">Done! Worth ${pts} ${word} once a parent checks</span>`
+    : locked ? `<span class="chip todo">🔒 ${n} of ${tot} tasks ticked · worth ${pts} ${word}</span>`
+    : nlock ? `<span class="chip todo">🔒 Unlocks when After school is finished · worth ${pts} ${word}</span>`
+    : practice ? `<span class="chip mem">🧠 Practice run · worth ${pts} ${word}</span>`
+    : memOn ? `<span class="chip mem">🧠 Memory mode · worth ${pts} ${word}</span>`
+    : `<span class="chip todo">${left} ${left === 1 ? 'task' : 'tasks'} to go · worth ${pts} ${word}</span>`;
+  const cel = V.fx && V.fx.done === r.k;
+  const sparks = cel ? [[-34,-30],[34,-28],[-40,10],[40,12],[0,-42],[-18,36],[20,38]].map(([x,y]) => `<span class="spark" style="--x:${x}px;--y:${y}px">★</span>`).join('') : '';
+  const keys = `data-r="${r.k}" data-host="${host}"`;
+  const canStart = !locked && !chk && n === 0 && !d.started[r.k] && !memOn && !nlock;
+  const hideBtn = !focus && !locked && V.open[r.k] ? `<button class="link" data-act="open" data-r="${r.k}">Hide</button>` : '';
+  let body;
+  if (memRun) body = `<p class="hint">🧠 You did this one from memory, so the list stays hidden.</p>`;
+  else if (nlock) body = `<div class="lockcard">🔒 Finish After school first, then Night unlocks.</div>${hideBtn}`;
+  else if (practice && !chk && !locked && !done) {
+    body = `<div class="memcard"><span class="big-emo" aria-hidden="true">🧠</span><h4>Practice run</h4>
+      <p class="hint">Keep going from memory. Because you peeked, this one won't count towards your badges, but you still get the normal points. There are ${tot} tasks.</p>
+      <div class="btns"><button class="btn primary big" data-act="practicedone" ${keys}>Done</button><button class="btn ghost" data-act="peek" ${keys}>Peek at the list</button></div></div>`;
+  } else if (memOn && !chk && !locked && !done) {
+    const ask = V.peekAsk === r.k;
+    body = `<div class="memcard"><span class="big-emo" aria-hidden="true">🧠</span><h4>Memory mode</h4>
+      <p class="hint">Do your ${r.name.toLowerCase()} routine without the list. There are ${tot} tasks. Tap Done when you've finished them all.</p>
+      ${ask ? `<p><b>Peek at the list?</b> <span class="hint" style="display:inline">This one won't count as a memory run, but you still get the normal points.</span></p>
+        <div class="btns"><button class="btn primary" data-act="peek" ${keys}>Show the list</button><button class="btn ghost" data-act="peek-no">Keep going from memory</button></div>`
+      : `<div class="btns"><button class="btn primary big" data-act="memdone" ${keys}>Done from memory</button><button class="btn ghost" data-act="peek-ask" data-r="${r.k}">Peek at the list</button></div>`}</div>`;
+  } else if (focus && canStart) {
+    body = `<div class="start"><p class="hint">Ready when you are!</p>
+      <button class="btn primary big" data-act="start" ${keys}>Start</button>
+      ${memAllowed ? `<button class="btn soft big" data-act="startmem" ${keys}>🧠 Start from memory</button>` : ''}</div>`;
+  } else {
+    const extra = memAllowed && canStart ? `<button class="btn soft" data-act="startmem" ${keys}>🧠 Try this one from memory</button>`
+      : d.mem[r.k] === 'peeked' && !chk && !done && !locked ? `<button class="btn soft" data-act="hide" ${keys}>🙈 Hide the list again</button>` : '';
+    body = `${extra}<ul class="tasks">${ts.map((t,i) => {
+      const on = d.t[r.k][i], pop = V.fx && V.fx.pop === `${r.k}-${i}` ? ' pop' : '';
+      return `<li><button class="task${pop}" data-act="tick" data-r="${r.k}" data-i="${i}" data-host="${host}" aria-pressed="${on}" ${(chk || locked)?'disabled':''}>
+        <span class="box">${CHECK}</span><span class="emo" aria-hidden="true">${EMOJI[t] || '⭐'}</span><span class="tl">${esc(t)}</span></button>${t === 'Homework' && !locked && P.homework && P.homework[g] ? `<a class="hwlink" href="${esc(P.homework[g].url)}" target="_blank" rel="noopener">📄 Open tonight's homework: ${esc(P.homework[g].title)}</a>` : ''}</li>`;
+    }).join('')}</ul>${hideBtn}`;
+  }
+  return `<article class="card routine ${st}${cel?' celebrate':''}${focus?' focus':''}">
+    <div class="r-head"><span class="r-icon" aria-hidden="true">${r.icon}${sparks}</span>
+      <div class="r-title"><h3>${r.name}</h3>${r.k==='chores' ? `<p class="r-note">${PC.dow(viewDay())===6 ? "Saturday morning counts as Friday's chores" : 'Friday night, or Saturday morning if we’re out'}</p>` : ''}</div>
+      <div class="ring" style="--p:${tot ? n/tot : 0}" role="img" aria-label="${n} of ${tot} tasks ticked"><span>${memOn && !memRun && !done ? '🧠' : `${n}/${tot}`}<small>tasks</small></span></div></div>
+    ${chip}
+    ${body}</article>`;
+}
+function rPoints(g,s){
+  const c = C(), R = RULES(), lines = [];
+  for (const {r,host} of c.routinesFor(s)) {
+    const d = c.day(g,host);
+    lines.push({ l:r.name, p:ptsOf(r), st: d.chk[r.k] ? 'earned' : c.allDone(d,r.k) ? 'waiting' : 'todo',
+      sub: c.isMemRun(d,r.k) ? (d.chk[r.k] && d.memOk[r.k] ? '🧠 From memory' : d.chk[r.k] ? '' : '🧠 From memory, waiting to be confirmed') : '' });
+  }
+  const d = c.day(g,s);
+  if (PC.isWk(s)) {
+    lines.push({ l:'No-chasing bonus', p:R.bonus, st: c.full(g,s) && d.nc ? 'earned' : 'todo', sub:'All three routines with no reminders' });
+    const sb = c.streakBonus(g,s); if (sb) lines.push({ l:'Streak bonus', p:sb, st:'earned', sub:`${c.streakTo(g,s)} full days in a row` });
+    if (PC.dow(s) === 5 && c.weeklyMaster(g,s)) lines.push({ l:'Weekly Master bonus', p:R.weeklyMaster, st:'earned', sub:'🏆 Every routine from memory, Monday to Friday' });
+  }
+  for (const b of d.behs) lines.push({ l:'Good behaviour', p:1, st:'earned', sub: b.for + (b.by ? ` · from ${b.by}` : '') });
+  for (const x of d.deds) lines.push({ l: x.fixed ? 'Made it right' : 'Point taken away', p: x.fixed ? 0 : -1, st: x.fixed ? 'fixed' : 'lost',
+    sub: x.why + (x.note ? ` · ${x.note}` : '') + (x.fixed ? ' · point given back' : '') });
+  const lostN = d.deds.filter(x => !x.fixed).length;
+  const got = lines.filter(x => x.st === 'earned').reduce((a,x) => a + x.p, 0);
+  const wait = lines.filter(x => x.st === 'waiting').reduce((a,x) => a + x.p, 0);
+  const tagFor = { earned:'Earned', waiting:'Waiting for a check', todo:'Not yet', lost:'Taken away', fixed:'Given back' };
+  return `<section class="card"><div><span class="lbl">${s===P.today ? "Today's points" : shortDate(s)}</span><h2>Points for the day</h2></div>
+    <ul class="pl">${lines.map(x => `<li class="${x.st}"><span class="pv-l"><b>${x.l}</b>${x.sub ? `<span class="hint">${esc(x.sub)}</span>` : ''}</span><span class="pts">${x.p < 0 ? '−' + (-x.p) : x.st === 'fixed' ? '↺' : '+' + x.p}<span class="tag">${tagFor[x.st]}</span></span></li>`).join('') || '<li><span class="hint">Nothing yet for this day.</span></li>'}</ul>
+    <div class="totals"><div><span class="lbl">Points earned</span><b class="num" style="display:block;color:var(--good)">${got}</b></div><div><span class="lbl">Points waiting for a check</span><b class="num" style="display:block;color:var(--wait)">${wait}</b></div></div>
+    ${lostN ? `<p class="hint">Taken away: −${lostN}. It comes off your points to spend, not your week or the team jar.</p>` : ''}</section>`;
+}
+function rGoal(g){
+  const name = P.data.goal[g], it = P.cfg.shop.find(x => x.name === name);
+  if (!it) return `<section class="card"><div><span class="lbl">Saving for</span><h2>Pick a reward</h2></div><p class="hint">Choose something in the shop to save towards.</p><button class="btn primary" data-act="tab" data-tab="shop">Open the shop</button></section>`;
+  const bal = C().balance(g), p = Math.min(Math.max(bal,0) / it.cost, 1), left = Math.max(it.cost - bal, 0);
+  return `<section class="card"><span class="lbl">Saving for</span>
+    <div class="goal-top"><span class="big-emo" aria-hidden="true">${shopEmoji(it.name)}</span><div><h3>${esc(it.name)}</h3><span class="hint">★ ${it.cost} points</span></div></div>
+    <div class="bar gold" style="--p:${p};height:14px"><i></i></div>
+    <p class="hint"><b style="color:var(--ink)">${Math.max(0, Math.min(bal,it.cost))} of ${it.cost}</b> · ${left ? `${left} more to go` : 'You have enough! Cash it in from the shop.'}</p></section>`;
+}
+function rShop(g){
+  const bal = C().balance(g);
+  const hist = [
+    ...P.data.requests.filter(q => q.g === g && q.status === 'Waiting').map(q => `<li><span>${shopEmoji(q.reward)} ${esc(q.reward)}</span><span class="chip wait">Asked a parent</span></li>`),
+    ...P.data.spending.filter(x => x.g === g).slice().reverse().map(x => `<li><span>${shopEmoji(x.reward)} ${esc(x.reward)}<span class="hint">${shortDate(x.date)}</span></span><b class="num" style="font-size:18px">−${x.cost}</b></li>`)
+  ];
+  return `<div class="shop-head"><div><h2>Reward shop</h2><p class="hint">You have <b style="color:var(--ink)">★ ${bal}</b> to spend. A parent says yes before points come off.</p></div></div>
+    <div class="shop">${P.cfg.shop.map(it => {
+      const req = P.data.requests.find(q => q.g === g && q.reward === it.name && q.status === 'Waiting'), saving = P.data.goal[g] === it.name, can = bal >= it.cost;
+      const buy = req ? `<span class="chip wait">Asked a parent</span>`
+        : can ? `<button class="btn gold" data-act="cashin" data-reward="${esc(it.name)}">Cash in ★ ${it.cost}</button>`
+        : `<span class="chip todo">${it.cost - bal} more to go</span>`;
+      return `<article class="card reward${saving?' saving':''}">
+        <div class="rw-top"><span class="big-emo" aria-hidden="true">${shopEmoji(it.name)}</span><div><h3>${esc(it.name)}</h3><span class="chip gold" style="margin-top:4px">★ ${it.cost}</span></div></div>
+        <div class="bar gold" style="--p:${Math.min(Math.max(bal,0)/it.cost,1)}"><i></i></div>
+        <div class="rw-actions"><button class="btn ${saving?'soft':'ghost'}" data-act="goal" data-reward="${esc(it.name)}" aria-pressed="${saving}">${saving ? '✓ Saving for this' : 'Save for this'}</button>${buy}</div></article>`;
+    }).join('')}</div>
+    <section class="card"><h2>My rewards</h2>${hist.length ? `<ul class="hist">${hist.join('')}</ul>` : '<p class="hint">Nothing cashed in yet.</p>'}</section>`;
+}
+function rBadges(g){
+  const c = C(), wk = c.weekDates(P.today).slice(0,5), fri = wk[4];
+  const dmWeek = wk.filter(s => c.dailyMaster(g,s)).length;
+  const nc = c.noChaseCount(g), best = c.bestStreak(g), cur = c.curStreak(g);
+  const everyday = badgeCard('🚀', 'Self-Starter', 'Days with no reminders needed', nc, PC.SELF_LEVELS, ['no-chase day','no-chase days'])
+    + badgeCard('🔥', 'Streak', 'Your best run of full weekdays', best, PC.STREAK_LEVELS, ['day in a row','days in a row'], `current streak ${cur}`);
+  const mem = PC.MEM_ROUT.map(k => { const r = ROUT.find(x => x.k === k), n = c.memCount(g,k);
+    return badgeCard(r.icon, MEM_NAMES[k], `${n} confirmed memory ${n === 1 ? 'run' : 'runs'}`, n, PC.MEM_LEVELS, ['memory run','memory runs']); }).join('');
+  const dmc = c.dailyMasterCount(g), wmc = c.weeklyMasterCount(g);
+  return `<div class="layout"><div style="min-width:0;display:flex;flex-direction:column;gap:16px">
       <div class="section-lbl" style="margin:0"><span class="lbl">Every day</span></div>
-      <div class="badges">${c}</div>
+      <div class="badges">${everyday}</div>
       <div class="section-lbl" style="margin:8px 0 0"><span class="lbl">Memory</span></div>
       <section class="card"><span class="lbl">Memory challenge</span><h2>Do it without the list</h2>
         <p class="hint">Before you start a routine, tap “Start from memory”. Do it without looking, then tap Done. When a parent confirms it, it counts towards your badges.</p></section>
-      <div class="badges">${r}</div></div>
+      <div class="badges">${mem}</div></div>
     <aside class="rail">
-      <section class="card"><div class="b-top"><span class="medal${p?" on":""}" aria-hidden="true">🧠${p?`<span class="lv">${p}</span>`:""}</span>
+      <section class="card"><div class="b-top"><span class="medal${dmc ? ' on' : ''}" aria-hidden="true">🧠${dmc ? `<span class="lv">${dmc}</span>` : ''}</span>
         <div><h3>Daily Master</h3><span class="hint">All three daily routines from memory in one day</span></div></div>
         <span class="lbl">This week</span>
-        <div class="wkrow">${e.map(h=>`<div class="wkd${t.dailyMaster(a,h)?" on":""}"><b>${t.dailyMaster(a,h)?"🧠":h>P.today?"·":"–"}</b>${DAYS[PC.dow(h)].slice(0,3)}</div>`).join("")}</div>
-        <p class="hint">${o} of 5 this week.</p></section>
-      <section class="card"><div class="b-top"><span class="medal${d?" on":""}" aria-hidden="true">🏆${d?`<span class="lv">${d}</span>`:""}</span>
+        <div class="wkrow">${wk.map(s => `<div class="wkd${c.dailyMaster(g,s) ? ' on' : ''}"><b>${c.dailyMaster(g,s) ? '🧠' : s > P.today ? '·' : '–'}</b>${DAYS[PC.dow(s)].slice(0,3)}</div>`).join('')}</div>
+        <p class="hint">${dmWeek} of 5 this week.</p></section>
+      <section class="card"><div class="b-top"><span class="medal${wmc ? ' on' : ''}" aria-hidden="true">🏆${wmc ? `<span class="lv">${wmc}</span>` : ''}</span>
         <div><h3>Weekly Master</h3><span class="hint">Daily Master every day, Monday to Friday</span></div></div>
         <span class="chip gold">+${RULES().weeklyMaster} points</span>
-        <p class="hint">${t.weeklyMaster(a,s)?"You did it this week!":e.every(h=>h>=P.today||t.dailyMaster(a,h))?"Still possible this week. Keep going!":"Not this week. Try again from Monday."}</p></section>
-    </aside></div>`}function rParent(){const a=C(),t=viewDay(),e=a.waitingOn("ayla",t).length+a.waitingOn("lani",t).length,s=P.data.requests.filter(i=>i.status==="Waiting").map(i=>`<div class="req" data-who="${i.g}"><span class="big-emo" aria-hidden="true">${shopEmoji(i.reward)}</span>
-      <div class="req-t"><b>${girlName(i.g)}</b> wants to cash in <b>${esc(i.reward)}</b><span class="hint">Costs ★ ${i.cost} · she has ★ ${a.balance(i.g)}</span></div>
-      <div class="req-a"><button class="btn good" data-act="approve" data-id="${esc(i.id)}">Approve</button><button class="btn ghost" data-act="decline" data-id="${esc(i.id)}">Not now</button></div></div>`).join(""),o=P.data.requests.filter(i=>i.status==="Waiting").length;return`<section class="hero"><div class="hello"><p class="eyebrow">Parent check · ${longDate(t)}</p><h1>${e?`${e} to check`:"All checked"}</h1></div>
-      <div class="stats"><div class="stat"><span class="lbl">Cash-in requests</span><b class="num sm">${o}</b></div><div class="stat"><span class="lbl">Team jar</span><b class="num sm">${P.jar.total}<small> / ${P.jar.goal}</small></b><div class="bar gold" style="--p:${Math.min(P.jar.total/P.jar.goal,1)}"><i></i></div></div></div></section>
-    ${rWeek("parent")}
-    ${s?`<div class="reqs">${s}</div>`:""}
-    <div class="girls">${PC.GIRLS.map(i=>rGP(i,t)).join("")}</div>
-    ${rDevices()}`}function rDevices(){return`<section class="card"><div><span class="lbl">Security</span><h2>Signed-in devices</h2></div>
+        <p class="hint">${c.weeklyMaster(g, fri) ? 'You did it this week!' : wk.every(s => s >= P.today || c.dailyMaster(g,s)) ? 'Still possible this week. Keep going!' : 'Not this week. Try again from Monday.'}</p></section>
+    </aside></div>`;
+}
+
+/* ---------- parent view ---------- */
+function rParent(){
+  const c = C(), s = viewDay();
+  const waiting = c.waitingOn('ayla',s).length + c.waitingOn('lani',s).length;
+  const reqs = P.data.requests.filter(q => q.status === 'Waiting').map(q => `<div class="req" data-who="${q.g}"><span class="big-emo" aria-hidden="true">${shopEmoji(q.reward)}</span>
+      <div class="req-t"><b>${girlName(q.g)}</b> wants to cash in <b>${esc(q.reward)}</b><span class="hint">Costs ★ ${q.cost} · she has ★ ${c.balance(q.g)}</span></div>
+      <div class="req-a"><button class="btn good" data-act="approve" data-id="${esc(q.id)}">Approve</button><button class="btn ghost" data-act="decline" data-id="${esc(q.id)}">Not now</button></div></div>`).join('');
+  const nreq = P.data.requests.filter(q => q.status === 'Waiting').length;
+  const bl = backlog();
+  const head = waiting ? `${waiting} to check` : bl.length ? `Nothing to check ${V.day ? 'on this day' : 'today'}` : 'All checked';
+  return `<section class="hero"><div class="hello"><p class="eyebrow">Parent check · ${longDate(s)}</p><h1>${head}</h1>${bl.length ? `<span class="chip wait">${bl.length} from ${V.day ? 'other days' : 'earlier'}</span>` : ''}</div>
+      <div class="stats"><div class="stat"><span class="lbl">Cash-in requests</span><b class="num sm">${nreq}</b></div><div class="stat"><span class="lbl">Team jar</span><b class="num sm">${P.jar.total}<small> / ${P.jar.goal}</small></b><div class="bar gold" style="--p:${Math.min(P.jar.total/P.jar.goal,1)}"><i></i></div></div></div></section>
+    ${rBacklog(bl)}
+    ${rWeek('parent')}
+    ${reqs ? `<div class="reqs">${reqs}</div>` : ''}
+    <div class="girls">${PC.GIRLS.map(g => rGP(g,s)).join('')}</div>
+    ${rDevices()}`;
+}
+// Routines finished on an earlier day (from the start date) that nobody has checked yet.
+// Leaves out anything already shown in today's or the selected day's cards.
+function backlog(){
+  const c = C(), shown = new Set();
+  [P.today, viewDay()].forEach(d => c.routinesFor(d).forEach(x => PC.GIRLS.forEach(g => shown.add(`${g}|${x.r.k}|${x.host}`))));
+  const out = [], order = k => ROUT.findIndex(x => x.k === k);
+  PC.GIRLS.forEach(g => Object.keys(P.data.days[g] || {}).forEach(h => {
+    if (h < P.cfg.startDate || h >= P.today) return;
+    c.waitingOn(g, h).forEach(x => { if (x.host === h && !shown.has(`${g}|${x.r.k}|${h}`)) out.push({ g, r:x.r, host:h }); });
+  }));
+  return out.sort((a, b) => a.host < b.host ? -1 : a.host > b.host ? 1 : a.g !== b.g ? (a.g < b.g ? -1 : 1) : order(a.r.k) - order(b.r.k));
+}
+function rBacklog(list){
+  if (!list.length) return '';
+  const c = C(), rows = (V.blAll ? list : list.slice(0, 6)).map(({ g, r, host }) => {
+    const d = c.day(g, host), pts = ptsOf(r), memRun = c.isMemRun(d, r.k), keys = `data-g="${g}" data-r="${r.k}" data-host="${host}"`;
+    const btns = memRun
+      ? `<button class="btn primary" data-act="checkmem" ${keys}>🧠 Confirm memory · +${pts}</button><button class="btn ghost" data-act="check" ${keys}>Check, not from memory</button>`
+      : `<button class="btn primary" data-act="check" ${keys}>Check · +${pts}</button>`;
+    return `<div class="crow" data-who="${g}"><span class="r-icon" aria-hidden="true">${r.icon}</span>
+      <div class="ct"><b>${girlName(g)} · ${r.name}</b><span class="hint">${shortDate(host)} · ${memRun ? '🧠 Done from memory' : 'All tasks ticked'}</span></div>
+      <div class="ca">${btns}<button class="link" data-act="goday" data-day="${host}">Go to day</button></div></div>`;
+  }).join('');
+  const more = list.length > 6 ? `<button class="link" data-act="blall">${V.blAll ? 'Show fewer' : `Show all ${list.length}`}</button>` : '';
+  return `<section class="card backlog"><div><span class="lbl">Still waiting</span><h2>From earlier days</h2><span class="hint">Finished but not checked yet. Points count on the day she earned them.</span></div>
+    <div>${rows}</div>${more}</section>`;
+}
+function rDevices(){
+  const rows = (P.devices || []).map(d => {
+    const who = PEOPLE.find(p => p.person === d.person) || { who:'parent', mark:'?' };
+    const ask = V.confirmDev === d.id, mine = d.id === DEV.deviceId;
+    const act = mine ? `<span class="chip todo">This device</span>` : ask
+      ? `<span class="hint" style="display:inline">Sign out ${esc(d.name)}?</span><button class="btn primary" data-act="signout-yes" data-id="${esc(d.id)}">Sign out</button><button class="btn ghost" data-act="signout-no">Keep</button>`
+      : `<button class="btn ghost" data-act="signout" data-id="${esc(d.id)}">Sign out</button>`;
+    return `<div class="dev" data-who="${who.who}"><span class="av" aria-hidden="true">${who.mark}</span>
+      <div class="dev-t"><b>${esc(d.name)}</b><span class="hint">${esc(d.person)} · set up ${shortDate(d.since)} · last used ${d.used === P.today ? 'today' : shortDate(d.used)}</span></div>
+      <div class="dev-a">${act}</div></div>`;
+  }).join('');
+  return `<section class="card"><div><span class="lbl">Security</span><h2>Signed-in devices</h2></div>
     <p class="hint">Each device asked for a PIN once. Signing a device out makes it ask again. PINs are changed in the script's settings.</p>
-    <div>${(P.devices||[]).map(t=>{const e=PEOPLE.find(l=>l.person===t.person)||{who:"parent",mark:"?"},s=V.confirmDev===t.id,i=t.id===DEV.deviceId?'<span class="chip todo">This device</span>':s?`<span class="hint" style="display:inline">Sign out ${esc(t.name)}?</span><button class="btn primary" data-act="signout-yes" data-id="${esc(t.id)}">Sign out</button><button class="btn ghost" data-act="signout-no">Keep</button>`:`<button class="btn ghost" data-act="signout" data-id="${esc(t.id)}">Sign out</button>`;return`<div class="dev" data-who="${e.who}"><span class="av" aria-hidden="true">${e.mark}</span>
-      <div class="dev-t"><b>${esc(t.name)}</b><span class="hint">${esc(t.person)} · set up ${shortDate(t.since)} · last used ${t.used===P.today?"today":shortDate(t.used)}</span></div>
-      <div class="dev-a">${i}</div></div>`}).join("")||'<p class="hint">No devices signed in.</p>'}</div></section>`}function rGP(a,t){const e=C(),s=e.day(a,t),o=girlName(a),i=e.routinesFor(t),l=RULES(),n=i.map(({r:d,host:h})=>rCRow(a,d,h)).join(""),c=e.checkAllList(a,t).length,r=i.filter(({r:d,host:h})=>{const m=e.day(a,h);return e.isMemRun(m,d.k)&&!m.chk[d.k]}).length,p=P.data.notes.filter(d=>d.g===a).slice(-2).reverse();return`<section class="card gp" data-who="${a}">
-    <div class="gp-head"><span class="av" aria-hidden="true">${o[0]}</span><div style="flex:1;min-width:0"><h2>${o}</h2>
-      <div class="gp-stats"><span class="chip gold">★ ${e.balance(a)} to spend</span><span class="chip todo">${e.weekPts(a)} / ${l.weekTarget} this week</span><span class="chip todo">🔥 ${e.curStreak(a)}</span></div></div></div>
-    ${c||r?`<div style="display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center">
-      ${c?`<button class="btn primary" data-act="checkall" data-g="${a}">✓ Check all done (${c})</button>`:""}
-      ${r?`<span class="hint" style="display:inline">🧠 ${r} memory ${r===1?"run needs":"runs need"} your own check below</span>`:""}</div>`:""}
-    <div>${n||'<p class="hint" style="padding:12px 0;border-top:1px solid var(--line)">No routines on Sundays.</p>'}
-    ${PC.isWk(t)?`<div class="opt"><div><b>No chasing</b><span class="hint">All three routines without reminders. Adds +${l.bonus} once all three are checked.</span></div>
-      <button class="sw" role="switch" aria-checked="${!!s.nc}" data-act="nochase" data-g="${a}" aria-label="No chasing for ${o}"></button></div>`:""}
-    <div class="opt col"><div><b>Good behaviour</b> <span class="chip gold" style="margin-left:6px">${s.behs.length} / ${l.behMax} today</span><span class="hint">Listening the first time, doing things in good time. One point at a time, up to ${l.behMax} a day.</span></div>
-      ${s.behs.length?`<ul class="hist">${s.behs.map(d=>`<li><span><b class="num" style="font-size:17px;color:var(--good)">+1</b> ${esc(d.for)}${d.by?`<span class="hint">from ${esc(d.by)}</span>`:""}</span><button class="link" data-act="unbeh" data-g="${a}" data-id="${esc(d.id)}">Undo</button></li>`).join("")}</ul>`:""}
-      ${s.behs.length<l.behMax?`<div class="give"><input class="in" id="bf-${a}" data-input="behfor" data-g="${a}" placeholder="What for? ${o} sees this" value="${esc(V.draft[a]||"")}" aria-label="What the good behaviour point is for" maxlength="60">
-           <button class="btn good" data-act="give" data-g="${a}">Give +1</button></div>`:`<p class="hint">That's the most for today. Nice work, ${o}!</p>`}</div>
-    <div class="opt col"><div><b>Praise note</b><span class="hint">Pops up on ${o}'s page the next time she opens it. No points, just words.</span></div>
-      ${p.length?`<ul class="hist">${p.map(d=>`<li><span>💌 ${esc(d.text)}<span class="hint">${esc(d.from)} · ${shortDate(d.date)}</span></span><span class="chip ${d.seen?"good":"todo"}">${d.seen?"Seen":"Not seen yet"}</span></li>`).join("")}</ul>`:""}
-      <div class="give"><input class="in" id="pn-${a}" data-input="notetext" data-g="${a}" placeholder="Proud of you for…" value="${esc(V.noteDraft[a]||"")}" aria-label="Praise note for ${o}" maxlength="140">
-        <button class="btn gold" data-act="note" data-g="${a}">Send</button></div></div>
-    <div class="day-total"><span class="lbl">Points from this day</span><b class="num">${e.dayPts(a,t)}</b></div></div></section>`}function rCRow(a,t,e){const s=C(),o=s.day(a,e),i=P.cfg.tasks[t.k],l=o.t[t.k].filter(Boolean).length,n=i.length,c=!!o.chk[t.k],r=s.allDone(o,t.k),p=ptsOf(t),d=i.filter((S,k)=>!o.t[t.k][k]),h=s.isMemRun(o,t.k),m=h?c?o.memOk[t.k]?"🧠 Memory run confirmed":"Checked, not from memory":"🧠 Done from memory: confirm if it was all done without the list":o.peeked[t.k]&&r?o.practiceDone[t.k]?"Peeked, then finished from memory (practice run)":"Peeked, then ticked from the list":o.mem[t.k]==="on"&&!r?"🧠 Doing it from memory":o.mem[t.k]==="practice"&&!r?"🧠 Practice run after a peek":r?"All tasks ticked":`${l} of ${n} ticked`,u=`data-g="${a}" data-r="${t.k}" data-host="${e}"`,$=c?`<span class="chip good">${h&&o.memOk[t.k]?"🧠 ":"✓ "}+${p}</span><button class="link" data-act="uncheck" ${u}>Undo</button>`:h?`<button class="btn primary" data-act="checkmem" ${u}>🧠 Confirm memory · +${p}</button><button class="btn ghost" data-act="check" ${u}>Check, not from memory</button>`:r?`<button class="btn primary" data-act="check" ${u}>Check · +${p}</button>`:`<button class="btn ghost" data-act="check" ${u}>Check anyway</button>`;return`<div class="crow"><span class="r-icon" aria-hidden="true">${t.icon}</span>
-    <div class="ct"><b>${t.name}</b>${e!==viewDay()?' <span class="hint" style="display:inline">(Friday)</span>':""}<span class="hint">${m}</span>${d.length&&l&&!h?`<span class="miss">Not ticked: ${d.map(esc).join(", ")}</span>`:""}</div>
-    <div class="ca">${$}</div></div>`}const $app=document.getElementById("app");function render(){const a=document.activeElement,t=a&&a.tagName==="INPUT"&&a.id?a.id:null,e=t?[a.selectionStart,a.selectionEnd]:null;if(draw(),t){const s=document.getElementById(t);if(s){s.focus();try{s.setSelectionRange(e[0],e[1])}catch{}}}}function draw(){if(!DEV){$app.dataset.who="setup",$app.innerHTML=rSetup(),V.setup.shake=!1;return}if(!P){$app.dataset.who=DEV.who,$app.innerHTML=`<header class="top"><div class="brand"><span class="coin sm" aria-hidden="true">★</span>Points Tracker</div></header>
+    <div>${rows || '<p class="hint">No devices signed in.</p>'}</div></section>`;
+}
+function rGP(g,s){
+  const c = C(), d = c.day(g,s), name = girlName(g), list = c.routinesFor(s), R = RULES();
+  const rows = list.map(({r,host}) => rCRow(g,r,host)).join('');
+  const normal = c.checkAllList(g,s).length;
+  const memWait = list.filter(({r,host}) => { const x = c.day(g,host); return c.isMemRun(x,r.k) && !x.chk[r.k]; }).length;
+  const sent = P.data.notes.filter(x => x.g === g).slice(-2).reverse();
+  return `<section class="card gp" data-who="${g}">
+    <div class="gp-head"><span class="av" aria-hidden="true">${name[0]}</span><div style="flex:1;min-width:0"><h2>${name}</h2>
+      <div class="gp-stats"><span class="chip gold">★ ${c.balance(g)} to spend</span><span class="chip todo">${c.weekPts(g)} / ${R.weekTarget} this week</span><span class="chip todo">🔥 ${c.curStreak(g)}</span></div></div></div>
+    ${normal || memWait ? `<div style="display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center">
+      ${normal ? `<button class="btn primary" data-act="checkall" data-g="${g}">✓ Check all done (${normal})</button>` : ''}
+      ${memWait ? `<span class="hint" style="display:inline">🧠 ${memWait} memory ${memWait === 1 ? 'run needs' : 'runs need'} your own check below</span>` : ''}</div>` : ''}
+    <div>${rows || '<p class="hint" style="padding:12px 0;border-top:1px solid var(--line)">No routines on Sundays.</p>'}
+    ${PC.isWk(s) ? `<div class="opt"><div><b>No chasing</b><span class="hint">All three routines without reminders. Adds +${R.bonus} once all three are checked.</span></div>
+      <button class="sw" role="switch" aria-checked="${!!d.nc}" data-act="nochase" data-g="${g}" aria-label="No chasing for ${name}"></button></div>` : ''}
+    <div class="opt col"><div><b>Good behaviour</b> <span class="chip gold" style="margin-left:6px">${d.behs.length} / ${R.behMax} today</span><span class="hint">Listening the first time, doing things in good time. One point at a time, up to ${R.behMax} a day.</span></div>
+      ${d.behs.length ? `<ul class="hist">${d.behs.map(b => `<li><span><b class="num" style="font-size:17px;color:var(--good)">+1</b> ${esc(b.for)}${b.by ? `<span class="hint">from ${esc(b.by)}</span>` : ''}</span><button class="link" data-act="unbeh" data-g="${g}" data-id="${esc(b.id)}">Undo</button></li>`).join('')}</ul>` : ''}
+      ${d.behs.length < R.behMax
+        ? `<div class="give"><input class="in" id="bf-${g}" data-input="behfor" data-g="${g}" placeholder="What for? ${name} sees this" value="${esc(V.draft[g] || '')}" aria-label="What the good behaviour point is for" maxlength="60">
+           <button class="btn good" data-act="give" data-g="${g}">Give +1</button></div>`
+        : `<p class="hint">That's the most for today. Nice work, ${name}!</p>`}</div>
+    ${rDed(g, s, d)}
+    <div class="opt col"><div><b>Praise note</b><span class="hint">Pops up on ${name}'s page the next time she opens it. No points, just words.</span></div>
+      ${sent.length ? `<ul class="hist">${sent.map(x => `<li><span>💌 ${esc(x.text)}<span class="hint">${esc(x.from)} · ${shortDate(x.date)}</span></span><span class="chip ${x.seen ? 'good' : 'todo'}">${x.seen ? 'Seen' : 'Not seen yet'}</span></li>`).join('')}</ul>` : ''}
+      <div class="give"><input class="in" id="pn-${g}" data-input="notetext" data-g="${g}" placeholder="Proud of you for…" value="${esc(V.noteDraft[g] || '')}" aria-label="Praise note for ${name}" maxlength="140">
+        <button class="btn gold" data-act="note" data-g="${g}">Send</button></div></div>
+    <div class="day-total"><span class="lbl">Points from this day</span><b class="num">${c.dayPts(g,s)}</b></div></div></section>`;
+}
+function rDed(g, s, d){
+  const c = C(), R = RULES(), name = girlName(g), today = s === P.today, active = d.deds.filter(x => !x.fixed).length;
+  const list = d.deds.length ? `<ul class="hist">${d.deds.map(x => `<li><span><b class="num" style="font-size:17px;color:var(--${x.fixed ? 'good' : 'wait'})">${x.fixed ? '↺' : '−1'}</b> ${esc(x.why)}<span class="hint">${[x.note ? esc(x.note) : '', x.by ? `from ${esc(x.by)}` : '', x.fixed ? 'made it right, point given back' : ''].filter(Boolean).join(' · ')}</span></span>
+      <span class="ded-a">${today ? (x.fixed
+        ? `<button class="link" data-act="fixded" data-on="0" data-g="${g}" data-id="${esc(x.id)}">Undo</button>`
+        : `<button class="btn ghost sm" data-act="fixded" data-on="1" data-g="${g}" data-id="${esc(x.id)}">Made it right</button>`) : ''}<button class="link" data-act="unded" data-g="${g}" data-id="${esc(x.id)}">Remove</button></span></li>`).join('')}</ul>` : '';
+  let ctl;
+  if (!today) ctl = '<p class="hint">Points can only be taken away on the day itself.</p>';
+  else if (active >= R.dedMax) ctl = '<p class="hint">That’s the most for today.</p>';
+  else if (P.today >= P.cfg.startDate && c.balance(g) < 1) ctl = `<p class="hint">${name} has no points to lose right now.</p>`;
+  else if (V.dedOpen[g]) ctl = `<div class="ded-pick"><span class="hint">Why? ${name} sees this.</span>
+      <div class="ded-r">${PC.DED_REASONS.map(r => `<button class="btn ghost" data-act="take" data-g="${g}" data-why="${esc(r)}">${esc(r)}</button>`).join('')}</div>
+      <input class="in" id="dn-${g}" data-input="dednote" data-g="${g}" placeholder="Extra detail (optional)" value="${esc(V.dedNote[g] || '')}" maxlength="80" aria-label="Extra detail">
+      <button class="link" data-act="ded-close" data-g="${g}" style="align-self:flex-start">Cancel</button></div>`;
+  else ctl = `<button class="btn ghost" data-act="ded-open" data-g="${g}" style="align-self:flex-start">−1 Take a point</button>`;
+  return `<div class="opt col"><div><b>Taking a point away</b> <span class="chip wait" style="margin-left:6px">${active} / ${R.dedMax} today</span><span class="hint">Warn first, out loud. If it happens again, take 1 point. Making it right today gives it back. Only comes off points to spend.</span></div>
+    ${list}${ctl}</div>`;
+}
+function rCRow(g,r,host){
+  const c = C(), d = c.day(g,host), ts = P.cfg.tasks[r.k], n = d.t[r.k].filter(Boolean).length, tot = ts.length, chk = !!d.chk[r.k], done = c.allDone(d, r.k), pts = ptsOf(r);
+  const miss = ts.filter((t,i) => !d.t[r.k][i]), memRun = c.isMemRun(d, r.k);
+  const status = memRun ? (chk ? (d.memOk[r.k] ? '🧠 Memory run confirmed' : 'Checked, not from memory') : '🧠 Done from memory: confirm if it was all done without the list')
+    : d.peeked[r.k] && done ? (d.practiceDone[r.k] ? 'Peeked, then finished from memory (practice run)' : 'Peeked, then ticked from the list')
+    : d.mem[r.k] === 'on' && !done ? '🧠 Doing it from memory' : d.mem[r.k] === 'practice' && !done ? '🧠 Practice run after a peek'
+    : done ? 'All tasks ticked' : `${n} of ${tot} ticked`;
+  const keys = `data-g="${g}" data-r="${r.k}" data-host="${host}"`;
+  const act = chk ? `<span class="chip good">${memRun && d.memOk[r.k] ? '🧠 ' : '✓ '}+${pts}</span><button class="link" data-act="uncheck" ${keys}>Undo</button>`
+    : memRun ? `<button class="btn primary" data-act="checkmem" ${keys}>🧠 Confirm memory · +${pts}</button><button class="btn ghost" data-act="check" ${keys}>Check, not from memory</button>`
+    : done ? `<button class="btn primary" data-act="check" ${keys}>Check · +${pts}</button>`
+    : `<button class="btn ghost" data-act="check" ${keys}>Check anyway</button>`;
+  return `<div class="crow"><span class="r-icon" aria-hidden="true">${r.icon}</span>
+    <div class="ct"><b>${r.name}</b>${host !== viewDay() ? ' <span class="hint" style="display:inline">(Friday)</span>' : ''}<span class="hint">${status}</span>${miss.length && n && !memRun ? `<span class="miss">Not ticked: ${miss.map(esc).join(', ')}</span>` : ''}</div>
+    <div class="ca">${act}</div></div>`;
+}
+
+/* ---------- render ---------- */
+const $app = document.getElementById('app');
+function render(){
+  // keep the cursor in a text box if someone is typing while fresh data arrives
+  const ae = document.activeElement, fid = ae && ae.tagName === 'INPUT' && ae.id ? ae.id : null;
+  const sel = fid ? [ae.selectionStart, ae.selectionEnd] : null;
+  draw();
+  if (fid) { const el = document.getElementById(fid); if (el) { el.focus(); try { el.setSelectionRange(sel[0], sel[1]); } catch (e) {} } }
+}
+function draw(){
+  if (!DEV) { $app.dataset.who = 'setup'; $app.innerHTML = rSetup(); V.setup.shake = false; return; }
+  if (!P) { $app.dataset.who = DEV.who; $app.innerHTML = `<header class="top"><div class="brand"><span class="coin sm" aria-hidden="true">★</span>Points Tracker</div></header>
       <section class="card rest" style="text-align:center;padding:40px 18px"><div class="big-emo" style="margin:0 auto">⏳</div><h2>Loading ${esc(DEV.person)}'s page…</h2>
-      <p class="hint">${net==="offline"?"Can’t reach the points tracker. Check the internet; it will try again.":"Just a moment."}</p></section>`;return}$app.dataset.who=P.me.who,$app.innerHTML=rTop()+(isParent()?rParent():rGirl(P.me.who))+rFooter(),V.fx=null}let tt;function toast(a){const t=document.getElementById("toast");t.textContent=a,t.hidden=!1,clearTimeout(tt),tt=setTimeout(()=>{t.hidden=!0},2600)}const selFor=a=>Object.entries(a.dataset).map(([t,e])=>`[data-${t.replace(/[A-Z]/g,s=>"-"+s.toLowerCase())}="${CSS.escape(e)}"]`).join("");document.addEventListener("click",a=>{const t=a.target.closest("button[data-act]");if(!t||t.disabled)return;const e=t.dataset.act,s=t.dataset.g,o=t.dataset.r,i=t.dataset.host,l=a.detail===0?selFor(t):null,n=()=>{if(render(),l){const c=$app.querySelector(l);c&&c.focus()}};switch(e){case"pick":return V.setup={step:"pin",person:t.dataset.to,pin:"",err:"",shake:!1,busy:!1,notice:""},n();case"pinwho":return V.setup={step:"who",person:null,pin:"",err:"",shake:!1,busy:!1,notice:""},n();case"pinback":return V.setup.pin=V.setup.pin.slice(0,-1),V.setup.err=V.setup.err==="locked"?"locked":"",n();case"digit":return addDigit(t.dataset.d);case"selfout":return V.signoutAsk=!0,n();case"selfout-no":return V.signoutAsk=!1,n();case"selfout-yes":return V.signoutAsk=!1,signedOut("");case"day":return V.day=t.dataset.day===P.today?null:t.dataset.day,V.open={},n();case"tab":return V.tab=t.dataset.tab,n();case"open":return V.open[o]=!V.open[o],n();case"peek-ask":return V.peekAsk=o,n();case"peek-no":return V.peekAsk=null,n();case"signout":return V.confirmDev=t.dataset.id,n();case"signout-no":return V.confirmDev=null,n();case"signout-yes":return V.confirmDev=null,P.devices=(P.devices||[]).filter(c=>c.id!==t.dataset.id),queue.push({op:"signout",deviceId:t.dataset.id}),toast("Device signed out. It will ask for a PIN next time."),pump(),n();case"tick":{const c=t.getAttribute("aria-pressed")!=="true";if(act({op:"tick",r:o,host:i,i:+t.dataset.i,on:c})){V.fx={pop:`${o}-${t.dataset.i}`};const r=C().day(P.me.who,i);c&&C().allDone(r,o)&&(V.fx.done=o,toast(`${ROUT.find(p=>p.k===o).name} done! A parent will check it.`))}return n()}case"start":return act({op:"start",r:o,host:i}),n();case"startmem":return act({op:"startmem",r:o,host:i})&&toast("Memory mode on. You've got this!"),n();case"peek":return V.peekAsk=null,act({op:"peek",r:o,host:i})&&toast("List shown. Normal points still count."),n();case"hide":return act({op:"hide",r:o,host:i})&&toast("List hidden. Keep going from memory!"),n();case"memdone":return act({op:"memdone",r:o,host:i})&&(V.fx={done:o},toast(`🧠 ${ROUT.find(c=>c.k===o).name} done from memory! A parent will confirm it.`)),n();case"practicedone":return act({op:"practicedone",r:o,host:i})&&(V.fx={done:o},toast(`${ROUT.find(c=>c.k===o).name} done! A parent will check it.`)),n();case"goal":return act({op:"goal",reward:t.dataset.reward}),n();case"cashin":return act({op:"cashin",reward:t.dataset.reward})&&toast(`Asked a parent for ${t.dataset.reward}`),n();case"noteSeen":return act({op:"noteSeen",id:t.dataset.id}),n();case"check":return act({op:"check",g:s,r:o,host:i}),n();case"checkmem":return act({op:"checkmem",g:s,r:o,host:i})&&toast(`🧠 Memory run confirmed for ${girlName(s)}`),n();case"uncheck":return act({op:"uncheck",g:s,r:o,host:i}),n();case"checkall":{const c=C().checkAllList(s,viewDay()).length;return act({op:"checkall",g:s,date:viewDay()})&&toast(`Checked ${c} ${c===1?"routine":"routines"} for ${girlName(s)}`),n()}case"nochase":return act({op:"nochase",g:s,date:viewDay(),on:t.getAttribute("aria-checked")!=="true"}),n();case"give":{const c=(V.draft[s]||"").trim();if(!c){toast("Add what the point is for first");const r=document.getElementById("bf-"+s);r&&r.focus();return}return act({op:"give",g:s,date:viewDay(),why:c})&&(V.draft[s]="",toast(`+1 for ${girlName(s)}: ${c}`)),n()}case"unbeh":return act({op:"unbeh",g:s,date:viewDay(),id:t.dataset.id})&&toast("Point removed"),n();case"approve":{const c=P.data.requests.find(r=>r.id===t.dataset.id);return act({op:"approve",id:t.dataset.id})&&c&&toast(`Approved: ${c.reward} for ${girlName(c.g)}`),n()}case"decline":return act({op:"decline",id:t.dataset.id})&&toast("Request declined"),n();case"note":{const c=(V.noteDraft[s]||"").trim();if(!c){toast("Write the note first");return}return act({op:"note",g:s,text:c})&&(V.noteDraft[s]="",toast(`Note sent to ${girlName(s)}`)),n()}}}),document.addEventListener("input",a=>{const t=a.target;t.dataset&&(t.dataset.input==="behfor"&&(V.draft[t.dataset.g]=t.value),t.dataset.input==="notetext"&&(V.noteDraft[t.dataset.g]=t.value))}),document.addEventListener("keydown",a=>{const t=a.target;if(!DEV&&V.setup.step==="pin"&&t.tagName!=="INPUT"){/^\d$/.test(a.key)?addDigit(a.key):a.key==="Backspace"&&(V.setup.pin=V.setup.pin.slice(0,-1),render());return}if(a.key!=="Enter"||!t.dataset||!t.dataset.input)return;const e=$app.querySelector(`button[data-act="${t.dataset.input==="behfor"?"give":"note"}"][data-g="${t.dataset.g}"]`);if(e){e.click();const s=document.getElementById(t.id);s&&s.focus()}}),document.addEventListener("visibilitychange",()=>{document.visibilityState==="visible"&&DEV&&refresh()}),setInterval(()=>{DEV&&document.visibilityState==="visible"&&!queue.length&&refresh()},6e4),setInterval(()=>{P&&!queue.length&&render()},5*6e4),render(),DEV&&refresh();</script>
+      <p class="hint">${net === 'offline' ? 'Can’t reach the points tracker. Check the internet; it will try again.' : 'Just a moment.'}</p></section>`; return; }
+  $app.dataset.who = P.me.who;
+  $app.innerHTML = rTop() + (isParent() ? rParent() : rGirl(P.me.who)) + rFooter();
+  V.fx = null;
+}
+let tt;
+function toast(m){ const el = document.getElementById('toast'); el.textContent = m; el.hidden = false; clearTimeout(tt); tt = setTimeout(() => { el.hidden = true; }, 2600); }
+const selFor = b => Object.entries(b.dataset).map(([k,v]) => `[data-${k.replace(/[A-Z]/g, m => '-' + m.toLowerCase())}="${CSS.escape(v)}"]`).join('');
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('button[data-act]'); if (!b || b.disabled) return;
+  const a = b.dataset.act, g = b.dataset.g, r = b.dataset.r, host = b.dataset.host;
+  const keep = e.detail === 0 ? selFor(b) : null;
+  const done = () => { render(); if (keep) { const el = $app.querySelector(keep); if (el) el.focus(); } };
+  switch (a) {
+    // setup
+    case 'pick': V.setup = { step:'pin', person:b.dataset.to, pin:'', err:'', shake:false, busy:false, notice:'' }; return done();
+    case 'pinwho': V.setup = { step:'who', person:null, pin:'', err:'', shake:false, busy:false, notice:'' }; return done();
+    case 'pinback': V.setup.pin = V.setup.pin.slice(0,-1); V.setup.err = V.setup.err === 'locked' ? 'locked' : ''; return done();
+    case 'digit': return addDigit(b.dataset.d);
+    case 'selfout': V.signoutAsk = true; return done();
+    case 'selfout-no': V.signoutAsk = false; return done();
+    case 'selfout-yes': V.signoutAsk = false; return signedOut('');
+    // navigation
+    case 'day': V.day = b.dataset.day === P.today ? null : b.dataset.day; V.open = {}; return done();
+    case 'wk': {
+      V.wk = b.dataset.d === 'now' ? 0 : Math.max(0, V.wk + Number(b.dataset.d)); V.open = {};
+      if (!V.wk) V.day = null;
+      else { const c = C(), dates = c.weekDates(PC.add(P.today, -7 * V.wk)); V.day = dates.find(s => PC.GIRLS.some(g => c.waitingOn(g, s).length)) || dates[0]; }
+      return done();
+    }
+    case 'goday': {
+      const s = b.dataset.day; V.day = s === P.today ? null : s; V.wk = weeksBack(s); V.open = {}; render();
+      const el = $app.querySelector('.girls'); if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+      return;
+    }
+    case 'blall': V.blAll = !V.blAll; return done();
+    case 'tab': V.tab = b.dataset.tab; return done();
+    case 'open': V.open[r] = !V.open[r]; return done();
+    case 'peek-ask': V.peekAsk = r; return done();
+    case 'peek-no': V.peekAsk = null; return done();
+    case 'signout': V.confirmDev = b.dataset.id; return done();
+    case 'signout-no': V.confirmDev = null; return done();
+    case 'signout-yes': V.confirmDev = null; P.devices = (P.devices || []).filter(d => d.id !== b.dataset.id); queue.push({ op:'signout', deviceId:b.dataset.id }); toast('Device signed out. It will ask for a PIN next time.'); pump(); return done();
+    // girl actions
+    case 'tick': {
+      const on = b.getAttribute('aria-pressed') !== 'true';
+      if (act({ op:'tick', r, host, i:+b.dataset.i, on })) {
+        V.fx = { pop:`${r}-${b.dataset.i}` };
+        const d = C().day(P.me.who, host);
+        if (on && C().allDone(d, r)) { V.fx.done = r; toast(`${ROUT.find(x => x.k === r).name} done! A parent will check it.`); }
+      }
+      return done();
+    }
+    case 'start': act({ op:'start', r, host }); return done();
+    case 'startmem': if (act({ op:'startmem', r, host })) toast("Memory mode on. You've got this!"); return done();
+    case 'peek': V.peekAsk = null; if (act({ op:'peek', r, host })) toast('List shown. Normal points still count.'); return done();
+    case 'hide': if (act({ op:'hide', r, host })) toast('List hidden. Keep going from memory!'); return done();
+    case 'memdone': if (act({ op:'memdone', r, host })) { V.fx = { done:r }; toast(`🧠 ${ROUT.find(x => x.k === r).name} done from memory! A parent will confirm it.`); } return done();
+    case 'practicedone': if (act({ op:'practicedone', r, host })) { V.fx = { done:r }; toast(`${ROUT.find(x => x.k === r).name} done! A parent will check it.`); } return done();
+    case 'goal': act({ op:'goal', reward:b.dataset.reward }); return done();
+    case 'cashin': if (act({ op:'cashin', reward:b.dataset.reward })) toast(`Asked a parent for ${b.dataset.reward}`); return done();
+    case 'noteSeen': act({ op:'noteSeen', id:b.dataset.id }); return done();
+    // parent actions
+    case 'check': {
+      const late = b.closest('.backlog');
+      if (act({ op:'check', g, r, host }) && late) toast(`Checked ${girlName(g)}'s ${ROUT.find(x => x.k === r).name} for ${shortDate(host)}`);
+      return late ? render() : done();
+    }
+    case 'checkmem': if (act({ op:'checkmem', g, r, host })) toast(`🧠 Memory run confirmed for ${girlName(g)}`); return b.closest('.backlog') ? render() : done();
+    case 'uncheck': act({ op:'uncheck', g, r, host }); return done();
+    case 'checkall': { const n = C().checkAllList(g, viewDay()).length; if (act({ op:'checkall', g, date:viewDay() })) toast(`Checked ${n} ${n === 1 ? 'routine' : 'routines'} for ${girlName(g)}`); return done(); }
+    case 'nochase': act({ op:'nochase', g, date:viewDay(), on: b.getAttribute('aria-checked') !== 'true' }); return done();
+    case 'give': {
+      const why = (V.draft[g] || '').trim();
+      if (!why) { toast('Add what the point is for first'); const el = document.getElementById('bf-' + g); if (el) el.focus(); return; }
+      if (act({ op:'give', g, date:viewDay(), why })) { V.draft[g] = ''; toast(`+1 for ${girlName(g)}: ${why}`); }
+      return done();
+    }
+    case 'unbeh': if (act({ op:'unbeh', g, date:viewDay(), id:b.dataset.id })) toast('Point removed'); return done();
+    case 'ded-open': V.dedOpen[g] = true; render(); { const el = document.getElementById('dn-' + g); if (el && e.detail === 0) $app.querySelector(`button[data-act="take"][data-g="${g}"]`).focus(); } return;
+    case 'ded-close': V.dedOpen[g] = false; V.dedNote[g] = ''; return render();
+    case 'take': {
+      const why = b.dataset.why;
+      if (act({ op:'take', g, date:P.today, why, note:(V.dedNote[g] || '').trim() })) { V.dedOpen[g] = false; V.dedNote[g] = ''; toast(`−1 for ${girlName(g)}: ${why}`); }
+      return render();
+    }
+    case 'fixded': { const on = b.dataset.on === '1'; if (act({ op:'fixded', g, date:P.today, id:b.dataset.id, on })) toast(on ? `Point given back to ${girlName(g)}` : 'Point taken away again'); return render(); }
+    case 'unded': if (act({ op:'unded', g, date:viewDay(), id:b.dataset.id })) toast('Removed'); return render();
+    case 'approve': { const q = P.data.requests.find(x => x.id === b.dataset.id); if (act({ op:'approve', id:b.dataset.id }) && q) toast(`Approved: ${q.reward} for ${girlName(q.g)}`); return done(); }
+    case 'decline': if (act({ op:'decline', id:b.dataset.id })) toast('Request declined'); return done();
+    case 'note': {
+      const text = (V.noteDraft[g] || '').trim();
+      if (!text) { toast('Write the note first'); return; }
+      if (act({ op:'note', g, text })) { V.noteDraft[g] = ''; toast(`Note sent to ${girlName(g)}`); }
+      return done();
+    }
+  }
+});
+document.addEventListener('input', e => {
+  const t = e.target; if (!t.dataset) return;
+  if (t.dataset.input === 'behfor') V.draft[t.dataset.g] = t.value;
+  if (t.dataset.input === 'notetext') V.noteDraft[t.dataset.g] = t.value;
+  if (t.dataset.input === 'dednote') V.dedNote[t.dataset.g] = t.value;
+});
+document.addEventListener('keydown', e => {
+  const t = e.target;
+  if (!DEV && V.setup.step === 'pin' && t.tagName !== 'INPUT') {
+    if (/^\d$/.test(e.key)) addDigit(e.key);
+    else if (e.key === 'Backspace') { V.setup.pin = V.setup.pin.slice(0,-1); render(); }
+    return;
+  }
+  if (e.key !== 'Enter' || !t.dataset || !t.dataset.input || t.dataset.input === 'dednote') return;
+  const btn = $app.querySelector(`button[data-act="${t.dataset.input === 'behfor' ? 'give' : 'note'}"][data-g="${t.dataset.g}"]`);
+  if (btn) { btn.click(); const el = document.getElementById(t.id); if (el) el.focus(); }
+});
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && DEV) refresh(); });
+setInterval(() => { if (DEV && document.visibilityState === 'visible' && !queue.length) refresh(); }, 60000);
+setInterval(() => { if (P && !queue.length) render(); }, 5 * 60000); // keeps "Right now" in step with the clock
+
+render();
+if (DEV) refresh();
+
+</script>
 </body>
 </html>
