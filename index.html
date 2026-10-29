@@ -344,6 +344,40 @@ img{max-width:100%}
 .btn.sm{min-height:34px;padding:4px 11px;font-size:13px}
 .pl .lost .pts{color:var(--wait)}
 .pl .fixed,.pl .fixed .pts{color:var(--ink-3)}
+.hw{display:flex;flex-direction:column;gap:16px}
+.hw-girls .btn{min-width:88px}
+.hw-girls .hw-on{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+.hw-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.hw-head .btn{min-width:44px;font-size:18px}
+.hw-days{display:flex;flex-direction:column;gap:8px}
+.hw-day{display:grid;grid-template-columns:72px minmax(0,1fr);gap:12px;align-items:center;padding:10px 12px;border-radius:var(--r-md);background:var(--surface-2)}
+.hw-day.today{box-shadow:inset 0 0 0 2px var(--accent)}
+.hw-d{display:flex;flex-direction:column;line-height:1.15}
+.hw-d span{font-size:12px;color:var(--ink-2)}
+.hw-t{display:flex;flex-direction:column;gap:4px;min-width:0}
+.hw-title{font-weight:600;overflow-wrap:anywhere}
+a.hw-title{color:var(--parent);text-underline-offset:2px}
+.hw-bar{display:flex;flex-direction:column;gap:5px}
+.hw-bar-l{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px;flex-wrap:wrap}
+.hw-bar-l span{color:var(--ink-2)}
+.bar.hw-base i{background:var(--ink-3)}
+.hw-rub{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r-md);background:var(--parent-soft)}
+.hw-rub>div:first-child{display:flex;flex-direction:column}
+.hw-lv{display:flex;gap:4px;flex:none}
+.hw-lv span{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;font-weight:700;font-size:14px;background:var(--surface);color:var(--ink-2);border:1px solid var(--line);box-sizing:border-box}
+.hw-lv span.on{background:var(--parent);color:var(--on-accent);border-color:var(--parent)}
+.hw-slips{display:flex;flex-direction:column;gap:10px}
+.hw-slip{display:grid;grid-template-columns:minmax(0,1fr) 96px 24px;gap:10px;align-items:center;font-size:13px}
+.hw-slip .bar i{background:var(--parent)}
+.hw-slip b{text-align:right}
+.hw-tip{margin:0;font-size:13px;padding:10px 12px;border-radius:12px;background:var(--surface-2)}
+.hw-list{display:flex;flex-direction:column;gap:8px}
+.hw-sheet{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--surface-2)}
+.hw-sheet>div:first-child{display:flex;flex-direction:column;min-width:0}
+.hw-sr{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hw-sr .chip{align-self:flex-end}
+.hw-chips{display:flex;flex-wrap:wrap;gap:6px}
+.hw-want{display:inline-flex;padding:6px 12px;border-radius:99px;background:var(--accent-soft);color:var(--ink);font-size:13px;font-weight:600}
 </style>
 </head>
 <body>
@@ -697,7 +731,7 @@ function readLS(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); 
 function writeLS(k, v){ try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
 let DEV = readLS(DEV_KEY);
 let P = DEV ? readLS(CACHE_KEY) : null;
-let V = { day:null, wk:0, blAll:false, dedOpen:{}, dedNote:{}, tab:'today', open:{}, peekAsk:null, confirmDev:null, signoutAsk:false, draft:{}, noteDraft:{}, fx:null,
+let V = { day:null, wk:0, ptab:'check', hwg:'ayla', hwwk:0, blAll:false, dedOpen:{}, dedNote:{}, tab:'today', open:{}, peekAsk:null, confirmDev:null, signoutAsk:false, draft:{}, noteDraft:{}, fx:null,
           setup:{ step:'who', person:null, pin:'', err:'', shake:false, busy:false, notice:'' } };
 let queue = [], sending = false, net = 'ok', retryTimer = null;
 
@@ -1072,6 +1106,9 @@ function rBadges(g){
 
 /* ---------- parent view ---------- */
 function rParent(){
+  return rPTabs() + (V.ptab === 'hw' ? rHW() : rCheck());
+}
+function rCheck(){
   const c = C(), s = viewDay();
   const waiting = c.waitingOn('ayla',s).length + c.waitingOn('lani',s).length;
   const reqs = P.data.requests.filter(q => q.status === 'Waiting').map(q => `<div class="req" data-who="${q.g}"><span class="big-emo" aria-hidden="true">${shopEmoji(q.reward)}</span>
@@ -1087,6 +1124,97 @@ function rParent(){
     ${reqs ? `<div class="reqs">${reqs}</div>` : ''}
     <div class="girls">${PC.GIRLS.map(g => rGP(g,s)).join('')}</div>
     ${rDevices()}`;
+}
+// ---------- parent Homework tab (data: P.hw from the Points Sheet's Homework tab, filled in by Claude) ----------
+const HW_FOCUS = ['', 'Learn', 'Practise', 'Role play', 'Research', 'Present'];
+const HW_SLIPS = [
+  ['w', "Didn't take in the whole question", 'she starts answering before reading to the end.'],
+  ['a', 'Answered something else', 'she answers a nearby question instead of the one asked.'],
+  ['f', 'Wrong answer form', 'she writes a sentence when a word, letter or X was asked for.'],
+  ['p', 'Missed a part', 'she answers the first part and stops. Ask her: “How many things does it want?”'],
+  ['s', 'Skipped (stuck)', 'she leaves a box empty when stuck instead of a best guess.'],
+  ['c', 'Check slip (e.g. two X’s)', 'she ticks the checklist without looking back. Ask her to show you one check.']
+];
+function rPTabs(){
+  return `<div class="tabs" role="tablist" aria-label="Parent pages">
+    <button class="tab" role="tab" data-act="ptab" data-tab="check" aria-selected="${V.ptab !== 'hw'}">Check</button>
+    <button class="tab" role="tab" data-act="ptab" data-tab="hw" aria-selected="${V.ptab === 'hw'}">Homework</button></div>`;
+}
+function rHW(){
+  const H = P.hw || { rows: [], set: {} }, g = V.hwg || 'ayla', nm = girlName(g);
+  const rows = (H.rows || []).filter(x => x.g === g);
+  return `<div class="hw" data-who="${g}">
+    <div class="seg hw-girls">${PC.GIRLS.map(x => `<button class="btn ${x === g ? 'soft hw-on' : 'ghost'}" data-act="hwg" data-to="${x}" aria-pressed="${x === g}">${girlName(x)}</button>`).join('')}</div>
+    ${rHWWeek(g, nm, rows)}${rHWBlock(g, nm, rows, H.set || {})}${rHWVoice(g, nm, rows)}</div>`;
+}
+function rHWWeek(g, nm, rows){
+  const ws = PC.add(PC.weekStart(P.today), -7 * V.hwwk), end = PC.add(ws, 4);
+  const idx = (P.cfg.tasks.after || []).indexOf('Homework'), start = (P.hw && P.hw.set && P.hw.set.block_start) || '';
+  const days = [0, 1, 2, 3, 4].map(i => {
+    const s = PC.add(ws, i), r = rows.filter(x => x.date === s).pop(), dd = (P.data.days[g] || {})[s];
+    const ticked = !!(dd && idx >= 0 && dd.t && dd.t.after && dd.t.after[idx]);
+    const focus = start && s >= start ? HW_FOCUS[i + 1] : '';
+    let mark = '';
+    if (r && s >= P.cfg.startDate) {
+      if (ticked) mark = '<span class="chip good">Done</span>';
+      else if (s > P.today) mark = '<span class="chip todo">Coming up</span>';
+      else if (s === P.today) mark = dd && dd.started && dd.started.after ? '<span class="chip wait">Started, not ticked</span>' : '<span class="chip todo">Not started</span>';
+      else mark = '<span class="chip wait">Not ticked</span>';
+    }
+    const title = r ? (r.url ? `<a class="hw-title" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>` : `<b class="hw-title">${esc(r.title)}</b>`)
+      : `<span class="hint">${s > P.today ? 'Not built yet' : 'No homework'}</span>`;
+    const type = r && r.type && r.type !== 'Sheet' ? `<span class="chip todo">${esc(r.type)}</span>` : '';
+    return `<div class="hw-day${s === P.today ? ' today' : ''}"><div class="hw-d"><b>${shortDate(s).replace(/ \S+$/, '')}</b><span>${focus || '&nbsp;'}</span></div><div class="hw-t">${title}${type}${mark}</div></div>`;
+  }).join('');
+  const label = V.hwwk === 0 ? 'This week' : V.hwwk === 1 ? 'Last week' : `${V.hwwk} weeks ago`;
+  return `<section class="card"><div class="hw-head"><div><span class="lbl">${label} · ${shortDate(ws)} to ${shortDate(end)}</span><h2>${nm}'s sheets</h2></div>
+    <div class="seg"><button class="btn ghost" data-act="hwwk" data-d="1" aria-label="Earlier week">‹</button>${V.hwwk ? '<button class="btn ghost" data-act="hwwk" data-d="-1" aria-label="Later week">›</button>' : ''}</div></div>
+    <div class="hw-days">${days}</div></section>`;
+}
+function rHWBlock(g, nm, rows, set){
+  const st = set.block_start || '', skill = set.block_skill || 'This block', num = set.block_num || '1';
+  if (!st) return '';
+  const wk = P.today < st ? 0 : Math.min(4, Math.floor((toD(P.today) - toD(st)) / 6048e5) + 1);
+  const inB = rows.filter(x => x.date >= st && x.date <= PC.add(st, 27));
+  const scored = inB.filter(x => x.score !== null && x.score !== undefined && x.out > 0);
+  const base = scored.filter(x => x.type === 'Baseline').pop();
+  const w4 = scored.filter(x => /week 4/i.test(x.type)).pop();
+  const latest = scored.filter(x => x !== base && x !== w4 && (!base || x.date >= base.date)).pop();
+  const pct = x => Math.round(100 * x.score / x.out);
+  const barRow = (label, x, cls) => x ? `<div class="hw-bar"><div class="hw-bar-l"><span>${label} · ${shortDate(x.date)}</span><b>${pct(x)}% (${x.score} of ${x.out})</b></div><div class="bar ${cls}" style="--p:${Math.min(1, pct(x) / 100)}"><i></i></div></div>` : '';
+  const rub = inB.filter(x => x.rubric).pop(), lv = rub ? Number(rub.rubric) || 0 : 0;
+  const tot = {}; HW_SLIPS.forEach(([k]) => { tot[k] = inB.reduce((a, x) => a + ((x.slips && x.slips[k]) || 0), 0); });
+  const max = Math.max(1, ...HW_SLIPS.map(([k]) => tot[k])), any = HW_SLIPS.some(([k]) => tot[k]);
+  const top = HW_SLIPS.reduce((m, s) => tot[s[0]] > tot[m[0]] ? s : m, HW_SLIPS[0]);
+  const head = wk ? `Block ${esc(num)} · Week ${wk} of 4` : `Block ${esc(num)} · Starts ${shortDate(st)}`;
+  const scores = base ? barRow('Baseline', base, 'hw-base') + barRow('Latest check', latest, '') + barRow('Week 4 check', w4, '') + (w4 ? '' : '<p class="hint">The week 4 check appears here when it’s done.</p>')
+    : `<p class="hint">${wk ? 'The baseline result appears here once it’s marked.' : `Baseline check on ${longDate(st)}.`}</p>`;
+  const slips = any ? HW_SLIPS.map(([k, label]) => `<div class="hw-slip"><span>${label}</span><div class="bar"><i style="--p:${tot[k] / max}"></i></div><b>${tot[k]}</b></div>`).join('')
+      + `<p class="hw-tip"><b>Biggest slip:</b> ${top[1].toLowerCase().replace(/ \(.*\)/, '')}, which means ${top[2]}</p>`
+    : '<p class="hint">Slips show here once sheets in this block are marked.</p>';
+  return `<section class="card"><div><span class="lbl">${head}</span><h2>${esc(skill)}</h2></div>${scores}
+    <div class="hw-rub"><div><b>Rubric level</b><span class="hint">You and ${nm} score it at the end of weeks 1 and 4. Level 3 = mastered.</span></div>
+      <div class="hw-lv" role="img" aria-label="${lv ? `Level ${lv} of 4` : 'Not scored yet'}">${[1, 2, 3, 4].map(n => `<span class="${n <= lv ? 'on' : ''}">${n}</span>`).join('')}</div></div>
+    <div class="hw-slips"><div class="hw-bar-l"><b>Where she slips</b><span class="hint">this block, all sheets</span></div>${slips}</div></section>`;
+}
+function hwList(rows, key){
+  const seen = new Set(), out = [];
+  rows.slice().reverse().forEach(x => String(x[key] || '').split(/[,;]/).map(t => t.trim()).filter(Boolean).forEach(t => {
+    const k = t.toLowerCase(); if (!seen.has(k)) { seen.add(k); out.push(t); }
+  }));
+  return out;
+}
+function rHWVoice(g, nm, rows){
+  const sheets = rows.filter(x => x.hard || x.enjoy).slice(-5).reverse();
+  const wants = hwList(rows, 'next'), words = hwList(rows, 'words');
+  const hardCls = h => /easy/i.test(h) ? 'todo' : /hard/i.test(h) ? 'wait' : 'good';
+  const enj = e => !e ? '' : /^\d+$/.test(e) ? `Enjoyed ${esc(e)} of 5` : `Felt: ${esc(e)}`;
+  const list = sheets.length ? sheets.map(x => `<div class="hw-sheet"><div><b>${esc(x.title)}</b><span class="hint">${shortDate(x.date)}</span></div><div class="hw-sr">${x.hard ? `<span class="chip ${hardCls(x.hard)}">${esc(x.hard)}</span>` : ''}<span class="hint">${enj(x.enjoy)}</span></div></div>`).join('')
+    : '<p class="hint">Her ratings show here after each sheet is marked.</p>';
+  return `<section class="card"><div><span class="lbl">In her words</span><h2>${nm}'s voice</h2></div>
+    <div class="hw-list"><b>Last 5 sheets</b>${list}</div>
+    <div class="hw-list"><b>Wants to learn next</b>${wants.length ? `<div class="hw-chips">${wants.slice(0, 8).map(t => `<span class="hw-want">${esc(t)}</span>`).join('')}</div>` : '<p class="hint">Nothing yet.</p>'}</div>
+    ${words.length ? `<div class="hw-list"><b>Words to practise</b><span class="hint">Words she flagged as stuck on. Try them at reading time.</span><div class="hw-chips">${words.slice(0, 12).map(t => `<span class="chip todo">${esc(t)}</span>`).join('')}</div></div>` : ''}</section>`;
 }
 // Routines finished on an earlier day (from the start date) that nobody has checked yet.
 // Leaves out anything already shown in today's or the selected day's cards.
@@ -1244,6 +1372,9 @@ document.addEventListener('click', e => {
     }
     case 'blall': V.blAll = !V.blAll; return done();
     case 'tab': V.tab = b.dataset.tab; return done();
+    case 'ptab': V.ptab = b.dataset.tab; return done();
+    case 'hwg': V.hwg = b.dataset.to; return done();
+    case 'hwwk': V.hwwk = Math.max(0, V.hwwk + Number(b.dataset.d)); return done();
     case 'open': V.open[r] = !V.open[r]; return done();
     case 'peek-ask': V.peekAsk = r; return done();
     case 'peek-no': V.peekAsk = null; return done();
