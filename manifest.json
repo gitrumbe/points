@@ -1,0 +1,17 @@
+{
+ "name": "Points Tracker",
+ "short_name": "Points",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#F2F4F9",
+ "theme_color": "#3D55D0",
+ "icons": [
+  {
+   "src": "icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml",
+   "purpose": "any"
+  }
+ ]
+}
