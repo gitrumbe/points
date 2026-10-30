@@ -413,6 +413,10 @@ var PointsCore = (function () {
   function dow(s) { return toD(s).getUTCDay(); }
   function isWk(s) { var w = dow(s); return w >= 1 && w <= 5; }
   function weekStart(s) { return add(s, -((dow(s) + 6) % 7)); }
+  // A task can be left off some weekdays (Tasks tab: "Make tomorrow's lunch [not Fri]").
+  // cfg.skip[routine][task index] = weekday numbers (0 = Sunday) when it isn't needed. It counts as done on those days.
+  function skipped(cfg, k, i, s) { var r = cfg.skip && cfg.skip[k] && cfg.skip[k][i]; return !!(r && s && r.indexOf(dow(s)) >= 0); }
+  function fillSkips(cfg, d, s) { if (!cfg.skip || !d || !d.t) return d; Object.keys(d.t).forEach(function (k) { d.t[k].forEach(function (_, i) { if (skipped(cfg, k, i, s)) d.t[k][i] = true; }); }); return d; }
 
   function blankDay(cfg) {
     var t = {};
@@ -442,11 +446,12 @@ var PointsCore = (function () {
   function make(cfg, data, today) {
     var R = cfg.rules;
     var pts = { before: R.before, after: R.after, night: R.night, chores: R.chores };
+    GIRLS.forEach(function (g) { Object.keys((data.days && data.days[g]) || {}).forEach(function (s) { fillSkips(cfg, data.days[g][s], s); }); });
     function inRange(s) { return s >= cfg.startDate && s <= today; }
     function pk(g, s) { return data.days[g] && data.days[g][s]; }
     function day(g, s) {
       if (!data.days[g]) data.days[g] = {};
-      if (!data.days[g][s]) data.days[g][s] = blankDay(cfg);
+      if (!data.days[g][s]) data.days[g][s] = fillSkips(cfg, blankDay(cfg), s);
       return data.days[g][s];
     }
     function allDone(d, k) { return d.t[k].length > 0 && d.t[k].every(Boolean); }
@@ -560,6 +565,7 @@ var PointsCore = (function () {
         if (r === 'night' && C.nightLocked(g, op.host)) return fail('Finish After school first');
         if (d.mem[r] === 'on' || d.mem[r] === 'practice') return fail('The list is hidden in memory mode');
         var i = Number(op.i); if (!(i >= 0 && i < d.t[r].length)) return fail('Unknown task');
+        if (skipped(cfg, r, i, op.host)) return fail('That one isn\u2019t needed today');
         d.t[r][i] = !!op.on; d.started[r] = true; touch(g, op.host); return res;
       }
       case 'start': {
@@ -570,7 +576,7 @@ var PointsCore = (function () {
         d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today can be started');
         if (MEM_ROUT.indexOf(r) < 0) return fail('Memory mode is for the daily routines');
         if (r === 'night' && C.nightLocked(g, op.host)) return fail('Finish After school first');
-        if (d.t[r].some(Boolean) || d.chk[r]) return fail('Memory mode has to be switched on before you start');
+        if (d.t[r].some(function (v, j) { return v && !skipped(cfg, r, j, op.host); }) || d.chk[r]) return fail('Memory mode has to be switched on before you start');
         d.mem[r] = 'on'; d.started[r] = true; touch(g, op.host); return res;
       }
       case 'peek': {
@@ -691,7 +697,7 @@ var PointsCore = (function () {
   return {
     ROUTINES: ROUTINES, MEM_ROUT: MEM_ROUT, MEM_LEVELS: MEM_LEVELS, SELF_LEVELS: SELF_LEVELS, STREAK_LEVELS: STREAK_LEVELS,
     GIRLS: GIRLS, GIRL_NAMES: GIRL_NAMES, DED_REASONS: DED_REASONS,
-    add: add, dow: dow, isWk: isWk, weekStart: weekStart, blankDay: blankDay, normalizeDay: normalizeDay,
+    add: add, dow: dow, isWk: isWk, weekStart: weekStart, skipped: skipped, blankDay: blankDay, normalizeDay: normalizeDay,
     make: make, apply: apply,
     levelIn: function (n, levels) { return levels.filter(function (x) { return n >= x; }).length; }
   };
@@ -764,6 +770,10 @@ function pump(){
     sending = false; net = 'ok';
     if (resp.error === 'auth') return signedOut('This device was signed out. Enter your PIN to set it up again.');
     queue.shift();
+    if (!resp.data && op.op !== 'load' && /went wrong/i.test(resp.error || '') && (op.tries = (op.tries || 0) + 1) < 4) {
+      queue.unshift(op); render(); clearTimeout(retryTimer); retryTimer = setTimeout(pump, 2500); return;
+    }
+    if (!resp.data && op.op !== 'load') refresh();
     if (resp.data) {
       P = resp;
       for (const q of queue) if (q.op !== 'load') PC.apply(P.cfg, P.data, P.today, P.me, q);
@@ -957,7 +967,7 @@ function rToday(g){
 }
 const ptsOf = r => P.cfg.rules[r.rule];
 function rMini(g, r, host){
-  const c = C(), d = c.day(g,host), n = d.t[r.k].filter(Boolean).length, tot = d.t[r.k].length, pts = ptsOf(r);
+  const c = C(), d = c.day(g,host), sk = i => PC.skipped(P.cfg, r.k, i, host), n = d.t[r.k].filter((v,i) => v && !sk(i)).length, tot = d.t[r.k].filter((v,i) => !sk(i)).length, pts = ptsOf(r);
   const word = pts === 1 ? 'point' : 'points';
   const chip = d.chk[r.k] ? `<span class="chip good">✓ ${pts} ${word} earned</span>`
     : c.isMemRun(d,r.k) ? `<span class="chip mem">🧠 Done from memory · waiting for a check</span>`
@@ -968,7 +978,7 @@ function rMini(g, r, host){
     <button class="btn ghost" data-act="open" data-r="${r.k}">Show</button></div>`;
 }
 function rRoutine(g, r, host, focus){
-  const c = C(), d = c.day(g,host), ts = P.cfg.tasks[r.k], n = d.t[r.k].filter(Boolean).length, tot = ts.length, chk = !!d.chk[r.k], done = c.allDone(d, r.k);
+  const c = C(), d = c.day(g,host), ts = P.cfg.tasks[r.k], sk = i => PC.skipped(P.cfg, r.k, i, host), n = d.t[r.k].filter((v,i) => v && !sk(i)).length, tot = ts.filter((t,i) => !sk(i)).length, chk = !!d.chk[r.k], done = c.allDone(d, r.k);
   const pts = ptsOf(r), st = chk ? 'checked' : done ? 'done' : 'todo', word = pts === 1 ? 'point' : 'points';
   const locked = viewDay() !== P.today, left = tot - n;
   const memAllowed = PC.MEM_ROUT.includes(r.k), practice = d.mem[r.k] === 'practice';
@@ -1010,6 +1020,7 @@ function rRoutine(g, r, host, focus){
     const extra = memAllowed && canStart ? `<button class="btn soft" data-act="startmem" ${keys}>🧠 Try this one from memory</button>`
       : d.mem[r.k] === 'peeked' && !chk && !done && !locked ? `<button class="btn soft" data-act="hide" ${keys}>🙈 Hide the list again</button>` : '';
     body = `${extra}<ul class="tasks">${ts.map((t,i) => {
+      if (sk(i)) return '';
       const on = d.t[r.k][i], pop = V.fx && V.fx.pop === `${r.k}-${i}` ? ' pop' : '';
       return `<li><button class="task${pop}" data-act="tick" data-r="${r.k}" data-i="${i}" data-host="${host}" aria-pressed="${on}" ${(chk || locked)?'disabled':''}>
         <span class="box">${CHECK}</span><span class="emo" aria-hidden="true">${EMOJI[t] || '⭐'}</span><span class="tl">${esc(t)}</span></button>${t === 'Homework' && !locked && P.homework && P.homework[g] ? `<a class="hwlink" href="${esc(P.homework[g].url)}" target="_blank" rel="noopener">📄 Open tonight's homework: ${esc(P.homework[g].title)}</a>` : ''}</li>`;
@@ -1305,7 +1316,7 @@ function rDed(g, s, d){
     ${list}${ctl}</div>`;
 }
 function rCRow(g,r,host){
-  const c = C(), d = c.day(g,host), ts = P.cfg.tasks[r.k], n = d.t[r.k].filter(Boolean).length, tot = ts.length, chk = !!d.chk[r.k], done = c.allDone(d, r.k), pts = ptsOf(r);
+  const c = C(), d = c.day(g,host), ts = P.cfg.tasks[r.k], sk = i => PC.skipped(P.cfg, r.k, i, host), n = d.t[r.k].filter((v,i) => v && !sk(i)).length, tot = ts.filter((t,i) => !sk(i)).length, chk = !!d.chk[r.k], done = c.allDone(d, r.k), pts = ptsOf(r);
   const miss = ts.filter((t,i) => !d.t[r.k][i]), memRun = c.isMemRun(d, r.k);
   const status = memRun ? (chk ? (d.memOk[r.k] ? '🧠 Memory run confirmed' : 'Checked, not from memory') : '🧠 Done from memory: confirm if it was all done without the list')
     : d.peeked[r.k] && done ? (d.practiceDone[r.k] ? 'Peeked, then finished from memory (practice run)' : 'Peeked, then ticked from the list')
@@ -1454,7 +1465,7 @@ document.addEventListener('keydown', e => {
   if (btn) { btn.click(); const el = document.getElementById(t.id); if (el) el.focus(); }
 });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && DEV) refresh(); });
-setInterval(() => { if (DEV && document.visibilityState === 'visible' && !queue.length) refresh(); }, 60000);
+setInterval(() => { if (DEV && document.visibilityState === 'visible' && !queue.length && (DEV.who === 'parent' || Date.now() % 60000 < 30000)) refresh(); }, 30000);
 setInterval(() => { if (P && !queue.length) render(); }, 5 * 60000); // keeps "Right now" in step with the clock
 
 render();
