@@ -289,6 +289,7 @@ p{margin:0}
 .mini .r-icon{width:40px;height:40px;font-size:20px;border-radius:12px}
 .mini-t{flex:1 1 140px;min-width:0}
 .mini-t b{font-weight:600}
+.mini-t .chip{white-space:normal;max-width:100%}
 .alldone{align-items:center;text-align:center;padding:28px 18px}
 .timebar{display:inline-flex;gap:2px;background:var(--surface);border-radius:99px;padding:3px;margin-left:6px;vertical-align:middle}
 .timebar button{border:0;background:transparent;border-radius:99px;padding:3px 10px;font-size:12px;font-weight:600;cursor:pointer;color:var(--ink-2)}
@@ -378,6 +379,15 @@ a.hw-title{color:var(--parent);text-underline-offset:2px}
 .hw-sr .chip{align-self:flex-end}
 .hw-chips{display:flex;flex-wrap:wrap;gap:6px}
 .hw-want{display:inline-flex;padding:6px 12px;border-radius:99px;background:var(--accent-soft);color:var(--ink);font-size:13px;font-weight:600}
+/* warnings, strikes and Kid view */
+.strikes .sline{display:flex;align-items:center;gap:6px;margin:6px 0 2px}
+.strikes .sdot{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--surface-2);color:var(--ink-3);font-size:13px;font-weight:700}
+.strikes .sdot.on{background:var(--wait);color:#fff}
+.strikes .sline b{margin-left:4px}
+.bedtime{margin:8px 0 0;padding:10px 12px;border-radius:12px;background:var(--wait-soft);color:var(--ink);font-weight:600}
+.kidnote{margin:0 0 12px}
+.kidview{border:2px dashed var(--line);border-radius:20px;padding:12px;pointer-events:none;user-select:none}
+@media (max-width:600px){.kidview{padding:6px;border-radius:14px}}
 </style>
 </head>
 <body>
@@ -394,7 +404,9 @@ var PointsCore = (function () {
     { k: 'before', name: 'Before school', icon: '🌅', rule: 'before' },
     { k: 'after',  name: 'After school',  icon: '🏫', rule: 'after' },
     { k: 'night',  name: 'Night',         icon: '🌙', rule: 'night' },
-    { k: 'chores', name: 'Weekly chores', icon: '🏠', rule: 'chores' }
+    { k: 'chores', name: 'Weekly chores', icon: '🏠', rule: 'chores' },
+    { k: 'wkmorn', name: 'Weekend morning', icon: '🌞', rule: 'wkmorn' },
+    { k: 'monday', name: 'Ready for Monday', icon: '🎒', rule: 'monday' }
   ];
   var MEM_ROUT = ['before', 'after', 'night'];
   var MEM_LEVELS = [1, 5, 10, 20, 40];
@@ -404,6 +416,12 @@ var PointsCore = (function () {
   var GIRL_NAMES = { ayla: 'Ayla', lani: 'Lani' };
   // Reasons a parent can take a point away (the girls see these words).
   var DED_REASONS = ['Lying', 'Rude or disrespectful', 'Ignoring a warning', 'Not following instructions', 'Asked for help before trying'];
+  // Reasons for a warning (the girls see these words). Ignoring a warning turns it into a strike.
+  var WARN_REASONS = ['Not following instructions', 'Not listening', 'Dragging it out'];
+  // Which routines belong to a day (for the no-chasing bonus): weekdays, Saturday, Sunday.
+  function ownKeys(w) { return w >= 1 && w <= 5 ? ['before', 'after', 'night'] : w === 6 ? ['wkmorn', 'night'] : ['wkmorn', 'monday', 'night']; }
+  // The routine that has to be finished before Night unlocks (none on Saturday).
+  function nightGate(w) { return w >= 1 && w <= 5 ? 'after' : w === 0 ? 'monday' : null; }
 
   /* ---------- dates (all as 'yyyy-mm-dd' text) ---------- */
   function pad(n) { return String(n).padStart(2, '0'); }
@@ -421,7 +439,7 @@ var PointsCore = (function () {
   function blankDay(cfg) {
     var t = {};
     ROUTINES.forEach(function (r) { t[r.k] = (cfg.tasks[r.k] || []).map(function () { return false; }); });
-    return { t: t, chk: {}, nc: false, behs: [], deds: [], started: {}, mem: {}, memDone: {}, memOk: {}, peeked: {}, practiceDone: {} };
+    return { t: t, chk: {}, nc: false, behs: [], deds: [], warns: [], strikes: [], started: {}, mem: {}, memDone: {}, memOk: {}, peeked: {}, practiceDone: {} };
   }
   // Make a stored day match the current task lists (tasks can be edited in the Sheet).
   function normalizeDay(cfg, d) {
@@ -431,6 +449,8 @@ var PointsCore = (function () {
     b.nc = !!d.nc;
     b.behs = d.behs || [];
     b.deds = d.deds || [];
+    b.warns = d.warns || [];
+    b.strikes = d.strikes || [];
     ROUTINES.forEach(function (r) {
       var src = (d.t && d.t[r.k]) || [];
       b.t[r.k] = b.t[r.k].map(function (_, i) { return !!src[i]; });
@@ -445,7 +465,9 @@ var PointsCore = (function () {
    */
   function make(cfg, data, today) {
     var R = cfg.rules;
-    var pts = { before: R.before, after: R.after, night: R.night, chores: R.chores };
+    var pts = { before: R.before, after: R.after, night: R.night, chores: R.chores,
+      wkmorn: R.wkmorn == null ? 1 : R.wkmorn, monday: R.monday == null ? 2 : R.monday };
+    var STRIKE_MAX = R.strikeMax || 3;
     GIRLS.forEach(function (g) { Object.keys((data.days && data.days[g]) || {}).forEach(function (s) { fillSkips(cfg, data.days[g][s], s); }); });
     function inRange(s) { return s >= cfg.startDate && s <= today; }
     function pk(g, s) { return data.days[g] && data.days[g][s]; }
@@ -457,6 +479,12 @@ var PointsCore = (function () {
     function allDone(d, k) { return d.t[k].length > 0 && d.t[k].every(Boolean); }
     function finished(g, host, k) { var d = pk(g, host); return !!d && (!!d.chk[k] || allDone(d, k)); }
     function full(g, s) { var d = pk(g, s); return !!d && isWk(s) && !!d.chk.before && !!d.chk.after && !!d.chk.night; }
+    // Every routine that belongs to the day is checked (weekdays: the same as full).
+    function fullDay(g, s) { var d = pk(g, s); return !!d && ownKeys(dow(s)).every(function (k) { return !!d.chk[k]; }); }
+    function strikeCount(g, s) { var d = pk(g, s); return d ? d.strikes.length : 0; }
+    function bedtime(g, s) { return strikeCount(g, s) >= STRIKE_MAX; }
+    // No-chasing bonus: every routine of the day checked, the switch on, and no strike that day.
+    function noChase(g, s) { var d = pk(g, s); return !!d && fullDay(g, s) && !!d.nc && !d.strikes.length; }
     function streakTo(g, s) {
       var n = 0, cur = s;
       for (var i = 0; i < 800 && cur >= cfg.startDate; i++) {
@@ -475,11 +503,9 @@ var PointsCore = (function () {
     function dayPts(g, s) {
       var d = pk(g, s); if (!d || s < cfg.startDate) return 0;
       var p = 0;
-      if (isWk(s)) {
-        ['before', 'after', 'night'].forEach(function (k) { if (d.chk[k]) p += pts[k]; });
-        if (full(g, s) && d.nc) p += R.bonus;
-        p += streakBonus(g, s);
-      }
+      ownKeys(dow(s)).forEach(function (k) { if (d.chk[k]) p += pts[k]; });
+      if (noChase(g, s)) p += R.bonus;
+      if (isWk(s)) p += streakBonus(g, s);
       if (d.chk.chores) p += pts.chores;
       if (dow(s) === 5 && weeklyMaster(g, s)) p += R.weeklyMaster;
       return p + d.behs.length;
@@ -488,7 +514,7 @@ var PointsCore = (function () {
     function earned(g) { return daysOf(g).reduce(function (a, s) { return a + dayPts(g, s); }, 0); }
     function spent(g) { return data.spending.filter(function (x) { return x.g === g && x.date >= cfg.startDate; }).reduce(function (a, x) { return a + x.cost; }, 0); }
     // Points taken away only come off the points to spend (not the team jar, week, streaks or badges).
-    function lostOn(g, s) { var d = pk(g, s); if (!d || s < cfg.startDate) return 0; return d.deds.filter(function (x) { return !x.fixed; }).length; }
+    function lostOn(g, s) { var d = pk(g, s); if (!d || s < cfg.startDate) return 0; return d.deds.filter(function (x) { return !x.fixed; }).length + d.strikes.filter(function (x) { return x.pt; }).length; }
     function lost(g) { return daysOf(g).reduce(function (a, s) { return a + lostOn(g, s); }, 0); }
     function balance(g) { return earned(g) - spent(g) - lost(g); }
     function weekDates(s) { var ws = weekStart(s), out = []; for (var i = 0; i < 7; i++) out.push(add(ws, i)); return out; }
@@ -500,7 +526,7 @@ var PointsCore = (function () {
       return s < cfg.startDate ? 0 : streakTo(g, s);
     }
     function bestStreak(g) { return daysOf(g).filter(isWk).reduce(function (m, s) { return Math.max(m, streakTo(g, s)); }, 0); }
-    function noChaseCount(g) { return daysOf(g).filter(function (s) { return full(g, s) && pk(g, s).nc; }).length; }
+    function noChaseCount(g) { return daysOf(g).filter(function (s) { return isWk(s) && noChase(g, s); }).length; }
     function memCount(g, k) { return daysOf(g).filter(function (s) { return memOk(g, s, k); }).length; }
     function dailyMasterCount(g) { return daysOf(g).filter(function (s) { return dailyMaster(g, s); }).length; }
     function weeklyMasterCount(g) { return daysOf(g).filter(function (s) { return dow(s) === 5 && weeklyMaster(g, s); }).length; }
@@ -508,10 +534,15 @@ var PointsCore = (function () {
       var w = dow(s), out = [];
       if (isWk(s)) ROUTINES.slice(0, 3).forEach(function (r) { out.push({ r: r, host: s }); });
       if (w === 5) out.push({ r: ROUTINES[3], host: s });
-      if (w === 6) out.push({ r: ROUTINES[3], host: add(s, -1) }); // Saturday-morning chores count for Friday
+      if (w === 6) { // Saturday: weekend morning, chores (count for Friday), night
+        out.push({ r: ROUTINES[4], host: s });
+        out.push({ r: ROUTINES[3], host: add(s, -1) });
+        out.push({ r: ROUTINES[2], host: s });
+      }
+      if (w === 0) [4, 5, 2].forEach(function (i) { out.push({ r: ROUTINES[i], host: s }); }); // Sunday
       return out;
     }
-    function nightLocked(g, s) { return isWk(s) && !finished(g, s, 'after'); }
+    function nightLocked(g, s) { var k = nightGate(dow(s)); return !!k && !finished(g, s, k); }
     function isMemRun(d, k) { return !!d.memDone[k]; }
     function waitingOn(g, s) {
       return routinesFor(s).filter(function (x) { var d = pk(g, x.host); return d && allDone(d, x.r.k) && !d.chk[x.r.k]; });
@@ -525,7 +556,8 @@ var PointsCore = (function () {
       dayPts: dayPts, earned: earned, spent: spent, balance: balance, lostOn: lostOn, lost: lost, weekDates: weekDates, weekPts: weekPts, monthPts: monthPts,
       curStreak: curStreak, bestStreak: bestStreak, noChaseCount: noChaseCount, memCount: memCount,
       dailyMasterCount: dailyMasterCount, weeklyMasterCount: weeklyMasterCount, routinesFor: routinesFor,
-      nightLocked: nightLocked, isMemRun: isMemRun, waitingOn: waitingOn, checkAllList: checkAllList
+      nightLocked: nightLocked, isMemRun: isMemRun, waitingOn: waitingOn, checkAllList: checkAllList,
+      fullDay: fullDay, noChase: noChase, strikeCount: strikeCount, bedtime: bedtime, strikeMax: STRIKE_MAX
     };
   }
 
@@ -553,7 +585,7 @@ var PointsCore = (function () {
     var g = parent ? op.g : me.who;
     if (GIRLS.indexOf(g) < 0 && ['approve', 'decline', 'load'].indexOf(op.op) < 0) return fail('Unknown person');
     var girlOps = ['tick', 'start', 'startmem', 'peek', 'hide', 'memdone', 'practicedone', 'goal', 'cashin', 'noteSeen'];
-    var parentOps = ['check', 'checkmem', 'uncheck', 'checkall', 'nochase', 'give', 'unbeh', 'take', 'fixded', 'unded', 'approve', 'decline', 'note'];
+    var parentOps = ['check', 'checkmem', 'uncheck', 'checkall', 'nochase', 'give', 'unbeh', 'take', 'fixded', 'unded', 'approve', 'decline', 'note', 'warn', 'unwarn', 'strike', 'unstrike'];
     if (girlOps.indexOf(op.op) >= 0 && parent) return fail('That is for the girls’ pages');
     if (parentOps.indexOf(op.op) >= 0 && !parent) return fail('Only a parent can do that');
     var d, r = op.r, k;
@@ -562,7 +594,7 @@ var PointsCore = (function () {
       case 'tick': {
         d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today can be ticked');
         if (d.chk[r]) return fail('Already checked by a parent');
-        if (r === 'night' && C.nightLocked(g, op.host)) return fail('Finish After school first');
+        if (r === 'night' && C.nightLocked(g, op.host)) return fail('Finish ' + (dow(op.host) === 0 ? 'Ready for Monday' : 'After school') + ' first');
         if (d.mem[r] === 'on' || d.mem[r] === 'practice') return fail('The list is hidden in memory mode');
         var i = Number(op.i); if (!(i >= 0 && i < d.t[r].length)) return fail('Unknown task');
         if (skipped(cfg, r, i, op.host)) return fail('That one isn\u2019t needed today');
@@ -575,7 +607,7 @@ var PointsCore = (function () {
       case 'startmem': {
         d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today can be started');
         if (MEM_ROUT.indexOf(r) < 0) return fail('Memory mode is for the daily routines');
-        if (r === 'night' && C.nightLocked(g, op.host)) return fail('Finish After school first');
+        if (r === 'night' && C.nightLocked(g, op.host)) return fail('Finish ' + (dow(op.host) === 0 ? 'Ready for Monday' : 'After school') + ' first');
         if (d.t[r].some(function (v, j) { return v && !skipped(cfg, r, j, op.host); }) || d.chk[r]) return fail('Memory mode has to be switched on before you start');
         d.mem[r] = 'on'; d.started[r] = true; touch(g, op.host); return res;
       }
@@ -594,7 +626,7 @@ var PointsCore = (function () {
         d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today');
         var want = op.op === 'memdone' ? 'on' : 'practice';
         if (d.mem[r] !== want) return fail('Not in memory mode');
-        if (r === 'night' && C.nightLocked(g, op.host)) return fail('Finish After school first');
+        if (r === 'night' && C.nightLocked(g, op.host)) return fail('Finish ' + (dow(op.host) === 0 ? 'Ready for Monday' : 'After school') + ' first');
         d.t[r] = d.t[r].map(function () { return true; });
         if (op.op === 'memdone') d.memDone[r] = true; else d.practiceDone[r] = true;
         touch(g, op.host); return res;
@@ -671,6 +703,42 @@ var PointsCore = (function () {
         if (!validDate(op.date)) return fail('Unknown day');
         d = C.day(g, op.date); d.deds = d.deds.filter(function (y) { return y.id !== op.id; }); touch(g, op.date); return res;
       }
+      case 'warn': {
+        if (op.date !== today) return fail('Warnings are for today');
+        if (WARN_REASONS.indexOf(op.why) < 0) return fail('Pick a reason');
+        d = C.day(g, today);
+        if (d.warns.length >= 10) return fail('That’s a lot of warnings today');
+        d.warns.push({ id: op.newId, why: op.why, note: String(op.note || '').trim().slice(0, 80), by: me.name, at: String(op.at || '').slice(0, 8), struck: '' });
+        touch(g, today); return res;
+      }
+      case 'unwarn': {
+        if (op.date !== today) return fail('Only today’s warnings can be changed');
+        d = C.day(g, today);
+        var w0 = d.warns.filter(function (y) { return y.id === op.id; })[0];
+        if (!w0) return fail('Not found');
+        if (w0.struck) return fail('Undo the strike first');
+        d.warns = d.warns.filter(function (y) { return y.id !== op.id; }); touch(g, today); return res;
+      }
+      case 'strike': {
+        if (op.date !== today) return fail('Strikes are for today');
+        d = C.day(g, today);
+        var w1 = d.warns.filter(function (y) { return y.id === op.id; })[0];
+        if (!w1) return fail('A strike needs a warning first');
+        if (w1.struck) return fail('That warning is already a strike');
+        if (d.strikes.length >= C.strikeMax) return fail('That’s ' + C.strikeMax + ' strikes already today');
+        var pt = !(today >= cfg.startDate && C.balance(g) < 1);
+        d.strikes.push({ id: op.newId, warn: w1.id, why: w1.why, note: w1.note, by: me.name, pt: pt });
+        w1.struck = op.newId; touch(g, today); return res;
+      }
+      case 'unstrike': {
+        if (!validDate(op.date)) return fail('Unknown day');
+        d = C.day(g, op.date);
+        var sx = d.strikes.filter(function (y) { return y.id === op.id; })[0];
+        if (!sx) return fail('Not found');
+        d.strikes = d.strikes.filter(function (y) { return y.id !== op.id; });
+        d.warns.forEach(function (y) { if (y.struck === op.id) y.struck = ''; });
+        touch(g, op.date); return res;
+      }
       case 'approve':
       case 'decline': {
         var q = data.requests.filter(function (x) { return x.id === op.id && x.status === 'Waiting'; })[0];
@@ -696,7 +764,7 @@ var PointsCore = (function () {
 
   return {
     ROUTINES: ROUTINES, MEM_ROUT: MEM_ROUT, MEM_LEVELS: MEM_LEVELS, SELF_LEVELS: SELF_LEVELS, STREAK_LEVELS: STREAK_LEVELS,
-    GIRLS: GIRLS, GIRL_NAMES: GIRL_NAMES, DED_REASONS: DED_REASONS,
+    GIRLS: GIRLS, GIRL_NAMES: GIRL_NAMES, DED_REASONS: DED_REASONS, WARN_REASONS: WARN_REASONS, ownKeys: ownKeys, nightGate: nightGate,
     add: add, dow: dow, isWk: isWk, weekStart: weekStart, skipped: skipped, blankDay: blankDay, normalizeDay: normalizeDay,
     make: make, apply: apply,
     levelIn: function (n, levels) { return levels.filter(function (x) { return n >= x; }).length; }
@@ -718,6 +786,7 @@ const EMOJI = {
   'Make bed':'🛏️','Get dressed':'👕','Eat breakfast':'🥣','Do breakfast dishes':'🍽️','Brush teeth':'🪥','Face, hair and skin':'🧴','Tidy room':'🧸','Pack bag and lunch box':'🎒',
   'Unpack bag and clean lunch box':'🧽',"Make tomorrow's lunch":'🥪','Change out of uniform':'👚','Exercise':'🏃','Homework':'✏️',
   'Eat dinner':'🍝','Do dinner dishes':'🧼','Shower':'🚿','Pyjamas on':'😴',
+  'Uniform laid out':'👔','School bag packed':'🎒',"Clean lunch box and make Monday's lunch":'🥪','Surface on charge':'🔌','Tidy room and desk':'🧹',
   'Clean room':'🧹','Vacuum bedroom':'💨','Washing and clothes':'🧺','Clean bathroom':'🛁','Clean kitchen':'🍳','House chore (ask a parent)':'🙋'
 };
 const SHOP_EMOJI = { 'Choose dinner or dessert':'🍨','Extra screen time':'📺','One-on-one time with a parent':'💛','Craft session':'✂️','Skatepark or outdoor trip':'🛹','Art supplies':'🎨' };
@@ -737,7 +806,7 @@ function readLS(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); 
 function writeLS(k, v){ try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
 let DEV = readLS(DEV_KEY);
 let P = DEV ? readLS(CACHE_KEY) : null;
-let V = { day:null, wk:0, ptab:'check', hwg:'ayla', hwwk:0, blAll:false, dedOpen:{}, dedNote:{}, tab:'today', open:{}, peekAsk:null, confirmDev:null, signoutAsk:false, draft:{}, noteDraft:{}, fx:null,
+let V = { day:null, wk:0, ptab:'check', hwg:'ayla', kidg:'ayla', warnOpen:{}, warnNote:{}, hwwk:0, blAll:false, dedOpen:{}, dedNote:{}, tab:'today', open:{}, peekAsk:null, confirmDev:null, signoutAsk:false, draft:{}, noteDraft:{}, fx:null,
           setup:{ step:'who', person:null, pin:'', err:'', shake:false, busy:false, notice:'' } };
 let queue = [], sending = false, net = 'ok', retryTimer = null;
 
@@ -797,8 +866,10 @@ function timeSlot(){ const h = new Date().getHours(); return h < 9 ? 'morning' :
 function focusFor(g, s, list){
   const c = C(), get = k => list.find(y => y.r.k === k);
   const open = k => { const x = get(k); return x && !c.finished(g, x.host, k) ? x : null; };
-  if (PC.dow(s) === 6) return open('chores');
-  if (!PC.isWk(s)) return null;
+  const w = PC.dow(s), h = new Date().getHours();
+  // Weekends: the morning routine first (it's the focus until 10am), Saturday chores, then the evening routines.
+  if (w === 6) return (h < 10 && open('wkmorn')) || open('chores') || open('wkmorn') || (h >= 17 ? open('night') : null) || null;
+  if (w === 0) return open('wkmorn') || (h >= 16 ? (open('monday') || open('night')) : null) || null;
   const t = timeSlot();
   if (t === 'morning' || t === 'school') return open('before') || { school:true };
   return open('after') || open('night') || (PC.dow(s) === 5 ? open('chores') : null);
@@ -819,8 +890,8 @@ function rWeek(g){
   return `${par ? rWkNav(back) : ''}<nav class="week" aria-label="Pick a day">${dates.map(s => {
     const fut = s > P.today, sel = s === viewDay(); let mk = 'none';
     if (fut) mk = '';
-    else if (g === 'parent') mk = (c.waitingOn('ayla',s).length + c.waitingOn('lani',s).length) ? 'wait' : (c.full('ayla',s) && c.full('lani',s)) ? 'full' : 'none';
-    else { const d = c.pk(g,s); mk = c.full(g,s) ? 'full' : (d && (Object.values(d.t).some(a => a.some(Boolean)) || d.behs.length)) ? 'part' : 'none'; }
+    else if (g === 'parent') mk = (c.waitingOn('ayla',s).length + c.waitingOn('lani',s).length) ? 'wait' : (c.fullDay('ayla',s) && c.fullDay('lani',s)) ? 'full' : 'none';
+    else { const d = c.pk(g,s); mk = c.fullDay(g,s) ? 'full' : (d && (Object.values(d.t).some(a => a.some(Boolean)) || d.behs.length)) ? 'part' : 'none'; }
     return `<button class="wd${s===P.today?' is-today':''}" data-act="day" data-day="${s}" aria-pressed="${sel}" ${fut?'disabled':''} aria-label="${longDate(s)}">
       <span class="wdn">${s===P.today?'Today':DAYS[PC.dow(s)].slice(0,3)}</span><span class="wdd">${toD(s).getDate()}</span><span class="mk ${mk}" aria-hidden="true"></span></button>`;
   }).join('')}</nav>`;
@@ -924,6 +995,7 @@ function rGirl(g){
         <div class="stat"><span class="lbl">Streak</span><b class="num sm">🔥 ${st}<small> ${st===1?'day':'days'}</small></b><span class="hint">${note}</span></div>
       </div></section>
     ${rPraise(g)}
+    ${rStrikes(g)}
     ${rLost(g)}
     ${rWeek(g)}
     <div class="tabs" role="tablist">
@@ -939,6 +1011,20 @@ function rPraise(g){
   return `<section class="card praise"><span class="big-emo" aria-hidden="true" style="background:var(--surface)">💌</span>
     <div class="praise-t"><span class="lbl">A note for you</span><p class="pq">“${esc(n.text)}”</p><span class="hint">From ${esc(n.from)} · ${shortDate(n.date)}</span></div>
     <button class="btn gold" data-act="noteSeen" data-id="${esc(n.id)}">Thanks! ❤️</button></section>`;
+}
+function rStrikes(g){
+  const c = C(), d = c.pk(g, P.today); if (!d || (!d.warns.length && !d.strikes.length)) return '';
+  const max = c.strikeMax, n = d.strikes.length, open = d.warns.filter(x => !x.struck);
+  const dots = Array.from({ length: max }, (_, i) => `<span class="sdot${i < n ? ' on' : ''}" aria-hidden="true">✖</span>`).join('');
+  const bed = n >= max ? `<p class="bedtime">🌙 ${max} strikes today: bedtime is 30 minutes earlier tonight.</p>` : '';
+  return `<section class="card praise lost strikes"><span class="big-emo" aria-hidden="true" style="background:var(--surface)">⚠️</span>
+    <div class="praise-t"><span class="lbl">Listening today</span>
+    <div class="sline" role="img" aria-label="${n} of ${max} strikes">${dots}<b>${n} of ${max} strikes</b></div>
+    ${open.length ? `<ul class="hist">${open.map(x => `<li><span><b>⚠️ Warning · ${esc(x.why)}</b>${x.note ? `<span class="hint">${esc(x.note)}</span>` : ''}</span></li>`).join('')}</ul>
+      <span class="hint">Do it now, the first time. If you ignore a warning, it becomes a strike.</span>` : ''}
+    ${n ? `<ul class="hist">${d.strikes.map(x => `<li><span><b>✖ Strike${x.pt ? ' · −1' : ''} · ${esc(x.why)}</b>${x.note ? `<span class="hint">${esc(x.note)}</span>` : ''}</span></li>`).join('')}</ul>
+      <span class="hint">Strikes can't be earned back, and today's no-chasing bonus is gone.</span>` : ''}
+    ${bed}</div></section>`;
 }
 function rLost(g){
   const d = C().pk(g, P.today), act = d ? d.deds.filter(x => !x.fixed) : [];
@@ -965,14 +1051,15 @@ function rToday(g){
   }
   return `<div class="layout"><div style="min-width:0">${main}</div><aside class="rail">${rPoints(g,s)}${rGoal(g)}${rJar()}</aside></div>`;
 }
-const ptsOf = r => P.cfg.rules[r.rule];
+const ptsOf = r => { const v = P.cfg.rules[r.rule]; return v == null ? ({ wkmorn:1, monday:2 })[r.rule] || 0 : v; };
+const gateName = host => PC.nightGate(PC.dow(host)) === 'monday' ? 'Ready for Monday' : 'After school';
 function rMini(g, r, host){
   const c = C(), d = c.day(g,host), sk = i => PC.skipped(P.cfg, r.k, i, host), n = d.t[r.k].filter((v,i) => v && !sk(i)).length, tot = d.t[r.k].filter((v,i) => !sk(i)).length, pts = ptsOf(r);
   const word = pts === 1 ? 'point' : 'points';
   const chip = d.chk[r.k] ? `<span class="chip good">✓ ${pts} ${word} earned</span>`
     : c.isMemRun(d,r.k) ? `<span class="chip mem">🧠 Done from memory · waiting for a check</span>`
     : n === tot ? `<span class="chip wait">Done · waiting for a check</span>`
-    : r.k === 'night' && viewDay() === P.today && c.nightLocked(g, host) ? `<span class="chip todo">🔒 Unlocks after After school</span>`
+    : r.k === 'night' && viewDay() === P.today && c.nightLocked(g, host) ? `<span class="chip todo">🔒 Unlocks after ${gateName(host)}</span>`
     : `<span class="chip todo">${n}/${tot} tasks · worth ${pts} ${word}</span>`;
   return `<div class="mini"><span class="r-icon" aria-hidden="true">${r.icon}</span><div class="mini-t"><b>${r.name}</b><div>${chip}</div></div>
     <button class="btn ghost" data-act="open" data-r="${r.k}">Show</button></div>`;
@@ -989,7 +1076,7 @@ function rRoutine(g, r, host, focus){
     : memRun ? `<span class="chip mem">🧠 Done from memory! Worth ${pts} ${word} once a parent confirms</span>`
     : done ? `<span class="chip wait">Done! Worth ${pts} ${word} once a parent checks</span>`
     : locked ? `<span class="chip todo">🔒 ${n} of ${tot} tasks ticked · worth ${pts} ${word}</span>`
-    : nlock ? `<span class="chip todo">🔒 Unlocks when After school is finished · worth ${pts} ${word}</span>`
+    : nlock ? `<span class="chip todo">🔒 Unlocks when ${gateName(host)} is finished · worth ${pts} ${word}</span>`
     : practice ? `<span class="chip mem">🧠 Practice run · worth ${pts} ${word}</span>`
     : memOn ? `<span class="chip mem">🧠 Memory mode · worth ${pts} ${word}</span>`
     : `<span class="chip todo">${left} ${left === 1 ? 'task' : 'tasks'} to go · worth ${pts} ${word}</span>`;
@@ -1000,7 +1087,7 @@ function rRoutine(g, r, host, focus){
   const hideBtn = !focus && !locked && V.open[r.k] ? `<button class="link" data-act="open" data-r="${r.k}">Hide</button>` : '';
   let body;
   if (memRun) body = `<p class="hint">🧠 You did this one from memory, so the list stays hidden.</p>`;
-  else if (nlock) body = `<div class="lockcard">🔒 Finish After school first, then Night unlocks.</div>${hideBtn}`;
+  else if (nlock) body = `<div class="lockcard">🔒 Finish ${gateName(host)} first, then Night unlocks.</div>${hideBtn}`;
   else if (practice && !chk && !locked && !done) {
     body = `<div class="memcard"><span class="big-emo" aria-hidden="true">🧠</span><h4>Practice run</h4>
       <p class="hint">Keep going from memory. Because you peeked, this one won't count towards your badges, but you still get the normal points. There are ${tot} tasks.</p>
@@ -1028,7 +1115,7 @@ function rRoutine(g, r, host, focus){
   }
   return `<article class="card routine ${st}${cel?' celebrate':''}${focus?' focus':''}">
     <div class="r-head"><span class="r-icon" aria-hidden="true">${r.icon}${sparks}</span>
-      <div class="r-title"><h3>${r.name}</h3>${r.k==='chores' ? `<p class="r-note">${PC.dow(viewDay())===6 ? "Saturday morning counts as Friday's chores" : 'Friday night, or Saturday morning if we’re out'}</p>` : ''}</div>
+      <div class="r-title"><h3>${r.name}</h3>${r.k==='monday' ? '<p class="r-note">Sunday from 4pm: get set for the school week</p>' : r.k==='wkmorn' ? '<p class="r-note">Saturday and Sunday, before 10am</p>' : ''}${r.k==='chores' ? `<p class="r-note">${PC.dow(viewDay())===6 ? "Saturday morning counts as Friday's chores" : 'Friday night, or Saturday morning if we’re out'}</p>` : ''}</div>
       <div class="ring" style="--p:${tot ? n/tot : 0}" role="img" aria-label="${n} of ${tot} tasks ticked"><span>${memOn && !memRun && !done ? '🧠' : `${n}/${tot}`}<small>tasks</small></span></div></div>
     ${chip}
     ${body}</article>`;
@@ -1041,15 +1128,17 @@ function rPoints(g,s){
       sub: c.isMemRun(d,r.k) ? (d.chk[r.k] && d.memOk[r.k] ? '🧠 From memory' : d.chk[r.k] ? '' : '🧠 From memory, waiting to be confirmed') : '' });
   }
   const d = c.day(g,s);
+  if (c.routinesFor(s).some(x => x.host === s && x.r.k !== 'chores')) lines.push({ l:'No-chasing bonus', p:R.bonus, st: c.noChase(g,s) ? 'earned' : 'todo',
+    sub: d.strikes.length ? 'Lost today because of a strike' : PC.isWk(s) ? 'All three routines with no reminders' : "All of today's routines with no reminders" });
   if (PC.isWk(s)) {
-    lines.push({ l:'No-chasing bonus', p:R.bonus, st: c.full(g,s) && d.nc ? 'earned' : 'todo', sub:'All three routines with no reminders' });
     const sb = c.streakBonus(g,s); if (sb) lines.push({ l:'Streak bonus', p:sb, st:'earned', sub:`${c.streakTo(g,s)} full days in a row` });
     if (PC.dow(s) === 5 && c.weeklyMaster(g,s)) lines.push({ l:'Weekly Master bonus', p:R.weeklyMaster, st:'earned', sub:'🏆 Every routine from memory, Monday to Friday' });
   }
   for (const b of d.behs) lines.push({ l:'Good behaviour', p:1, st:'earned', sub: b.for + (b.by ? ` · from ${b.by}` : '') });
   for (const x of d.deds) lines.push({ l: x.fixed ? 'Made it right' : 'Point taken away', p: x.fixed ? 0 : -1, st: x.fixed ? 'fixed' : 'lost',
     sub: x.why + (x.note ? ` · ${x.note}` : '') + (x.fixed ? ' · point given back' : '') });
-  const lostN = d.deds.filter(x => !x.fixed).length;
+  for (const x of d.strikes) lines.push({ l:'Strike', p: x.pt ? -1 : 0, st:'lost', sub: x.why + (x.note ? ` · ${x.note}` : '') + (x.pt ? '' : ' · no points to lose, still counts') });
+  const lostN = d.deds.filter(x => !x.fixed).length + d.strikes.filter(x => x.pt).length;
   const got = lines.filter(x => x.st === 'earned').reduce((a,x) => a + x.p, 0);
   const wait = lines.filter(x => x.st === 'waiting').reduce((a,x) => a + x.p, 0);
   const tagFor = { earned:'Earned', waiting:'Waiting for a check', todo:'Not yet', lost:'Taken away', fixed:'Given back' };
@@ -1117,7 +1206,17 @@ function rBadges(g){
 
 /* ---------- parent view ---------- */
 function rParent(){
-  return rPTabs() + (V.ptab === 'hw' ? rHW() : rCheck());
+  return rPTabs() + (V.ptab === 'hw' ? rHW() : V.ptab === 'kid' ? rKid() : rCheck());
+}
+// What a girl sees on her own device, today. Read-only: nothing on it can be tapped, and it doesn't mark her notes as seen.
+function rKid(){
+  const g = V.kidg || 'ayla', keep = { day:V.day, tab:V.tab, open:V.open, peekAsk:V.peekAsk, fx:V.fx };
+  V.day = null; V.tab = 'today'; V.open = {}; V.peekAsk = null; V.fx = null;
+  let body; try { body = rGirl(g); } finally { Object.assign(V, keep); }
+  return `<div class="kid">
+    <div class="seg hw-girls">${PC.GIRLS.map(x => `<button class="btn ${x === g ? 'soft hw-on' : 'ghost'}" data-act="kidg" data-to="${x}" aria-pressed="${x === g}">${girlName(x)}</button>`).join('')}</div>
+    <p class="note kidnote">👀 Viewing as <b>${girlName(g)}</b> · read-only. This is her screen right now; nothing here can be tapped.</p>
+    <div class="kidview" data-who="${g}" inert>${body}</div></div>`;
 }
 function rCheck(){
   const c = C(), s = viewDay();
@@ -1149,7 +1248,8 @@ const HW_SLIPS = [
 function rPTabs(){
   return `<div class="tabs" role="tablist" aria-label="Parent pages">
     <button class="tab" role="tab" data-act="ptab" data-tab="check" aria-selected="${V.ptab !== 'hw'}">Check</button>
-    <button class="tab" role="tab" data-act="ptab" data-tab="hw" aria-selected="${V.ptab === 'hw'}">Homework</button></div>`;
+    <button class="tab" role="tab" data-act="ptab" data-tab="hw" aria-selected="${V.ptab === 'hw'}">Homework</button>
+    <button class="tab" role="tab" data-act="ptab" data-tab="kid" aria-selected="${V.ptab === 'kid'}">Kid view</button></div>`;
 }
 function rHW(){
   const H = P.hw || { rows: [], set: {} }, g = V.hwg || 'ayla', nm = girlName(g);
@@ -1282,7 +1382,7 @@ function rGP(g,s){
       ${normal ? `<button class="btn primary" data-act="checkall" data-g="${g}">✓ Check all done (${normal})</button>` : ''}
       ${memWait ? `<span class="hint" style="display:inline">🧠 ${memWait} memory ${memWait === 1 ? 'run needs' : 'runs need'} your own check below</span>` : ''}</div>` : ''}
     <div>${rows || '<p class="hint" style="padding:12px 0;border-top:1px solid var(--line)">No routines on Sundays.</p>'}
-    ${PC.isWk(s) ? `<div class="opt"><div><b>No chasing</b><span class="hint">All three routines without reminders. Adds +${R.bonus} once all three are checked.</span></div>
+    ${list.some(x => x.host === s && x.r.k !== 'chores') ? `<div class="opt"><div><b>No chasing</b><span class="hint">${d.strikes.length ? 'No bonus today: there was a strike.' : PC.isWk(s) ? `All three routines without reminders. Adds +${R.bonus} once all three are checked.` : `All of today's routines without reminders. Adds +${R.bonus} once they're all checked.`}</span></div>
       <button class="sw" role="switch" aria-checked="${!!d.nc}" data-act="nochase" data-g="${g}" aria-label="No chasing for ${name}"></button></div>` : ''}
     <div class="opt col"><div><b>Good behaviour</b> <span class="chip gold" style="margin-left:6px">${d.behs.length} / ${R.behMax} today</span><span class="hint">Listening the first time, doing things in good time. One point at a time, up to ${R.behMax} a day.</span></div>
       ${d.behs.length ? `<ul class="hist">${d.behs.map(b => `<li><span><b class="num" style="font-size:17px;color:var(--good)">+1</b> ${esc(b.for)}${b.by ? `<span class="hint">from ${esc(b.by)}</span>` : ''}</span><button class="link" data-act="unbeh" data-g="${g}" data-id="${esc(b.id)}">Undo</button></li>`).join('')}</ul>` : ''}
@@ -1290,12 +1390,35 @@ function rGP(g,s){
         ? `<div class="give"><input class="in" id="bf-${g}" data-input="behfor" data-g="${g}" placeholder="What for? ${name} sees this" value="${esc(V.draft[g] || '')}" aria-label="What the good behaviour point is for" maxlength="60">
            <button class="btn good" data-act="give" data-g="${g}">Give +1</button></div>`
         : `<p class="hint">That's the most for today. Nice work, ${name}!</p>`}</div>
+    ${rWarn(g, s, d)}
     ${rDed(g, s, d)}
     <div class="opt col"><div><b>Praise note</b><span class="hint">Pops up on ${name}'s page the next time she opens it. No points, just words.</span></div>
       ${sent.length ? `<ul class="hist">${sent.map(x => `<li><span>💌 ${esc(x.text)}<span class="hint">${esc(x.from)} · ${shortDate(x.date)}</span></span><span class="chip ${x.seen ? 'good' : 'todo'}">${x.seen ? 'Seen' : 'Not seen yet'}</span></li>`).join('')}</ul>` : ''}
       <div class="give"><input class="in" id="pn-${g}" data-input="notetext" data-g="${g}" placeholder="Proud of you for…" value="${esc(V.noteDraft[g] || '')}" aria-label="Praise note for ${name}" maxlength="140">
         <button class="btn gold" data-act="note" data-g="${g}">Send</button></div></div>
     <div class="day-total"><span class="lbl">Points from this day</span><b class="num">${c.dayPts(g,s)}</b></div></div></section>`;
+}
+function rWarn(g, s, d){
+  const c = C(), name = girlName(g), today = s === P.today, max = c.strikeMax, n = d.strikes.length;
+  const wl = d.warns.map(x => {
+    const st = x.struck ? d.strikes.find(y => y.id === x.struck) : null;
+    const btns = !today ? '' : st
+      ? `<button class="link" data-act="unstrike" data-g="${g}" data-id="${esc(st.id)}">Undo strike</button>`
+      : `${n < max ? `<button class="btn ghost sm" data-act="strike" data-g="${g}" data-id="${esc(x.id)}">✖ Strike</button>` : ''}<button class="link" data-act="unwarn" data-g="${g}" data-id="${esc(x.id)}">Remove</button>`;
+    return `<li><span><b class="num" style="font-size:17px;color:var(--wait)">${st ? '✖' : '⚠️'}</b> ${esc(x.why)}${st ? ` · strike${st.pt ? ' (−1)' : ' (no points to lose)'}` : ''}<span class="hint">${[x.note ? esc(x.note) : '', x.by ? `from ${esc(x.by)}` : '', x.at ? esc(x.at) : ''].filter(Boolean).join(' · ')}</span></span>
+      <span class="ded-a">${btns}</span></li>`;
+  }).join('');
+  let ctl;
+  if (!today) ctl = '<p class="hint">Warnings and strikes are only given on the day itself.</p>';
+  else if (V.warnOpen[g]) ctl = `<div class="ded-pick"><span class="hint">Warn ${name} out loud, then pick why. She sees this.</span>
+      <div class="ded-r">${PC.WARN_REASONS.map(r => `<button class="btn ghost" data-act="warn" data-g="${g}" data-why="${esc(r)}">${esc(r)}</button>`).join('')}</div>
+      <input class="in" id="wn-${g}" data-input="warnnote" data-g="${g}" placeholder="What was asked (optional)" value="${esc(V.warnNote[g] || '')}" maxlength="80" aria-label="What was asked">
+      <button class="link" data-act="warn-close" data-g="${g}" style="align-self:flex-start">Cancel</button></div>`;
+  else ctl = `<button class="btn ghost" data-act="warn-open" data-g="${g}" style="align-self:flex-start">⚠️ Give a warning</button>`;
+  return `<div class="opt col"><div><b>Warnings and strikes</b> <span class="chip ${n >= max ? 'wait' : 'todo'}" style="margin-left:6px">✖ ${n} / ${max} strikes</span>
+    <span class="hint">Say it once, then warn. If she still doesn't do it, tap ✖ Strike: −1 that can't be earned back, and no no-chasing bonus today. ${max} strikes = bedtime 30 minutes earlier.</span>
+    ${n >= max ? `<p class="bedtime">🌙 ${max} strikes: ${name}'s bedtime is 30 minutes earlier tonight.</p>` : ''}
+    ${wl ? `<ul class="hist">${wl}</ul>` : ''}${ctl}</div></div>`;
 }
 function rDed(g, s, d){
   const c = C(), R = RULES(), name = girlName(g), today = s === P.today, active = d.deds.filter(x => !x.fixed).length;
@@ -1385,6 +1508,23 @@ document.addEventListener('click', e => {
     case 'tab': V.tab = b.dataset.tab; return done();
     case 'ptab': V.ptab = b.dataset.tab; return done();
     case 'hwg': V.hwg = b.dataset.to; return done();
+    case 'kidg': V.kidg = b.dataset.to; return done();
+    case 'warn-open': V.warnOpen[g] = true; return render();
+    case 'warn-close': V.warnOpen[g] = false; V.warnNote[g] = ''; return render();
+    case 'warn': {
+      const why = b.dataset.why, at = new Date().toLocaleTimeString('en-NZ', { hour:'numeric', minute:'2-digit' });
+      if (act({ op:'warn', g, date:P.today, why, note:(V.warnNote[g] || '').trim(), at })) { V.warnOpen[g] = false; V.warnNote[g] = ''; toast(`⚠️ Warning for ${girlName(g)}: ${why}`); }
+      return render();
+    }
+    case 'unwarn': if (act({ op:'unwarn', g, date:P.today, id:b.dataset.id })) toast('Warning removed'); return render();
+    case 'strike': {
+      if (act({ op:'strike', g, date:P.today, id:b.dataset.id })) {
+        const n = C().strikeCount(g, P.today), max = C().strikeMax;
+        toast(n >= max ? `✖ Strike ${n} for ${girlName(g)}: bedtime is 30 minutes earlier tonight` : `✖ Strike ${n} of ${max} for ${girlName(g)}`);
+      }
+      return render();
+    }
+    case 'unstrike': if (act({ op:'unstrike', g, date:P.today, id:b.dataset.id })) toast('Strike undone'); return render();
     case 'hwwk': V.hwwk = Math.max(0, V.hwwk + Number(b.dataset.d)); return done();
     case 'open': V.open[r] = !V.open[r]; return done();
     case 'peek-ask': V.peekAsk = r; return done();
@@ -1452,6 +1592,7 @@ document.addEventListener('input', e => {
   if (t.dataset.input === 'behfor') V.draft[t.dataset.g] = t.value;
   if (t.dataset.input === 'notetext') V.noteDraft[t.dataset.g] = t.value;
   if (t.dataset.input === 'dednote') V.dedNote[t.dataset.g] = t.value;
+  if (t.dataset.input === 'warnnote') V.warnNote[t.dataset.g] = t.value;
 });
 document.addEventListener('keydown', e => {
   const t = e.target;
@@ -1460,7 +1601,7 @@ document.addEventListener('keydown', e => {
     else if (e.key === 'Backspace') { V.setup.pin = V.setup.pin.slice(0,-1); render(); }
     return;
   }
-  if (e.key !== 'Enter' || !t.dataset || !t.dataset.input || t.dataset.input === 'dednote') return;
+  if (e.key !== 'Enter' || !t.dataset || !t.dataset.input || t.dataset.input === 'dednote' || t.dataset.input === 'warnnote') return;
   const btn = $app.querySelector(`button[data-act="${t.dataset.input === 'behfor' ? 'give' : 'note'}"][data-g="${t.dataset.g}"]`);
   if (btn) { btn.click(); const el = document.getElementById(t.id); if (el) el.focus(); }
 });
