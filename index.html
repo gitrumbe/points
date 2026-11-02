@@ -347,6 +347,8 @@ img{max-width:100%}
 .pl .fixed,.pl .fixed .pts{color:var(--ink-3)}
 .hw{display:flex;flex-direction:column;gap:16px}
 .hw-girls .btn{min-width:88px}
+.cg-girls{margin-top:4px}
+.cg-n{padding:1px 8px;font-size:12px;margin-left:4px}
 .hw-girls .hw-on{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
 .hw-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}
 .hw-head .btn{min-width:44px;font-size:18px}
@@ -806,7 +808,7 @@ function readLS(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); 
 function writeLS(k, v){ try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
 let DEV = readLS(DEV_KEY);
 let P = DEV ? readLS(CACHE_KEY) : null;
-let V = { day:null, wk:0, ptab:'check', hwg:'ayla', kidg:'ayla', warnOpen:{}, warnNote:{}, hwwk:0, blAll:false, dedOpen:{}, dedNote:{}, tab:'today', open:{}, peekAsk:null, confirmDev:null, signoutAsk:false, draft:{}, noteDraft:{}, fx:null,
+let V = { day:null, wk:0, ptab:'check', cg:'ayla', hwg:'ayla', kidg:'ayla', warnOpen:{}, warnNote:{}, hwwk:0, blAll:false, dedOpen:{}, dedNote:{}, tab:'today', open:{}, peekAsk:null, confirmDev:null, signoutAsk:false, draft:{}, noteDraft:{}, fx:null,
           setup:{ step:'who', person:null, pin:'', err:'', shake:false, busy:false, notice:'' } };
 let queue = [], sending = false, net = 'ok', retryTimer = null;
 
@@ -1232,7 +1234,8 @@ function rCheck(){
     ${rBacklog(bl)}
     ${rWeek('parent')}
     ${reqs ? `<div class="reqs">${reqs}</div>` : ''}
-    <div class="girls">${PC.GIRLS.map(g => rGP(g,s)).join('')}</div>
+    <div class="seg hw-girls cg-girls">${PC.GIRLS.map(x => { const n = c.waitingOn(x,s).length; return `<button class="btn ${x === V.cg ? 'soft hw-on' : 'ghost'}" data-act="cg" data-to="${x}" aria-pressed="${x === V.cg}" aria-label="${girlName(x)}${n ? `, ${n} to check` : ''}">${girlName(x)}${n ? ` <span class="chip wait cg-n">${n}</span>` : ''}</button>`; }).join('')}</div>
+    <div class="girls">${rGP(V.cg, s)}</div>
     ${rDevices()}`;
 }
 // ---------- parent Homework tab (data: P.hw from the Points Sheet's Homework tab, filled in by Claude) ----------
@@ -1348,7 +1351,7 @@ function rBacklog(list){
       : `<button class="btn primary" data-act="check" ${keys}>Check · +${pts}</button>`;
     return `<div class="crow" data-who="${g}"><span class="r-icon" aria-hidden="true">${r.icon}</span>
       <div class="ct"><b>${girlName(g)} · ${r.name}</b><span class="hint">${shortDate(host)} · ${memRun ? '🧠 Done from memory' : 'All tasks ticked'}</span></div>
-      <div class="ca">${btns}<button class="link" data-act="goday" data-day="${host}">Go to day</button></div></div>`;
+      <div class="ca">${btns}<button class="link" data-act="goday" data-day="${host}" data-g="${g}">Go to day</button></div></div>`;
   }).join('');
   const more = list.length > 6 ? `<button class="link" data-act="blall">${V.blAll ? 'Show fewer' : `Show all ${list.length}`}</button>` : '';
   return `<section class="card backlog"><div><span class="lbl">Still waiting</span><h2>From earlier days</h2><span class="hint">Finished but not checked yet. Points count on the day she earned them.</span></div>
@@ -1500,7 +1503,7 @@ document.addEventListener('click', e => {
       return done();
     }
     case 'goday': {
-      const s = b.dataset.day; V.day = s === P.today ? null : s; V.wk = weeksBack(s); V.open = {}; render();
+      const s = b.dataset.day; if (g) V.cg = g; V.day = s === P.today ? null : s; V.wk = weeksBack(s); V.open = {}; render();
       const el = $app.querySelector('.girls'); if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
       return;
     }
@@ -1509,6 +1512,7 @@ document.addEventListener('click', e => {
     case 'ptab': V.ptab = b.dataset.tab; return done();
     case 'hwg': V.hwg = b.dataset.to; return done();
     case 'kidg': V.kidg = b.dataset.to; return done();
+    case 'cg': V.cg = b.dataset.to; return done();
     case 'warn-open': V.warnOpen[g] = true; return render();
     case 'warn-close': V.warnOpen[g] = false; V.warnNote[g] = ''; return render();
     case 'warn': {
