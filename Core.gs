@@ -22,6 +22,10 @@ var PointsCore = (function () {
   var DED_REASONS = ['Lying', 'Rude or disrespectful', 'Ignoring a warning', 'Not following instructions', 'Asked for help before trying'];
   // Reasons for a warning (the girls see these words). Ignoring a warning turns it into a strike.
   var WARN_REASONS = ['Not following instructions', 'Not listening', 'Dragging it out'];
+  // A 3rd strike at or after this time (24-hour 'HH:MM') moves the earlier bedtime to the next night,
+  // because there's no bedtime left to take that night. About 1.5 hours before each girl's bedtime
+  // (Lani 8:30pm, Ayla 9:30pm). A Rules row 'late_ayla' / 'late_lani' overrides it.
+  var LATE_CUT = { ayla: '20:00', lani: '19:00' };
   // Which routines belong to a day (for the no-chasing bonus): weekdays, Saturday, Sunday.
   function ownKeys(w) { return w >= 1 && w <= 5 ? ['before', 'after', 'night'] : w === 6 ? ['wkmorn', 'night'] : ['wkmorn', 'monday', 'night']; }
   // The routine that has to be finished before Night unlocks (none on Saturday).
@@ -86,7 +90,13 @@ var PointsCore = (function () {
     // Every routine that belongs to the day is checked (weekdays: the same as full).
     function fullDay(g, s) { var d = pk(g, s); return !!d && ownKeys(dow(s)).every(function (k) { return !!d.chk[k]; }); }
     function strikeCount(g, s) { var d = pk(g, s); return d ? d.strikes.length : 0; }
-    function bedtime(g, s) { return strikeCount(g, s) >= STRIKE_MAX; }
+    function lateCut(g) { var v = R['late_' + g]; return /^\d{2}:\d{2}$/.test(String(v || '')) ? String(v) : LATE_CUT[g]; }
+    // The strike that made it 3 that day came at or after the cutoff.
+    function thirdLate(g, s) { var d = pk(g, s); if (!d || (d.strikes || []).length < STRIKE_MAX) return false; var k = d.strikes[STRIKE_MAX - 1]; return !!k.at && k.at >= lateCut(g); }
+    // Earlier bedtime on day s: 3 strikes that day before the cutoff, or 3 the night before after it.
+    function bedFromYesterday(g, s) { return thirdLate(g, add(s, -1)); }
+    function bedTomorrow(g, s) { return thirdLate(g, s); }
+    function bedtime(g, s) { return (strikeCount(g, s) >= STRIKE_MAX && !thirdLate(g, s)) || bedFromYesterday(g, s); }
     // No-chasing bonus: every routine of the day checked, the switch on, and no strike that day.
     function noChase(g, s) { var d = pk(g, s); return !!d && fullDay(g, s) && !!d.nc && !d.strikes.length; }
     function streakTo(g, s) {
@@ -180,7 +190,7 @@ var PointsCore = (function () {
       curStreak: curStreak, bestStreak: bestStreak, noChaseCount: noChaseCount, memCount: memCount,
       dailyMasterCount: dailyMasterCount, weeklyMasterCount: weeklyMasterCount, routinesFor: routinesFor,
       nightLocked: nightLocked, isMemRun: isMemRun, waitingOn: waitingOn, checkAllList: checkAllList,
-      fullDay: fullDay, noChase: noChase, strikeCount: strikeCount, bedtime: bedtime, strikeMax: STRIKE_MAX,
+      fullDay: fullDay, noChase: noChase, strikeCount: strikeCount, bedtime: bedtime, bedTomorrow: bedTomorrow, bedFromYesterday: bedFromYesterday, lateCut: lateCut, strikeMax: STRIKE_MAX,
       weekWarns: weekWarns, warnedFor: warnedFor, strikesFrom: strikesFrom
     };
   }
@@ -353,7 +363,8 @@ var PointsCore = (function () {
         var w1 = we.w, wd = we.date;
         d = C.day(g, today);
         if (d.strikes.length >= C.strikeMax) return fail('That’s ' + C.strikeMax + ' strikes already today');
-        d.strikes.push({ id: op.newId, warn: w1.id, wdate: wd, why: w1.why, note: w1.note, by: me.name, pt: true });
+        var at24 = /^\d{2}:\d{2}$/.test(String(op.at24 || '')) ? String(op.at24) : '';
+        d.strikes.push({ id: op.newId, warn: w1.id, wdate: wd, why: w1.why, note: w1.note, by: me.name, pt: true, at: at24 });
         touch(g, today); return res;
       }
       case 'unstrike': {
