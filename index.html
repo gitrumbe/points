@@ -519,6 +519,25 @@ var PointsCore = (function () {
     function lostOn(g, s) { var d = pk(g, s); if (!d || s < cfg.startDate) return 0; return d.deds.filter(function (x) { return !x.fixed; }).length + d.strikes.filter(function (x) { return x.pt; }).length; }
     function lost(g) { return daysOf(g).reduce(function (a, s) { return a + lostOn(g, s); }, 0); }
     function balance(g) { return earned(g) - spent(g) - lost(g); }
+    // Warnings last until Sunday night (Monday to Sunday week). Each comes back as { date, w }.
+    function weekWarns(g, s) {
+      var out = [], ws = weekStart(s);
+      for (var i = 0; i < 7; i++) {
+        var x = add(ws, i); if (x > s) break;
+        var d = pk(g, x); if (d) (d.warns || []).forEach(function (w) { out.push({ date: x, w: w }); });
+      }
+      return out;
+    }
+    function warnedFor(g, s, why) { return weekWarns(g, s).filter(function (e) { return e.w.why === why; })[0] || null; }
+    // Strikes this week that came from one warning.
+    function strikesFrom(g, s, wid) {
+      var out = [], ws = weekStart(s);
+      for (var i = 0; i < 7; i++) {
+        var x = add(ws, i), d = pk(g, x);
+        if (d) (d.strikes || []).forEach(function (k) { if (k.warn === wid) out.push({ date: x, k: k }); });
+      }
+      return out;
+    }
     function weekDates(s) { var ws = weekStart(s), out = []; for (var i = 0; i < 7; i++) out.push(add(ws, i)); return out; }
     function weekPts(g) { return weekDates(today).reduce(function (a, s) { return a + (s <= today ? dayPts(g, s) : 0); }, 0); }
     function monthPts(g) { return daysOf(g).filter(function (s) { return s.slice(0, 7) === today.slice(0, 7); }).reduce(function (a, s) { return a + dayPts(g, s); }, 0); }
@@ -559,7 +578,8 @@ var PointsCore = (function () {
       curStreak: curStreak, bestStreak: bestStreak, noChaseCount: noChaseCount, memCount: memCount,
       dailyMasterCount: dailyMasterCount, weeklyMasterCount: weeklyMasterCount, routinesFor: routinesFor,
       nightLocked: nightLocked, isMemRun: isMemRun, waitingOn: waitingOn, checkAllList: checkAllList,
-      fullDay: fullDay, noChase: noChase, strikeCount: strikeCount, bedtime: bedtime, strikeMax: STRIKE_MAX
+      fullDay: fullDay, noChase: noChase, strikeCount: strikeCount, bedtime: bedtime, strikeMax: STRIKE_MAX,
+      weekWarns: weekWarns, warnedFor: warnedFor, strikesFrom: strikesFrom
     };
   }
 
@@ -686,7 +706,7 @@ var PointsCore = (function () {
         if (DED_REASONS.indexOf(op.why) < 0) return fail('Pick a reason');
         d = C.day(g, today);
         if (d.deds.filter(function (x) { return !x.fixed; }).length >= C.R.dedMax) return fail('That’s the most for today');
-        if (today >= cfg.startDate && C.balance(g) < 1) return fail(GIRL_NAMES[g] + ' has no points to lose right now');
+        // The balance can go below 0, so a point still comes off when she has none (03/11).
         d.deds.push({ id: op.newId, why: op.why, note: String(op.note || '').trim().slice(0, 80), by: me.name, fixed: false });
         touch(g, today); return res;
       }
@@ -697,7 +717,6 @@ var PointsCore = (function () {
         if (!x) return fail('Not found');
         if (!op.on) {
           if (d.deds.filter(function (y) { return !y.fixed; }).length >= C.R.dedMax) return fail('That’s the most for today');
-          if (today >= cfg.startDate && C.balance(g) < 1) return fail(GIRL_NAMES[g] + ' has no points to lose right now');
         }
         x.fixed = !!op.on; touch(g, today); return res;
       }
@@ -708,29 +727,32 @@ var PointsCore = (function () {
       case 'warn': {
         if (op.date !== today) return fail('Warnings are for today');
         if (WARN_REASONS.indexOf(op.why) < 0) return fail('Pick a reason');
+        // One warning per reason per week: a repeat that week is a strike (03/11).
+        if (C.warnedFor(g, today, op.why)) return fail('Already warned for ' + op.why.toLowerCase() + ' this week. Tap ✖ Strike on that warning instead.');
         d = C.day(g, today);
         if (d.warns.length >= 10) return fail('That’s a lot of warnings today');
         d.warns.push({ id: op.newId, why: op.why, note: String(op.note || '').trim().slice(0, 80), by: me.name, at: String(op.at || '').slice(0, 8), struck: '' });
         touch(g, today); return res;
       }
       case 'unwarn': {
-        if (op.date !== today) return fail('Only today’s warnings can be changed');
+        if (op.date !== today) return fail('Only today’s warnings can be removed');
         d = C.day(g, today);
         var w0 = d.warns.filter(function (y) { return y.id === op.id; })[0];
         if (!w0) return fail('Not found');
-        if (w0.struck) return fail('Undo the strike first');
+        if (C.strikesFrom(g, today, w0.id).length) return fail('Undo the strike first');
         d.warns = d.warns.filter(function (y) { return y.id !== op.id; }); touch(g, today); return res;
       }
       case 'strike': {
+        // A strike goes on today, from any warning given this week (Monday to today).
         if (op.date !== today) return fail('Strikes are for today');
+        // Find the warning by its id among this week's warnings (the page doesn't need to say which day).
+        var we = C.weekWarns(g, today).filter(function (e) { return e.w.id === op.id; })[0];
+        if (!we) return fail('A strike needs a warning this week first');
+        var w1 = we.w, wd = we.date;
         d = C.day(g, today);
-        var w1 = d.warns.filter(function (y) { return y.id === op.id; })[0];
-        if (!w1) return fail('A strike needs a warning first');
-        if (w1.struck) return fail('That warning is already a strike');
         if (d.strikes.length >= C.strikeMax) return fail('That’s ' + C.strikeMax + ' strikes already today');
-        var pt = !(today >= cfg.startDate && C.balance(g) < 1);
-        d.strikes.push({ id: op.newId, warn: w1.id, why: w1.why, note: w1.note, by: me.name, pt: pt });
-        w1.struck = op.newId; touch(g, today); return res;
+        d.strikes.push({ id: op.newId, warn: w1.id, wdate: wd, why: w1.why, note: w1.note, by: me.name, pt: true });
+        touch(g, today); return res;
       }
       case 'unstrike': {
         if (!validDate(op.date)) return fail('Unknown day');
@@ -738,8 +760,9 @@ var PointsCore = (function () {
         var sx = d.strikes.filter(function (y) { return y.id === op.id; })[0];
         if (!sx) return fail('Not found');
         d.strikes = d.strikes.filter(function (y) { return y.id !== op.id; });
-        d.warns.forEach(function (y) { if (y.struck === op.id) y.struck = ''; });
-        touch(g, op.date); return res;
+        var wday = sx.wdate && C.pk(g, sx.wdate) ? C.pk(g, sx.wdate) : d;
+        (wday.warns || []).forEach(function (y) { if (y.struck === op.id) y.struck = ''; });
+        touch(g, op.date); if (sx.wdate) touch(g, sx.wdate); return res;
       }
       case 'approve':
       case 'decline': {
@@ -984,6 +1007,8 @@ function addDigit(dg){
   }).catch(() => { st.busy = false; st.pin = ''; st.err = 'Could not reach the points tracker. Check the internet and try again.'; render(); });
 }
 
+const DAYN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const warnDay = s => s === P.today ? 'today' : DAYN[PC.dow(s)];
 /* ---------- girl view ---------- */
 function rGirl(g){
   const c = C(), s = viewDay(), bal = c.balance(g), wk = c.weekPts(g), st = c.curStreak(g), R = RULES();
@@ -992,7 +1017,7 @@ function rGirl(g){
   return `<section class="hero">
       <div class="hello"><p class="eyebrow">${s===P.today ? 'Today' : 'Looking back'} · ${longDate(s)}</p><h1>Hi <span class="nm">${girlName(g)}</span></h1></div>
       <div class="stats">
-        <div class="stat money"><span class="coin" aria-hidden="true">★</span><div><b class="num">${bal}</b><span class="lbl">points to spend</span></div></div>
+        <div class="stat money"><span class="coin" aria-hidden="true">★</span><div><b class="num">${bal < 0 ? '−' + (-bal) : bal}</b><span class="lbl">${bal < 0 ? 'points owed' : 'points to spend'}</span>${bal < 0 ? `<span class="hint">Earn ${-bal} to get back to 0</span>` : ''}</div></div>
         <div class="stat"><span class="lbl">This week</span><b class="num sm">${wk}<small> / ${R.weekTarget}</small></b><div class="bar" style="--p:${Math.min(wk/R.weekTarget,1)}"><i></i></div></div>
         <div class="stat"><span class="lbl">Streak</span><b class="num sm">🔥 ${st}<small> ${st===1?'day':'days'}</small></b><span class="hint">${note}</span></div>
       </div></section>
@@ -1015,16 +1040,17 @@ function rPraise(g){
     <button class="btn gold" data-act="noteSeen" data-id="${esc(n.id)}">Thanks! ❤️</button></section>`;
 }
 function rStrikes(g){
-  const c = C(), d = c.pk(g, P.today); if (!d || (!d.warns.length && !d.strikes.length)) return '';
-  const max = c.strikeMax, n = d.strikes.length, open = d.warns.filter(x => !x.struck);
+  const c = C(), d = c.pk(g, P.today), ww = c.weekWarns(g, P.today), ks = d ? (d.strikes || []) : [];
+  if (!ww.length && !ks.length) return '';
+  const max = c.strikeMax, n = ks.length;
   const dots = Array.from({ length: max }, (_, i) => `<span class="sdot${i < n ? ' on' : ''}" aria-hidden="true">✖</span>`).join('');
   const bed = n >= max ? `<p class="bedtime">🌙 ${max} strikes today: bedtime is 30 minutes earlier tonight.</p>` : '';
   return `<section class="card praise lost strikes"><span class="big-emo" aria-hidden="true" style="background:var(--surface)">⚠️</span>
-    <div class="praise-t"><span class="lbl">Listening today</span>
-    <div class="sline" role="img" aria-label="${n} of ${max} strikes">${dots}<b>${n} of ${max} strikes</b></div>
-    ${open.length ? `<ul class="hist">${open.map(x => `<li><span><b>⚠️ Warning · ${esc(x.why)}</b>${x.note ? `<span class="hint">${esc(x.note)}</span>` : ''}</span></li>`).join('')}</ul>
-      <span class="hint">Do it now, the first time. If you ignore a warning, it becomes a strike.</span>` : ''}
-    ${n ? `<ul class="hist">${d.strikes.map(x => `<li><span><b>✖ Strike${x.pt ? ' · −1' : ''} · ${esc(x.why)}</b>${x.note ? `<span class="hint">${esc(x.note)}</span>` : ''}</span></li>`).join('')}</ul>
+    <div class="praise-t"><span class="lbl">Listening</span>
+    <div class="sline" role="img" aria-label="${n} of ${max} strikes today">${dots}<b>${n} of ${max} strikes today</b></div>
+    ${ww.length ? `<ul class="hist">${ww.map(e => `<li><span><b>⚠️ Warned this week · ${esc(e.w.why)} (${warnDay(e.date)})</b>${e.w.note ? `<span class="hint">${esc(e.w.note)}</span>` : ''}</span></li>`).join('')}</ul>
+      <span class="hint">A warning lasts until Sunday night. If you ignore it, or it happens again this week, it's a strike straight away.</span>` : ''}
+    ${n ? `<ul class="hist">${ks.map(x => `<li><span><b>✖ Strike${x.pt ? ' · −1' : ''} · ${esc(x.why)}</b>${x.note ? `<span class="hint">${esc(x.note)}</span>` : ''}</span></li>`).join('')}</ul>
       <span class="hint">Strikes can't be earned back, and today's no-chasing bonus is gone.</span>` : ''}
     ${bed}</div></section>`;
 }
@@ -1156,7 +1182,7 @@ function rGoal(g){
   return `<section class="card"><span class="lbl">Saving for</span>
     <div class="goal-top"><span class="big-emo" aria-hidden="true">${shopEmoji(it.name)}</span><div><h3>${esc(it.name)}</h3><span class="hint">★ ${it.cost} points</span></div></div>
     <div class="bar gold" style="--p:${p};height:14px"><i></i></div>
-    <p class="hint"><b style="color:var(--ink)">${Math.max(0, Math.min(bal,it.cost))} of ${it.cost}</b> · ${left ? `${left} more to go` : 'You have enough! Cash it in from the shop.'}</p></section>`;
+    <p class="hint"><b style="color:var(--ink)">${bal < 0 ? '−' + (-bal) : Math.min(bal,it.cost)} of ${it.cost}</b> · ${left ? `${left} more to go` : 'You have enough! Cash it in from the shop.'}</p></section>`;
 }
 function rShop(g){
   const bal = C().balance(g);
@@ -1380,7 +1406,7 @@ function rGP(g,s){
   const sent = P.data.notes.filter(x => x.g === g).slice(-2).reverse();
   return `<section class="card gp" data-who="${g}">
     <div class="gp-head"><span class="av" aria-hidden="true">${name[0]}</span><div style="flex:1;min-width:0"><h2>${name}</h2>
-      <div class="gp-stats"><span class="chip gold">★ ${c.balance(g)} to spend</span><span class="chip todo">${c.weekPts(g)} / ${R.weekTarget} this week</span><span class="chip todo">🔥 ${c.curStreak(g)}</span></div></div></div>
+      <div class="gp-stats"><span class="chip gold">${c.balance(g) < 0 ? `★ −${-c.balance(g)} owed` : `★ ${c.balance(g)} to spend`}</span><span class="chip todo">${c.weekPts(g)} / ${R.weekTarget} this week</span><span class="chip todo">🔥 ${c.curStreak(g)}</span></div></div></div>
     ${normal || memWait ? `<div style="display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center">
       ${normal ? `<button class="btn primary" data-act="checkall" data-g="${g}">✓ Check all done (${normal})</button>` : ''}
       ${memWait ? `<span class="hint" style="display:inline">🧠 ${memWait} memory ${memWait === 1 ? 'run needs' : 'runs need'} your own check below</span>` : ''}</div>` : ''}
@@ -1402,26 +1428,36 @@ function rGP(g,s){
     <div class="day-total"><span class="lbl">Points from this day</span><b class="num">${c.dayPts(g,s)}</b></div></div></section>`;
 }
 function rWarn(g, s, d){
-  const c = C(), name = girlName(g), today = s === P.today, max = c.strikeMax, n = d.strikes.length;
-  const wl = d.warns.map(x => {
-    const st = x.struck ? d.strikes.find(y => y.id === x.struck) : null;
-    const btns = !today ? '' : st
-      ? `<button class="link" data-act="unstrike" data-g="${g}" data-id="${esc(st.id)}">Undo strike</button>`
-      : `${n < max ? `<button class="btn ghost sm" data-act="strike" data-g="${g}" data-id="${esc(x.id)}">✖ Strike</button>` : ''}<button class="link" data-act="unwarn" data-g="${g}" data-id="${esc(x.id)}">Remove</button>`;
-    return `<li><span><b class="num" style="font-size:17px;color:var(--wait)">${st ? '✖' : '⚠️'}</b> ${esc(x.why)}${st ? ` · strike${st.pt ? ' (−1)' : ' (no points to lose)'}` : ''}<span class="hint">${[x.note ? esc(x.note) : '', x.by ? `from ${esc(x.by)}` : '', x.at ? esc(x.at) : ''].filter(Boolean).join(' · ')}</span></span>
-      <span class="ded-a">${btns}</span></li>`;
-  }).join('');
+  const c = C(), name = girlName(g), today = s === P.today, max = c.strikeMax, ks = d.strikes || [], n = ks.length;
+  const who = x => [x.note ? esc(x.note) : '', x.by ? `from ${esc(x.by)}` : '', x.at ? esc(x.at) : ''].filter(Boolean).join(' · ');
+  let wl = '', sl = '';
+  if (today) {
+    // This week's warnings (Monday to today): each stays live until Sunday night.
+    wl = c.weekWarns(g, s).map(e => {
+      const x = e.w, from = c.strikesFrom(g, s, x.id), canRm = e.date === s && !from.length;
+      const btns = `${n < max ? `<button class="btn ghost sm" data-act="strike" data-g="${g}" data-id="${esc(x.id)}" data-wd="${e.date}">✖ Strike</button>` : ''}${canRm ? `<button class="link" data-act="unwarn" data-g="${g}" data-id="${esc(x.id)}">Remove</button>` : ''}`;
+      return `<li><span><b class="num" style="font-size:17px;color:var(--wait)">⚠️</b> ${esc(x.why)} · ${warnDay(e.date)}${from.length ? ` · ${from.length} ${from.length === 1 ? 'strike' : 'strikes'} this week` : ''}<span class="hint">${who(x)}</span></span>
+        <span class="ded-a">${btns}</span></li>`;
+    }).join('');
+  } else {
+    wl = (d.warns || []).map(x => `<li><span><b class="num" style="font-size:17px;color:var(--wait)">⚠️</b> ${esc(x.why)}<span class="hint">${who(x)}</span></span></li>`).join('');
+  }
+  sl = ks.map(k => `<li><span><b class="num" style="font-size:17px;color:var(--wait)">✖</b> Strike · ${esc(k.why)}${k.pt ? ' (−1)' : ' (no points to lose)'}${k.wdate && k.wdate !== s ? ` · warned ${warnDay(k.wdate)}` : ''}<span class="hint">${k.by ? `from ${esc(k.by)}` : ''}</span></span>
+      <span class="ded-a">${today ? `<button class="link" data-act="unstrike" data-g="${g}" data-id="${esc(k.id)}">Undo strike</button>` : ''}</span></li>`).join('');
   let ctl;
   if (!today) ctl = '<p class="hint">Warnings and strikes are only given on the day itself.</p>';
-  else if (V.warnOpen[g]) ctl = `<div class="ded-pick"><span class="hint">Warn ${name} out loud, then pick why. She sees this.</span>
-      <div class="ded-r">${PC.WARN_REASONS.map(r => `<button class="btn ghost" data-act="warn" data-g="${g}" data-why="${esc(r)}">${esc(r)}</button>`).join('')}</div>
+  else if (V.warnOpen[g]) {
+    const left = PC.WARN_REASONS.filter(r => !c.warnedFor(g, s, r));
+    ctl = `<div class="ded-pick"><span class="hint">Warn ${name} out loud, then pick why. She sees this.${left.length < PC.WARN_REASONS.length ? ' Reasons already warned this week aren\'t shown: use ✖ Strike on that warning.' : ''}</span>
+      <div class="ded-r">${left.length ? left.map(r => `<button class="btn ghost" data-act="warn" data-g="${g}" data-why="${esc(r)}">${esc(r)}</button>`).join('') : '<span class="hint">Every reason has a warning this week. Use ✖ Strike.</span>'}</div>
       <input class="in" id="wn-${g}" data-input="warnnote" data-g="${g}" placeholder="What was asked (optional)" value="${esc(V.warnNote[g] || '')}" maxlength="80" aria-label="What was asked">
       <button class="link" data-act="warn-close" data-g="${g}" style="align-self:flex-start">Cancel</button></div>`;
+  }
   else ctl = `<button class="btn ghost" data-act="warn-open" data-g="${g}" style="align-self:flex-start">⚠️ Give a warning</button>`;
   return `<div class="opt col"><div><b>Warnings and strikes</b> <span class="chip ${n >= max ? 'wait' : 'todo'}" style="margin-left:6px">✖ ${n} / ${max} strikes</span>
-    <span class="hint">Say it once, then warn. If she still doesn't do it, tap ✖ Strike: −1 that can't be earned back, and no no-chasing bonus today. ${max} strikes = bedtime 30 minutes earlier.</span>
+    <span class="hint">Say it once, then warn. A warning lasts until Sunday night. If she ignores it, or does the same thing again this week, tap ✖ Strike on it: −1 that can't be earned back, and no no-chasing bonus today. ${max} strikes in a day = bedtime 30 minutes earlier.</span>
     ${n >= max ? `<p class="bedtime">🌙 ${max} strikes: ${name}'s bedtime is 30 minutes earlier tonight.</p>` : ''}
-    ${wl ? `<ul class="hist">${wl}</ul>` : ''}${ctl}</div></div>`;
+    ${wl ? `<span class="lbl">${today ? 'Warnings this week' : 'Warnings'}</span><ul class="hist">${wl}</ul>` : ''}${sl ? `<span class="lbl">Strikes</span><ul class="hist">${sl}</ul>` : ''}${ctl}</div></div>`;
 }
 function rDed(g, s, d){
   const c = C(), R = RULES(), name = girlName(g), today = s === P.today, active = d.deds.filter(x => !x.fixed).length;
@@ -1432,7 +1468,6 @@ function rDed(g, s, d){
   let ctl;
   if (!today) ctl = '<p class="hint">Points can only be taken away on the day itself.</p>';
   else if (active >= R.dedMax) ctl = '<p class="hint">That’s the most for today.</p>';
-  else if (P.today >= P.cfg.startDate && c.balance(g) < 1) ctl = `<p class="hint">${name} has no points to lose right now.</p>`;
   else if (V.dedOpen[g]) ctl = `<div class="ded-pick"><span class="hint">Why? ${name} sees this.</span>
       <div class="ded-r">${PC.DED_REASONS.map(r => `<button class="btn ghost" data-act="take" data-g="${g}" data-why="${esc(r)}">${esc(r)}</button>`).join('')}</div>
       <input class="in" id="dn-${g}" data-input="dednote" data-g="${g}" placeholder="Extra detail (optional)" value="${esc(V.dedNote[g] || '')}" maxlength="80" aria-label="Extra detail">
@@ -1522,7 +1557,7 @@ document.addEventListener('click', e => {
     }
     case 'unwarn': if (act({ op:'unwarn', g, date:P.today, id:b.dataset.id })) toast('Warning removed'); return render();
     case 'strike': {
-      if (act({ op:'strike', g, date:P.today, id:b.dataset.id })) {
+      if (act({ op:'strike', g, date:P.today, id:b.dataset.id, wdate:b.dataset.wd || P.today })) {
         const n = C().strikeCount(g, P.today), max = C().strikeMax;
         toast(n >= max ? `✖ Strike ${n} for ${girlName(g)}: bedtime is 30 minutes earlier tonight` : `✖ Strike ${n} of ${max} for ${girlName(g)}`);
       }
