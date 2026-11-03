@@ -420,6 +420,10 @@ var PointsCore = (function () {
   var DED_REASONS = ['Lying', 'Rude or disrespectful', 'Ignoring a warning', 'Not following instructions', 'Asked for help before trying'];
   // Reasons for a warning (the girls see these words). Ignoring a warning turns it into a strike.
   var WARN_REASONS = ['Not following instructions', 'Not listening', 'Dragging it out'];
+  // A 3rd strike at or after this time (24-hour 'HH:MM') moves the earlier bedtime to the next night,
+  // because there's no bedtime left to take that night. About 1.5 hours before each girl's bedtime
+  // (Lani 8:30pm, Ayla 9:30pm). A Rules row 'late_ayla' / 'late_lani' overrides it.
+  var LATE_CUT = { ayla: '20:00', lani: '19:00' };
   // Which routines belong to a day (for the no-chasing bonus): weekdays, Saturday, Sunday.
   function ownKeys(w) { return w >= 1 && w <= 5 ? ['before', 'after', 'night'] : w === 6 ? ['wkmorn', 'night'] : ['wkmorn', 'monday', 'night']; }
   // The routine that has to be finished before Night unlocks (none on Saturday).
@@ -484,7 +488,13 @@ var PointsCore = (function () {
     // Every routine that belongs to the day is checked (weekdays: the same as full).
     function fullDay(g, s) { var d = pk(g, s); return !!d && ownKeys(dow(s)).every(function (k) { return !!d.chk[k]; }); }
     function strikeCount(g, s) { var d = pk(g, s); return d ? d.strikes.length : 0; }
-    function bedtime(g, s) { return strikeCount(g, s) >= STRIKE_MAX; }
+    function lateCut(g) { var v = R['late_' + g]; return /^\d{2}:\d{2}$/.test(String(v || '')) ? String(v) : LATE_CUT[g]; }
+    // The strike that made it 3 that day came at or after the cutoff.
+    function thirdLate(g, s) { var d = pk(g, s); if (!d || (d.strikes || []).length < STRIKE_MAX) return false; var k = d.strikes[STRIKE_MAX - 1]; return !!k.at && k.at >= lateCut(g); }
+    // Earlier bedtime on day s: 3 strikes that day before the cutoff, or 3 the night before after it.
+    function bedFromYesterday(g, s) { return thirdLate(g, add(s, -1)); }
+    function bedTomorrow(g, s) { return thirdLate(g, s); }
+    function bedtime(g, s) { return (strikeCount(g, s) >= STRIKE_MAX && !thirdLate(g, s)) || bedFromYesterday(g, s); }
     // No-chasing bonus: every routine of the day checked, the switch on, and no strike that day.
     function noChase(g, s) { var d = pk(g, s); return !!d && fullDay(g, s) && !!d.nc && !d.strikes.length; }
     function streakTo(g, s) {
@@ -578,7 +588,7 @@ var PointsCore = (function () {
       curStreak: curStreak, bestStreak: bestStreak, noChaseCount: noChaseCount, memCount: memCount,
       dailyMasterCount: dailyMasterCount, weeklyMasterCount: weeklyMasterCount, routinesFor: routinesFor,
       nightLocked: nightLocked, isMemRun: isMemRun, waitingOn: waitingOn, checkAllList: checkAllList,
-      fullDay: fullDay, noChase: noChase, strikeCount: strikeCount, bedtime: bedtime, strikeMax: STRIKE_MAX,
+      fullDay: fullDay, noChase: noChase, strikeCount: strikeCount, bedtime: bedtime, bedTomorrow: bedTomorrow, bedFromYesterday: bedFromYesterday, lateCut: lateCut, strikeMax: STRIKE_MAX,
       weekWarns: weekWarns, warnedFor: warnedFor, strikesFrom: strikesFrom
     };
   }
@@ -751,7 +761,8 @@ var PointsCore = (function () {
         var w1 = we.w, wd = we.date;
         d = C.day(g, today);
         if (d.strikes.length >= C.strikeMax) return fail('That’s ' + C.strikeMax + ' strikes already today');
-        d.strikes.push({ id: op.newId, warn: w1.id, wdate: wd, why: w1.why, note: w1.note, by: me.name, pt: true });
+        var at24 = /^\d{2}:\d{2}$/.test(String(op.at24 || '')) ? String(op.at24) : '';
+        d.strikes.push({ id: op.newId, warn: w1.id, wdate: wd, why: w1.why, note: w1.note, by: me.name, pt: true, at: at24 });
         touch(g, today); return res;
       }
       case 'unstrike': {
@@ -1008,6 +1019,17 @@ function addDigit(dg){
 }
 
 const DAYN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const fmt12 = t => { const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}${m ? ':' + String(m).padStart(2,'0') : ''}${h < 12 ? 'am' : 'pm'}`; };
+// Bedtime lines for a girl on day s: from last night's late strikes, today's, or moved to tomorrow.
+function bedLines(g, s, who){
+  const c = C(), max = c.strikeMax, n = c.strikeCount(g, s), out = [];
+  const you = who === 'girl';
+  if (c.bedFromYesterday(g, s)) out.push(`🌙 ${max} strikes late last night: ${you ? 'your' : girlName(g) + "'s"} bedtime is 30 minutes earlier tonight.`);
+  if (n >= max) out.push(c.bedTomorrow(g, s)
+    ? `🌙 ${max} strikes after ${fmt12(c.lateCut(g))}: ${you ? 'your' : girlName(g) + "'s"} bedtime is 30 minutes earlier tomorrow night.`
+    : `🌙 ${max} strikes today: ${you ? 'your' : girlName(g) + "'s"} bedtime is 30 minutes earlier tonight.`);
+  return out.map(x => `<p class="bedtime">${x}</p>`).join('');
+}
 const warnDay = s => s === P.today ? 'today' : DAYN[PC.dow(s)];
 /* ---------- girl view ---------- */
 function rGirl(g){
@@ -1041,10 +1063,10 @@ function rPraise(g){
 }
 function rStrikes(g){
   const c = C(), d = c.pk(g, P.today), ww = c.weekWarns(g, P.today), ks = d ? (d.strikes || []) : [];
-  if (!ww.length && !ks.length) return '';
+  if (!ww.length && !ks.length && !c.bedFromYesterday(g, P.today)) return '';
   const max = c.strikeMax, n = ks.length;
   const dots = Array.from({ length: max }, (_, i) => `<span class="sdot${i < n ? ' on' : ''}" aria-hidden="true">✖</span>`).join('');
-  const bed = n >= max ? `<p class="bedtime">🌙 ${max} strikes today: bedtime is 30 minutes earlier tonight.</p>` : '';
+  const bed = bedLines(g, P.today, 'girl');
   return `<section class="card praise lost strikes"><span class="big-emo" aria-hidden="true" style="background:var(--surface)">⚠️</span>
     <div class="praise-t"><span class="lbl">Listening</span>
     <div class="sline" role="img" aria-label="${n} of ${max} strikes today">${dots}<b>${n} of ${max} strikes today</b></div>
@@ -1455,8 +1477,8 @@ function rWarn(g, s, d){
   }
   else ctl = `<button class="btn ghost" data-act="warn-open" data-g="${g}" style="align-self:flex-start">⚠️ Give a warning</button>`;
   return `<div class="opt col"><div><b>Warnings and strikes</b> <span class="chip ${n >= max ? 'wait' : 'todo'}" style="margin-left:6px">✖ ${n} / ${max} strikes</span>
-    <span class="hint">Say it once, then warn. A warning lasts until Sunday night. If she ignores it, or does the same thing again this week, tap ✖ Strike on it: −1 that can't be earned back, and no no-chasing bonus today. ${max} strikes in a day = bedtime 30 minutes earlier.</span>
-    ${n >= max ? `<p class="bedtime">🌙 ${max} strikes: ${name}'s bedtime is 30 minutes earlier tonight.</p>` : ''}
+    <span class="hint">Say it once, then warn. A warning lasts until Sunday night. If she ignores it, or does the same thing again this week, tap ✖ Strike on it: −1 that can't be earned back, and no no-chasing bonus today. ${max} strikes in a day = bedtime 30 minutes earlier (tomorrow night if the ${max === 3 ? 'third' : 'last'} comes after ${fmt12(c.lateCut(g))}).</span>
+    ${bedLines(g, s, 'parent')}
     ${wl ? `<span class="lbl">${today ? 'Warnings this week' : 'Warnings'}</span><ul class="hist">${wl}</ul>` : ''}${sl ? `<span class="lbl">Strikes</span><ul class="hist">${sl}</ul>` : ''}${ctl}</div></div>`;
 }
 function rDed(g, s, d){
@@ -1557,9 +1579,10 @@ document.addEventListener('click', e => {
     }
     case 'unwarn': if (act({ op:'unwarn', g, date:P.today, id:b.dataset.id })) toast('Warning removed'); return render();
     case 'strike': {
-      if (act({ op:'strike', g, date:P.today, id:b.dataset.id, wdate:b.dataset.wd || P.today })) {
-        const n = C().strikeCount(g, P.today), max = C().strikeMax;
-        toast(n >= max ? `✖ Strike ${n} for ${girlName(g)}: bedtime is 30 minutes earlier tonight` : `✖ Strike ${n} of ${max} for ${girlName(g)}`);
+      const now = new Date(), at24 = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+      if (act({ op:'strike', g, date:P.today, id:b.dataset.id, wdate:b.dataset.wd || P.today, at24 })) {
+        const c = C(), n = c.strikeCount(g, P.today), max = c.strikeMax;
+        toast(n >= max ? `✖ Strike ${n} for ${girlName(g)}: bedtime is 30 minutes earlier ${c.bedTomorrow(g, P.today) ? 'tomorrow night' : 'tonight'}` : `✖ Strike ${n} of ${max} for ${girlName(g)}`);
       }
       return render();
     }
