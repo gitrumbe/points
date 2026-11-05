@@ -17,7 +17,7 @@
   --bg:#F2F4F9; --surface:#FFFFFF; --surface-2:#E9EDF5; --line:#D8DEEA;
   --ink:#1A2132; --ink-2:#525C75; --ink-3:#8790A5;
   --gold:#F0AE14; --gold-deep:#B97F00; --gold-soft:#FFF0C7; --gold-ink:#3D2A00;
-  --good:#1E9A60; --good-soft:#DBF2E6; --wait:#C46F12; --wait-soft:#FCEAD3;
+  --good:#1E9A60; --good-soft:#DBF2E6; --wait:#C46F12; --wait-soft:#FCEAD3; --late:#C8352B; --late-soft:#FBE1DE;
   --ayla:#D23F76; --ayla-soft:#FBE0EA; --lani:#2A9150; --lani-soft:#DCF1E2; --parent:#3D55D0; --parent-soft:#E1E6FA;
   --accent:var(--parent); --accent-soft:var(--parent-soft); --on-accent:#FFFFFF;
   --shadow:0 1px 2px rgba(20,28,50,.06), 0 6px 18px rgba(20,28,50,.06);
@@ -29,7 +29,7 @@
   --bg:#0F121A; --surface:#181C28; --surface-2:#232A3A; --line:#2F3749;
   --ink:#EDF0F7; --ink-2:#A8B0C3; --ink-3:#737C92;
   --gold:#F6C244; --gold-deep:#C99520; --gold-soft:#372C10; --gold-ink:#2A1D00;
-  --good:#4CCB8C; --good-soft:#143326; --wait:#F2A54C; --wait-soft:#3A2914;
+  --good:#4CCB8C; --good-soft:#143326; --wait:#F2A54C; --wait-soft:#3A2914; --late:#FF7B6E; --late-soft:#3D1A17;
   --ayla:#F2709F; --ayla-soft:#3E1C2A; --lani:#5CCB7F; --lani-soft:#173322; --parent:#8597FF; --parent-soft:#212849;
   --on-accent:#0F121A; --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.25);
   color-scheme:dark;
@@ -38,7 +38,7 @@
   --bg:#0F121A; --surface:#181C28; --surface-2:#232A3A; --line:#2F3749;
   --ink:#EDF0F7; --ink-2:#A8B0C3; --ink-3:#737C92;
   --gold:#F6C244; --gold-deep:#C99520; --gold-soft:#372C10; --gold-ink:#2A1D00;
-  --good:#4CCB8C; --good-soft:#143326; --wait:#F2A54C; --wait-soft:#3A2914;
+  --good:#4CCB8C; --good-soft:#143326; --wait:#F2A54C; --wait-soft:#3A2914; --late:#FF7B6E; --late-soft:#3D1A17;
   --ayla:#F2709F; --ayla-soft:#3E1C2A; --lani:#5CCB7F; --lani-soft:#173322; --parent:#8597FF; --parent-soft:#212849;
   --on-accent:#0F121A; --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.25);
   color-scheme:dark;
@@ -388,8 +388,32 @@ a.hw-title{color:var(--parent);text-underline-offset:2px}
 .strikes .sline b{margin-left:4px}
 .bedtime{margin:8px 0 0;padding:10px 12px;border-radius:12px;background:var(--wait-soft);color:var(--ink);font-weight:600}
 .kidnote{margin:0 0 12px}
-.kidview{border:2px dashed var(--line);border-radius:20px;padding:12px;pointer-events:none;user-select:none}
+.kidview{border:2px dashed var(--line);border-radius:20px;padding:12px;user-select:none}
 @media (max-width:600px){.kidview{padding:6px;border-radius:14px}}
+/* deadlines (countdown to 8am / bedtime), weekly strike meter, chore self-check (05/11) */
+.cd{display:flex;flex-direction:column;gap:6px;padding:10px 12px;border-radius:var(--r-md);background:var(--good-soft)}
+.cd .cd-t{display:flex;justify-content:space-between;gap:8px;font-weight:600;font-size:14px;color:var(--ink)}
+.cd .cd-t b{font-family:var(--f-display);font-size:18px;color:var(--good)}
+.cd .bar i{background:var(--good)}
+.cd.amber{background:var(--gold-soft)} .cd.amber .cd-t b{color:var(--gold-deep)} .cd.amber .bar i{background:var(--gold)}
+.cd.late{background:var(--late-soft)} .cd.late .cd-t b{color:var(--late)} .cd.late .bar i{background:var(--late)}
+.cd.ok{background:var(--good-soft)}
+.chip.late{background:var(--late-soft);color:var(--late)}
+.wkm{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:8px 0 2px}
+.wkm .wd2{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--surface-2);color:var(--ink-3);font-size:11px;font-weight:700}
+.wkm .wd2.on{background:var(--late);color:#fff}
+.wkm .wd2.step{box-shadow:0 0 0 2px var(--late) inset}
+.wkm .wd2.step.on{box-shadow:none}
+.wkm .gap{width:6px}
+.wkm b{margin-left:6px;font-size:14px}
+.ladder{margin:8px 0 0;padding:10px 12px;border-radius:12px;background:var(--late-soft);color:var(--ink);font-weight:600}
+.selfchk{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;padding:12px 14px;border-radius:var(--r-md);border:2px dashed var(--line);background:var(--surface);color:var(--ink);font:inherit;cursor:pointer}
+.selfchk[aria-pressed="true"]{border-style:solid;border-color:var(--good);background:var(--good-soft)}
+.selfchk .box{flex:none}
+.selfchk[aria-pressed="true"] .box{background:var(--good);border-color:var(--good)}
+.selfchk[aria-pressed="true"] .box svg{opacity:1}
+.selfchk:disabled{cursor:default}
+.selfchk q{display:block;font-size:13px;color:var(--ink-2);margin-top:4px;quotes:none}
 </style>
 </head>
 <body>
@@ -416,10 +440,19 @@ var PointsCore = (function () {
   var STREAK_LEVELS = [5, 10, 20, 40, 60];
   var GIRLS = ['ayla', 'lani'];
   var GIRL_NAMES = { ayla: 'Ayla', lani: 'Lani' };
-  // Reasons a parent can take a point away (the girls see these words).
-  var DED_REASONS = ['Lying', 'Rude or disrespectful', 'Ignoring a warning', 'Not following instructions', 'Asked for help before trying'];
-  // Reasons for a warning (the girls see these words). Ignoring a warning turns it into a strike.
-  var WARN_REASONS = ['Not following instructions', 'Not listening', 'Dragging it out'];
+  // Reasons a parent can take a point away straight away, no warning (the girls see these words).
+  // 'Other' needs the detail typed in (05/11).
+  var DED_REASONS = ['Lying', 'Rude or disrespectful', 'Other'];
+  // Reasons for a warning (the girls see these words). Ignoring a warning, or a repeat that week, is a strike (05/11).
+  var LATE_WHY = 'Not ready on time';
+  var WARN_REASONS = ['Didn’t check for myself', LATE_WHY, 'Dragging it out', 'Not done properly', 'Said done when it wasn’t', 'Not listening'];
+  // Deadlines (05/11): Before school ready by 8am on weekdays, Night done by bedtime every day.
+  // Missing one gives an automatic "Not ready on time" warning (a repeat that week is a strike). Starts Monday 9 Nov.
+  var DEADLINE_FROM = '2026-11-09';
+  var READY_BY = '08:00';
+  var BEDTIME = { ayla: '21:30', lani: '20:30' };
+  // Strikes this week (Monday to Sunday, any reason): 6 = no devices for fun the next day; 9 = no devices or outings at the weekend.
+  var WEEK_STEPS = [6, 9];
   // A 3rd strike at or after this time (24-hour 'HH:MM') moves the earlier bedtime to the next night,
   // because there's no bedtime left to take that night. About 1.5 hours before each girl's bedtime
   // (Lani 8:30pm, Ayla 9:30pm). A Rules row 'late_ayla' / 'late_lani' overrides it.
@@ -445,13 +478,15 @@ var PointsCore = (function () {
   function blankDay(cfg) {
     var t = {};
     ROUTINES.forEach(function (r) { t[r.k] = (cfg.tasks[r.k] || []).map(function () { return false; }); });
-    return { t: t, chk: {}, nc: false, behs: [], deds: [], warns: [], strikes: [], started: {}, mem: {}, memDone: {}, memOk: {}, peeked: {}, practiceDone: {} };
+    // fin: time (HH:MM) a routine's last task was ticked. late: auto-late state per routine ('warn', 'strike', 'cap', 'x' = excused).
+    // self: chore self-check (false = ticked but not self-checked yet, true = self-checked).
+    return { t: t, chk: {}, nc: false, behs: [], deds: [], warns: [], strikes: [], started: {}, mem: {}, memDone: {}, memOk: {}, peeked: {}, practiceDone: {}, fin: {}, late: {}, self: {} };
   }
   // Make a stored day match the current task lists (tasks can be edited in the Sheet).
   function normalizeDay(cfg, d) {
     var b = blankDay(cfg);
     d = d || {};
-    ['chk', 'started', 'mem', 'memDone', 'memOk', 'peeked', 'practiceDone'].forEach(function (key) { b[key] = d[key] || {}; });
+    ['chk', 'started', 'mem', 'memDone', 'memOk', 'peeked', 'practiceDone', 'fin', 'late', 'self'].forEach(function (key) { b[key] = d[key] || {}; });
     b.nc = !!d.nc;
     b.behs = d.behs || [];
     b.deds = d.deds || [];
@@ -482,7 +517,8 @@ var PointsCore = (function () {
       if (!data.days[g][s]) data.days[g][s] = fillSkips(cfg, blankDay(cfg), s);
       return data.days[g][s];
     }
-    function allDone(d, k) { return d.t[k].length > 0 && d.t[k].every(Boolean); }
+    // Chores also need her self-check once she has ticked them on the new page (self.chores === false means not yet).
+    function allDone(d, k) { return d.t[k].length > 0 && d.t[k].every(Boolean) && !(k === 'chores' && d.self && d.self.chores === false); }
     function finished(g, host, k) { var d = pk(g, host); return !!d && (!!d.chk[k] || allDone(d, k)); }
     function full(g, s) { var d = pk(g, s); return !!d && isWk(s) && !!d.chk.before && !!d.chk.after && !!d.chk.night; }
     // Every routine that belongs to the day is checked (weekdays: the same as full).
@@ -549,6 +585,51 @@ var PointsCore = (function () {
       return out;
     }
     function weekDates(s) { var ws = weekStart(s), out = []; for (var i = 0; i < 7; i++) out.push(add(ws, i)); return out; }
+    // ---- weekly strike ladder (any reason, Monday to Sunday) ----
+    function weekStrikes(g, s) {
+      var n = 0, ws = weekStart(s);
+      for (var x = ws; x <= s; x = add(x, 1)) { var d = pk(g, x); if (d) n += (d.strikes || []).length; }
+      return n;
+    }
+    function weekStep(i) { var v = Number(R['weekStrikes' + (i + 1)]); return v > 0 ? v : WEEK_STEPS[i]; }
+    // The day a weekly step was reached (on or before s, this week), or null.
+    function stepDay(g, s, i) {
+      var need = weekStep(i), n = 0, ws = weekStart(s);
+      for (var x = ws; x <= s; x = add(x, 1)) { var d = pk(g, x); if (d) n += (d.strikes || []).length; if (n >= need) return x; }
+      return null;
+    }
+    // No devices for fun on day s: the 6th strike of a week came the day before.
+    function noDevices(g, s) { var y = add(s, -1); return stepDay(g, y, 0) === y; }
+    // No devices or outings at the weekend: 9 strikes this week (shown from the day it happens to Sunday).
+    function weekendBan(g, s) { return !!stepDay(g, s, 1); }
+    // ---- deadlines and lateness ----
+    var HM = /^\d{2}:\d{2}$/;
+    function deadline(g, k, s) {
+      var from = /^\d{4}-\d{2}-\d{2}$/.test(String(R.deadlineFrom || '')) ? String(R.deadlineFrom) : DEADLINE_FROM;
+      if (s < from) return null;
+      if (k === 'before' && isWk(s)) return HM.test(String(R.readyBy || '')) ? String(R.readyBy) : READY_BY;
+      if (k === 'night') { var b = R['bed_' + g]; return HM.test(String(b || '')) ? String(b) : BEDTIME[g]; }
+      return null;
+    }
+    // She used the app that day (so she was home). A day with no ticks or starts is treated as away (e.g. at Mum's).
+    function homeOn(d) {
+      if (!d) return false;
+      var st = d.started || {};
+      if (Object.keys(st).some(function (x) { return st[x]; })) return true;
+      return Object.keys(d.t || {}).some(function (x) { return (d.t[x] || []).some(Boolean); });
+    }
+    // Was routine k on day s late? now = 'HH:MM' on this device, used only for today.
+    function lateDue(g, s, k, now) {
+      var dl = deadline(g, k, s); if (!dl || s > today) return false;
+      if (s === today && !(HM.test(String(now || '')) && now >= dl)) return false;
+      var d = pk(g, s); if (!homeOn(d)) return false;
+      if (d.late && d.late[k]) return false;
+      var fin = d.fin && d.fin[k];
+      if (allDone(d, k) || d.chk[k]) return !!fin && fin > dl; // done: late only if the finish time was after the deadline
+      return true;
+    }
+    // How a routine stands against its deadline, for the screens.
+    function lateState(g, s, k) { var d = pk(g, s); return d && d.late ? d.late[k] || '' : ''; }
     function weekPts(g) { return weekDates(today).reduce(function (a, s) { return a + (s <= today ? dayPts(g, s) : 0); }, 0); }
     function monthPts(g) { return daysOf(g).filter(function (s) { return s.slice(0, 7) === today.slice(0, 7); }).reduce(function (a, s) { return a + dayPts(g, s); }, 0); }
     function curStreak(g) {
@@ -589,7 +670,9 @@ var PointsCore = (function () {
       dailyMasterCount: dailyMasterCount, weeklyMasterCount: weeklyMasterCount, routinesFor: routinesFor,
       nightLocked: nightLocked, isMemRun: isMemRun, waitingOn: waitingOn, checkAllList: checkAllList,
       fullDay: fullDay, noChase: noChase, strikeCount: strikeCount, bedtime: bedtime, bedTomorrow: bedTomorrow, bedFromYesterday: bedFromYesterday, lateCut: lateCut, strikeMax: STRIKE_MAX,
-      weekWarns: weekWarns, warnedFor: warnedFor, strikesFrom: strikesFrom
+      weekWarns: weekWarns, warnedFor: warnedFor, strikesFrom: strikesFrom,
+      weekStrikes: weekStrikes, weekStep: weekStep, stepDay: stepDay, noDevices: noDevices, weekendBan: weekendBan,
+      deadline: deadline, lateDue: lateDue, lateState: lateState, homeOn: homeOn
     };
   }
 
@@ -606,6 +689,14 @@ var PointsCore = (function () {
     function fail(msg) { res.ok = false; res.error = msg; return res; }
     function touch(g, s) { var key = g + '|' + s; if (res.touched.indexOf(key) < 0) res.touched.push(key); }
     function validDate(s) { return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && s <= today; }
+    function hm(v) { return /^\d{2}:\d{2}$/.test(String(v || '')) ? String(v) : ''; }
+    // Keep the time a routine was finished (the device's clock when the last task was ticked).
+    function setFin(d, k, at) {
+      d.fin = d.fin || {};
+      if (C.allDone(d, k)) { if (!d.fin[k] && hm(at)) d.fin[k] = hm(at); }
+      else delete d.fin[k];
+    }
+    function am(t) { var h = Number(t.slice(0, 2)), m = t.slice(3); return (h % 12 || 12) + (m === '00' ? '' : ':' + m) + (h < 12 ? 'am' : 'pm'); }
     function routineSlot(g, r, host, forGirl) {
       if (!r || !cfg.tasks[r]) return null;
       if (forGirl) {
@@ -616,7 +707,7 @@ var PointsCore = (function () {
     }
     var g = parent ? op.g : me.who;
     if (GIRLS.indexOf(g) < 0 && ['approve', 'decline', 'load'].indexOf(op.op) < 0) return fail('Unknown person');
-    var girlOps = ['tick', 'start', 'startmem', 'peek', 'hide', 'memdone', 'practicedone', 'goal', 'cashin', 'noteSeen'];
+    var girlOps = ['tick', 'start', 'startmem', 'peek', 'hide', 'memdone', 'practicedone', 'goal', 'cashin', 'noteSeen', 'selfcheck'];
     var parentOps = ['check', 'checkmem', 'uncheck', 'checkall', 'nochase', 'give', 'unbeh', 'take', 'fixded', 'unded', 'approve', 'decline', 'note', 'warn', 'unwarn', 'strike', 'unstrike'];
     if (girlOps.indexOf(op.op) >= 0 && parent) return fail('That is for the girls’ pages');
     if (parentOps.indexOf(op.op) >= 0 && !parent) return fail('Only a parent can do that');
@@ -630,7 +721,17 @@ var PointsCore = (function () {
         if (d.mem[r] === 'on' || d.mem[r] === 'practice') return fail('The list is hidden in memory mode');
         var i = Number(op.i); if (!(i >= 0 && i < d.t[r].length)) return fail('Unknown task');
         if (skipped(cfg, r, i, op.host)) return fail('That one isn\u2019t needed today');
-        d.t[r][i] = !!op.on; d.started[r] = true; touch(g, op.host); return res;
+        d.t[r][i] = !!op.on; d.started[r] = true;
+        if (r === 'chores') { d.self = d.self || {}; d.self.chores = false; } // any change to chores needs a fresh self-check
+        setFin(d, r, op.at24);
+        touch(g, op.host); return res;
+      }
+      case 'selfcheck': {
+        d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today');
+        if (r !== 'chores') return fail('Self-check is for chores');
+        if (!d.t[r].every(Boolean)) return fail('Tick every chore first');
+        d.self = d.self || {}; d.self.chores = !!op.on; setFin(d, r, op.at24);
+        touch(g, op.host); return res;
       }
       case 'start': {
         d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today can be started');
@@ -661,6 +762,7 @@ var PointsCore = (function () {
         if (r === 'night' && C.nightLocked(g, op.host)) return fail('Finish ' + (dow(op.host) === 0 ? 'Ready for Monday' : 'After school') + ' first');
         d.t[r] = d.t[r].map(function () { return true; });
         if (op.op === 'memdone') d.memDone[r] = true; else d.practiceDone[r] = true;
+        setFin(d, r, op.at24);
         touch(g, op.host); return res;
       }
       case 'goal': {
@@ -714,6 +816,7 @@ var PointsCore = (function () {
       case 'take': {
         if (op.date !== today) return fail('Points can only be taken away today');
         if (DED_REASONS.indexOf(op.why) < 0) return fail('Pick a reason');
+        if (op.why === 'Other' && !String(op.note || '').trim()) return fail('Type what the point is for');
         d = C.day(g, today);
         if (d.deds.filter(function (x) { return !x.fixed; }).length >= C.R.dedMax) return fail('That’s the most for today');
         // The balance can go below 0, so a point still comes off when she has none (03/11).
@@ -745,12 +848,18 @@ var PointsCore = (function () {
         touch(g, today); return res;
       }
       case 'unwarn': {
-        if (op.date !== today) return fail('Only today’s warnings can be removed');
-        d = C.day(g, today);
+        // Parent warnings: only on the day. Automatic "Not ready on time" warnings: any day this week, and the
+        // routine is marked excused so the app doesn't give it again (05/11).
+        var wdt = op.date || today;
+        if (!validDate(wdt) || wdt < add(today, -7)) return fail('Only this week’s warnings can be removed');
+        d = C.day(g, wdt);
         var w0 = d.warns.filter(function (y) { return y.id === op.id; })[0];
         if (!w0) return fail('Not found');
-        if (C.strikesFrom(g, today, w0.id).length) return fail('Undo the strike first');
-        d.warns = d.warns.filter(function (y) { return y.id !== op.id; }); touch(g, today); return res;
+        if (wdt !== today && !w0.auto) return fail('Only today’s warnings can be removed');
+        if (C.strikesFrom(g, wdt, w0.id).length) return fail('Undo the strike first');
+        d.warns = d.warns.filter(function (y) { return y.id !== op.id; });
+        if (w0.auto && w0.late) { d.late = d.late || {}; d.late[w0.late] = 'x'; }
+        touch(g, wdt); return res;
       }
       case 'strike': {
         // A strike goes on today, from any warning given this week (Monday to today).
@@ -771,9 +880,30 @@ var PointsCore = (function () {
         var sx = d.strikes.filter(function (y) { return y.id === op.id; })[0];
         if (!sx) return fail('Not found');
         d.strikes = d.strikes.filter(function (y) { return y.id !== op.id; });
+        if (sx.auto && sx.late) { d.late = d.late || {}; d.late[sx.late] = 'x'; } // excused: the app won't give it again
         var wday = sx.wdate && C.pk(g, sx.wdate) ? C.pk(g, sx.wdate) : d;
         (wday.warns || []).forEach(function (y) { if (y.struck === op.id) y.struck = ''; });
         touch(g, op.date); if (sx.wdate) touch(g, sx.wdate); return res;
+      }
+      case 'autolate': {
+        // Any page can send this when a deadline has passed; the rules here decide. Safe to send twice.
+        var lk = op.r, ls = op.host;
+        if (['before', 'night'].indexOf(lk) < 0 || !validDate(ls)) return fail('Unknown routine or day');
+        if (!C.lateDue(g, ls, lk, hm(op.now))) return res;
+        var dl = C.deadline(g, lk, ls), rn = ROUTINES.filter(function (x) { return x.k === lk; })[0].name;
+        var lnote = rn + ' not finished by ' + am(dl);
+        d = C.day(g, ls); d.late = d.late || {};
+        var prior = C.warnedFor(g, ls, LATE_WHY);
+        if (!prior) {
+          d.warns.push({ id: op.newId, why: LATE_WHY, note: lnote, by: 'the app', at: am(dl), struck: '', auto: true, late: lk });
+          d.late[lk] = 'warn';
+        } else if (d.strikes.length >= C.strikeMax) {
+          d.late[lk] = 'cap';
+        } else {
+          d.strikes.push({ id: op.newId, warn: prior.w.id, wdate: prior.date, why: LATE_WHY, note: lnote, by: 'the app', pt: true, at: dl, auto: true, late: lk });
+          d.late[lk] = 'strike';
+        }
+        touch(g, ls); return res;
       }
       case 'approve':
       case 'decline': {
@@ -800,7 +930,7 @@ var PointsCore = (function () {
 
   return {
     ROUTINES: ROUTINES, MEM_ROUT: MEM_ROUT, MEM_LEVELS: MEM_LEVELS, SELF_LEVELS: SELF_LEVELS, STREAK_LEVELS: STREAK_LEVELS,
-    GIRLS: GIRLS, GIRL_NAMES: GIRL_NAMES, DED_REASONS: DED_REASONS, WARN_REASONS: WARN_REASONS, ownKeys: ownKeys, nightGate: nightGate,
+    GIRLS: GIRLS, GIRL_NAMES: GIRL_NAMES, DED_REASONS: DED_REASONS, WARN_REASONS: WARN_REASONS, LATE_WHY: LATE_WHY, ownKeys: ownKeys, nightGate: nightGate,
     add: add, dow: dow, isWk: isWk, weekStart: weekStart, skipped: skipped, blankDay: blankDay, normalizeDay: normalizeDay,
     make: make, apply: apply,
     levelIn: function (n, levels) { return levels.filter(function (x) { return n >= x; }).length; }
@@ -843,6 +973,7 @@ function writeLS(k, v){ try { if (v === null) localStorage.removeItem(k); else l
 let DEV = readLS(DEV_KEY);
 let P = DEV ? readLS(CACHE_KEY) : null;
 let V = { day:null, wk:0, ptab:'check', cg:'ayla', hwg:'ayla', kidg:'ayla', warnOpen:{}, warnNote:{}, hwwk:0, blAll:false, dedOpen:{}, dedNote:{}, tab:'today', open:{}, peekAsk:null, confirmDev:null, signoutAsk:false, draft:{}, noteDraft:{}, fx:null,
+          kid:{ day:null, wk:0, tab:'today', open:{}, peekAsk:null },   // the Kid view's own place, so browsing it doesn't move the parent screens
           setup:{ step:'who', person:null, pin:'', err:'', shake:false, busy:false, notice:'' } };
 let queue = [], sending = false, net = 'ok', retryTimer = null;
 
@@ -883,6 +1014,7 @@ function pump(){
       P = resp;
       for (const q of queue) if (q.op !== 'load') PC.apply(P.cfg, P.data, P.today, P.me, q);
       writeLS(CACHE_KEY, P);
+      setTimeout(autoLate, 0);
     }
     if (!resp.ok && resp.error) toast(resp.error);
     render(); pump();
@@ -1031,6 +1163,73 @@ function bedLines(g, s, who){
   return out.map(x => `<p class="bedtime">${x}</p>`).join('');
 }
 const warnDay = s => s === P.today ? 'today' : DAYN[PC.dow(s)];
+/* ---------- deadlines, weekly strikes, self-check (05/11) ---------- */
+const p2 = n => String(n).padStart(2, '0');
+const nowHM = () => { const d = new Date(); return p2(d.getHours()) + ':' + p2(d.getMinutes()); };
+const minOf = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+const SELF_Q = 'Did I do each task and did I do it properly?';
+const SELF_A = 'I check first, then I ask, because that is being responsible.';
+const dedWhy = x => x.why === 'Other' && x.note ? x.note : x.why;
+const dedNote = x => x.why === 'Other' ? '' : x.note;
+// Countdown card for Before school (ready by 8am) and Night (bedtime), today only.
+function rDeadline(g, r, host){
+  if (host !== P.today || viewDay() !== P.today) return '';
+  const c = C(), dl = c.deadline(g, r.k, host); if (!dl) return '';
+  const d = c.pk(g, host), fin = d && d.fin && d.fin[r.k], done = !!d && (c.allDone(d, r.k) || !!d.chk[r.k]);
+  const label = r.k === 'night' ? 'Ready for bed by' : 'Ready by';
+  if (done) {
+    if (!fin) return '';
+    const late = fin > dl;
+    return `<div class="cd ${late ? 'late' : 'ok'}"><div class="cd-t"><span>${late ? '⏰' : '✓'} ${label} ${fmt12(dl)}</span><b>${late ? 'Late' : 'On time'}</b></div><span class="hint">Finished at ${fmt12(fin)}</span></div>`;
+  }
+  const left = minOf(dl) - minOf(nowHM());
+  if (left <= 0) return `<div class="cd late" role="status"><div class="cd-t"><span>⏰ ${label} ${fmt12(dl)}</span><b>Late</b></div><div class="bar"><i style="width:100%"></i></div>
+    <span class="hint">Finish now. Being late is a “Not ready on time” warning, and a strike if it happens again this week.</span></div>`;
+  const txt = left >= 60 ? `${Math.floor(left / 60)} h ${left % 60} min` : `${left} min left`;
+  return `<div class="cd${left <= 10 ? ' amber' : ''}" role="timer" aria-label="${label} ${fmt12(dl)}, ${txt}"><div class="cd-t"><span>⏰ ${label} ${fmt12(dl)}</span><b>${txt}</b></div>
+    <div class="bar" style="--p:${Math.min(left / 60, 1)}"><i></i></div></div>`;
+}
+// Small chip for a routine shown folded up (Rest of today).
+function rDeadlineChip(g, r, host){
+  if (host !== P.today || viewDay() !== P.today) return '';
+  const c = C(), dl = c.deadline(g, r.k, host); if (!dl) return '';
+  const d = c.pk(g, host), fin = d && d.fin && d.fin[r.k], done = !!d && (c.allDone(d, r.k) || !!d.chk[r.k]);
+  if (done) return fin && fin > dl ? `<span class="chip late">⏰ Finished late (${fmt12(fin)})</span>` : '';
+  const left = minOf(dl) - minOf(nowHM());
+  return left <= 0 ? `<span class="chip late">⏰ Late · ${fmt12(dl)}</span>` : `<span class="chip ${left <= 10 ? 'gold' : 'todo'}">⏰ By ${fmt12(dl)}</span>`;
+}
+// Weekly strike meter: 9 dots, the 6th and 9th ringed.
+function rWeekMeter(g, s){
+  const c = C(), n = c.weekStrikes(g, s), a = c.weekStep(0), b = c.weekStep(1), tot = Math.max(b, n);
+  const dots = Array.from({ length: tot }, (_, i) => `<span class="wd2${i < n ? ' on' : ''}${i + 1 === a || i + 1 === b ? ' step' : ''}" aria-hidden="true">${i + 1 === a || i + 1 === b ? i + 1 : ''}</span>${i + 1 === a ? '<span class="gap"></span>' : ''}`).join('');
+  return `<div class="wkm" role="img" aria-label="${n} strikes this week">${dots}<b>${n} ${n === 1 ? 'strike' : 'strikes'} this week</b></div>
+    <span class="hint">${a} in a week = no devices for fun the next day. ${b} = no devices or outings at the weekend. Back to 0 on Monday.</span>`;
+}
+function ladderLines(g, s, who){
+  const c = C(), you = who === 'girl', nm = you ? 'you' : girlName(g), a = c.weekStep(0), b = c.weekStep(1), out = [];
+  if (c.weekendBan(g, s)) out.push(`🚫 ${b} strikes this week: no devices for fun or outings for ${nm} this weekend.`);
+  if (c.noDevices(g, s)) out.push(`📵 ${a} strikes ${PC.dow(s) === 1 ? 'last week' : 'this week'}: no devices for fun for ${nm} today.`);
+  if (c.stepDay(g, s, 0) === s && s === P.today && !c.weekendBan(g, s)) out.push(`📵 ${a} strikes this week: no devices for fun for ${nm} tomorrow.`);
+  return out.map(x => `<p class="ladder">${x}</p>`).join('');
+}
+// The app gives "Not ready on time" itself once a deadline has passed. Any open page can send it; the rules decide.
+const lateSent = new Set();
+function autoLate(){
+  if (!P || !DEV || !P.data || !P.data.days) return;
+  const gs = isParent() ? PC.GIRLS : PC.GIRLS.includes(P.me.who) ? [P.me.who] : [];
+  const now = nowHM(); let sent = 0;
+  for (const g of gs) for (let i = 0; i <= 7; i++) {
+    const s = PC.add(P.today, -i);
+    for (const k of ['before', 'night']) {
+      const key = `${g}|${s}|${k}`;
+      if (lateSent.has(key) || !C().lateDue(g, s, k, now)) continue;
+      lateSent.add(key);
+      const op = { op:'autolate', g, r:k, host:s, now, newId: rid() };
+      if (PC.apply(P.cfg, P.data, P.today, P.me, op).ok) { queue.push(op); sent++; }
+    }
+  }
+  if (sent) { if (!isParent()) toast('⏰ Not ready on time: the app gave a warning.'); render(); pump(); }
+}
 /* ---------- girl view ---------- */
 function rGirl(g){
   const c = C(), s = viewDay(), bal = c.balance(g), wk = c.weekPts(g), st = c.curStreak(g), R = RULES();
@@ -1063,7 +1262,8 @@ function rPraise(g){
 }
 function rStrikes(g){
   const c = C(), d = c.pk(g, P.today), ww = c.weekWarns(g, P.today), ks = d ? (d.strikes || []) : [];
-  if (!ww.length && !ks.length && !c.bedFromYesterday(g, P.today)) return '';
+  const wn = c.weekStrikes(g, P.today);
+  if (!ww.length && !ks.length && !wn && !c.bedFromYesterday(g, P.today) && !c.noDevices(g, P.today)) return '';
   const max = c.strikeMax, n = ks.length;
   const dots = Array.from({ length: max }, (_, i) => `<span class="sdot${i < n ? ' on' : ''}" aria-hidden="true">✖</span>`).join('');
   const bed = bedLines(g, P.today, 'girl');
@@ -1074,14 +1274,15 @@ function rStrikes(g){
       <span class="hint">A warning lasts until Sunday night. If you ignore it, or it happens again this week, it's a strike straight away.</span>` : ''}
     ${n ? `<ul class="hist">${ks.map(x => `<li><span><b>✖ Strike${x.pt ? ' · −1' : ''} · ${esc(x.why)}</b>${x.note ? `<span class="hint">${esc(x.note)}</span>` : ''}</span></li>`).join('')}</ul>
       <span class="hint">Strikes can't be earned back, and today's no-chasing bonus is gone.</span>` : ''}
-    ${bed}</div></section>`;
+    ${rWeekMeter(g, P.today)}
+    ${bed}${ladderLines(g, P.today, 'girl')}</div></section>`;
 }
 function rLost(g){
   const d = C().pk(g, P.today), act = d ? d.deds.filter(x => !x.fixed) : [];
   if (!act.length) return '';
   return `<section class="card praise lost"><span class="big-emo" aria-hidden="true" style="background:var(--surface)">💭</span>
     <div class="praise-t"><span class="lbl">${act.length === 1 ? 'A point was' : act.length + ' points were'} taken away today</span>
-    <ul class="hist">${act.map(x => `<li><span><b>−1 · ${esc(x.why)}</b>${x.note ? `<span class="hint">${esc(x.note)}</span>` : ''}</span></li>`).join('')}</ul>
+    <ul class="hist">${act.map(x => `<li><span><b>−1 · ${esc(dedWhy(x))}</b>${dedNote(x) ? `<span class="hint">${esc(dedNote(x))}</span>` : ''}</span></li>`).join('')}</ul>
     <span class="hint">You can still earn it back today. Make it right (say sorry, fix it, or do it properly), then tell a parent.</span></div></section>`;
 }
 function rToday(g){
@@ -1108,10 +1309,12 @@ function rMini(g, r, host){
   const word = pts === 1 ? 'point' : 'points';
   const chip = d.chk[r.k] ? `<span class="chip good">✓ ${pts} ${word} earned</span>`
     : c.isMemRun(d,r.k) ? `<span class="chip mem">🧠 Done from memory · waiting for a check</span>`
+    : n === tot && r.k === 'chores' && !c.allDone(d, r.k) ? `<span class="chip todo">Last step: check your own work</span>`
     : n === tot ? `<span class="chip wait">Done · waiting for a check</span>`
     : r.k === 'night' && viewDay() === P.today && c.nightLocked(g, host) ? `<span class="chip todo">🔒 Unlocks after ${gateName(host)}</span>`
     : `<span class="chip todo">${n}/${tot} tasks · worth ${pts} ${word}</span>`;
-  return `<div class="mini"><span class="r-icon" aria-hidden="true">${r.icon}</span><div class="mini-t"><b>${r.name}</b><div>${chip}</div></div>
+  const cdc = rDeadlineChip(g, r, host);
+  return `<div class="mini"><span class="r-icon" aria-hidden="true">${r.icon}</span><div class="mini-t"><b>${r.name}</b><div>${chip}${cdc ? ' ' + cdc : ''}</div></div>
     <button class="btn ghost" data-act="open" data-r="${r.k}">Show</button></div>`;
 }
 function rRoutine(g, r, host, focus){
@@ -1125,6 +1328,7 @@ function rRoutine(g, r, host, focus){
     : chk ? `<span class="chip good">✓ Checked · ${pts} ${word} earned</span>`
     : memRun ? `<span class="chip mem">🧠 Done from memory! Worth ${pts} ${word} once a parent confirms</span>`
     : done ? `<span class="chip wait">Done! Worth ${pts} ${word} once a parent checks</span>`
+    : r.k === 'chores' && n === tot && !locked ? `<span class="chip todo">Last step: check your own work · worth ${pts} ${word}</span>`
     : locked ? `<span class="chip todo">🔒 ${n} of ${tot} tasks ticked · worth ${pts} ${word}</span>`
     : nlock ? `<span class="chip todo">🔒 Unlocks when ${gateName(host)} is finished · worth ${pts} ${word}</span>`
     : practice ? `<span class="chip mem">🧠 Practice run · worth ${pts} ${word}</span>`
@@ -1161,14 +1365,22 @@ function rRoutine(g, r, host, focus){
       const on = d.t[r.k][i], pop = V.fx && V.fx.pop === `${r.k}-${i}` ? ' pop' : '';
       return `<li><button class="task${pop}" data-act="tick" data-r="${r.k}" data-i="${i}" data-host="${host}" aria-pressed="${on}" ${(chk || locked)?'disabled':''}>
         <span class="box">${CHECK}</span><span class="emo" aria-hidden="true">${EMOJI[t] || '⭐'}</span><span class="tl">${esc(t)}</span></button>${t === 'Homework' && !locked && P.homework && P.homework[g] ? `<a class="hwlink" href="${esc(P.homework[g].url)}" target="_blank" rel="noopener">📄 Open tonight's homework: ${esc(P.homework[g].title)}</a>` : ''}</li>`;
-    }).join('')}</ul>${hideBtn}`;
+    }).join('')}</ul>${selfBox(d, r, host, n, tot, chk, locked)}${hideBtn}`;
   }
   return `<article class="card routine ${st}${cel?' celebrate':''}${focus?' focus':''}">
     <div class="r-head"><span class="r-icon" aria-hidden="true">${r.icon}${sparks}</span>
       <div class="r-title"><h3>${r.name}</h3>${r.k==='monday' ? '<p class="r-note">Sunday from 4pm: get set for the school week</p>' : r.k==='wkmorn' ? '<p class="r-note">Saturday and Sunday, before 10am</p>' : ''}${r.k==='chores' ? `<p class="r-note">${PC.dow(viewDay())===6 ? "Saturday morning counts as Friday's chores" : 'Friday night, or Saturday morning if we’re out'}</p>` : ''}</div>
       <div class="ring" style="--p:${tot ? n/tot : 0}" role="img" aria-label="${n} of ${tot} tasks ticked"><span>${memOn && !memRun && !done ? '🧠' : `${n}/${tot}`}<small>tasks</small></span></div></div>
     ${chip}
+    ${rDeadline(g, r, host)}
     ${body}</article>`;
+}
+// Chores: once every chore is ticked, she checks her own work before a parent does.
+function selfBox(d, r, host, n, tot, chk, locked){
+  if (r.k !== 'chores' || n < tot || !tot) return '';
+  const on = !!(d.self && d.self.chores !== false);
+  return `<button class="selfchk" data-act="selfcheck" data-r="${r.k}" data-host="${host}" aria-pressed="${on}" ${(chk || locked) ? 'disabled' : ''}>
+    <span class="box">${CHECK}</span><span><b>${SELF_Q}</b><q>${SELF_A}</q></span></button>`;
 }
 function rPoints(g,s){
   const c = C(), R = RULES(), lines = [];
@@ -1258,15 +1470,33 @@ function rBadges(g){
 function rParent(){
   return rPTabs() + (V.ptab === 'hw' ? rHW() : V.ptab === 'kid' ? rKid() : rCheck());
 }
-// What a girl sees on her own device, today. Read-only: nothing on it can be tapped, and it doesn't mark her notes as seen.
+// What a girl sees on her own device. View only: tabs, lists and days can be browsed (kept in V.kid),
+// but anything that changes her data is stopped in the click handler, so her notes aren't marked as seen either.
 function rKid(){
-  const g = V.kidg || 'ayla', keep = { day:V.day, tab:V.tab, open:V.open, peekAsk:V.peekAsk, fx:V.fx };
-  V.day = null; V.tab = 'today'; V.open = {}; V.peekAsk = null; V.fx = null;
+  const g = V.kidg || 'ayla', K = V.kid, keep = { day:V.day, wk:V.wk, tab:V.tab, open:V.open, peekAsk:V.peekAsk, fx:V.fx };
+  Object.assign(V, { day:K.day, wk:K.wk, tab:K.tab, open:K.open, peekAsk:K.peekAsk, fx:null });
   let body; try { body = rGirl(g); } finally { Object.assign(V, keep); }
   return `<div class="kid">
     <div class="seg hw-girls">${PC.GIRLS.map(x => `<button class="btn ${x === g ? 'soft hw-on' : 'ghost'}" data-act="kidg" data-to="${x}" aria-pressed="${x === g}">${girlName(x)}</button>`).join('')}</div>
-    <p class="note kidnote">👀 Viewing as <b>${girlName(g)}</b> · read-only. This is her screen right now; nothing here can be tapped.</p>
-    <div class="kidview" data-who="${g}" inert>${body}</div></div>`;
+    <p class="note kidnote">👀 Viewing as <b>${girlName(g)}</b> · view only. Tap around to see her lists, badges and shop; ticks and cash-ins are switched off here.</p>
+    <div class="kidview" data-who="${g}">${body}</div></div>`;
+}
+// Taps inside the Kid view: browsing moves V.kid, everything else is blocked
+const KID_NAV = new Set(['tab','open','day','wk','peek-ask','peek-no']);
+function kidTap(b, a, done){
+  if (!KID_NAV.has(a)) { toast('View only. Ticks and cash-ins are off in the Kid view.'); return; }
+  const K = V.kid, r = b.dataset.r;
+  if (a === 'tab') K.tab = b.dataset.tab;
+  else if (a === 'open') K.open[r] = !K.open[r];
+  else if (a === 'peek-ask') K.peekAsk = r;
+  else if (a === 'peek-no') K.peekAsk = null;
+  else if (a === 'day') { K.day = b.dataset.day === P.today ? null : b.dataset.day; K.open = {}; }
+  else if (a === 'wk') {
+    K.wk = b.dataset.d === 'now' ? 0 : Math.max(0, K.wk + Number(b.dataset.d)); K.open = {};
+    if (!K.wk) K.day = null;
+    else { const c = C(), dates = c.weekDates(PC.add(P.today, -7 * K.wk)); K.day = dates.find(s => PC.GIRLS.some(x => c.waitingOn(x, s).length)) || dates[0]; }
+  }
+  return done();
 }
 function rCheck(){
   const c = C(), s = viewDay();
@@ -1456,8 +1686,8 @@ function rWarn(g, s, d){
   if (today) {
     // This week's warnings (Monday to today): each stays live until Sunday night.
     wl = c.weekWarns(g, s).map(e => {
-      const x = e.w, from = c.strikesFrom(g, s, x.id), canRm = e.date === s && !from.length;
-      const btns = `${n < max ? `<button class="btn ghost sm" data-act="strike" data-g="${g}" data-id="${esc(x.id)}" data-wd="${e.date}">✖ Strike</button>` : ''}${canRm ? `<button class="link" data-act="unwarn" data-g="${g}" data-id="${esc(x.id)}">Remove</button>` : ''}`;
+      const x = e.w, from = c.strikesFrom(g, e.date, x.id), canRm = (e.date === s || x.auto) && !from.length;
+      const btns = `${n < max ? `<button class="btn ghost sm" data-act="strike" data-g="${g}" data-id="${esc(x.id)}" data-wd="${e.date}">✖ Strike</button>` : ''}${canRm ? `<button class="link" data-act="unwarn" data-g="${g}" data-id="${esc(x.id)}" data-wd="${e.date}" data-auto="${x.auto ? 1 : 0}">${x.auto ? 'Excuse' : 'Remove'}</button>` : ''}`;
       return `<li><span><b class="num" style="font-size:17px;color:var(--wait)">⚠️</b> ${esc(x.why)} · ${warnDay(e.date)}${from.length ? ` · ${from.length} ${from.length === 1 ? 'strike' : 'strikes'} this week` : ''}<span class="hint">${who(x)}</span></span>
         <span class="ded-a">${btns}</span></li>`;
     }).join('');
@@ -1465,7 +1695,7 @@ function rWarn(g, s, d){
     wl = (d.warns || []).map(x => `<li><span><b class="num" style="font-size:17px;color:var(--wait)">⚠️</b> ${esc(x.why)}<span class="hint">${who(x)}</span></span></li>`).join('');
   }
   sl = ks.map(k => `<li><span><b class="num" style="font-size:17px;color:var(--wait)">✖</b> Strike · ${esc(k.why)}${k.pt ? ' (−1)' : ' (no points to lose)'}${k.wdate && k.wdate !== s ? ` · warned ${warnDay(k.wdate)}` : ''}<span class="hint">${k.by ? `from ${esc(k.by)}` : ''}</span></span>
-      <span class="ded-a">${today ? `<button class="link" data-act="unstrike" data-g="${g}" data-id="${esc(k.id)}">Undo strike</button>` : ''}</span></li>`).join('');
+      <span class="ded-a">${today || k.auto ? `<button class="link" data-act="unstrike" data-g="${g}" data-id="${esc(k.id)}" data-day="${s}" data-auto="${k.auto ? 1 : 0}">${k.auto ? 'Excuse' : 'Undo strike'}</button>` : ''}</span></li>`).join('');
   let ctl;
   if (!today) ctl = '<p class="hint">Warnings and strikes are only given on the day itself.</p>';
   else if (V.warnOpen[g]) {
@@ -1477,13 +1707,14 @@ function rWarn(g, s, d){
   }
   else ctl = `<button class="btn ghost" data-act="warn-open" data-g="${g}" style="align-self:flex-start">⚠️ Give a warning</button>`;
   return `<div class="opt col"><div><b>Warnings and strikes</b> <span class="chip ${n >= max ? 'wait' : 'todo'}" style="margin-left:6px">✖ ${n} / ${max} strikes</span>
-    <span class="hint">Say it once, then warn. A warning lasts until Sunday night. If she ignores it, or does the same thing again this week, tap ✖ Strike on it: −1 that can't be earned back, and no no-chasing bonus today. ${max} strikes in a day = bedtime 30 minutes earlier (tomorrow night if the ${max === 3 ? 'third' : 'last'} comes after ${fmt12(c.lateCut(g))}).</span>
-    ${bedLines(g, s, 'parent')}
+    <span class="hint">Say it once, then warn. A warning lasts until Sunday night. If she ignores it, or does the same thing again this week, tap ✖ Strike on it: −1 that can't be earned back, and no no-chasing bonus today. ${max} strikes in a day = bedtime 30 minutes earlier (tomorrow night if the ${max === 3 ? 'third' : 'last'} comes after ${fmt12(c.lateCut(g))}). Not ready by 8am or bedtime: the app gives “Not ready on time” itself; tap Excuse for a fair reason (sick, no school, at Mum’s).</span>
+    ${rWeekMeter(g, s)}
+    ${bedLines(g, s, 'parent')}${ladderLines(g, s, 'parent')}
     ${wl ? `<span class="lbl">${today ? 'Warnings this week' : 'Warnings'}</span><ul class="hist">${wl}</ul>` : ''}${sl ? `<span class="lbl">Strikes</span><ul class="hist">${sl}</ul>` : ''}${ctl}</div></div>`;
 }
 function rDed(g, s, d){
   const c = C(), R = RULES(), name = girlName(g), today = s === P.today, active = d.deds.filter(x => !x.fixed).length;
-  const list = d.deds.length ? `<ul class="hist">${d.deds.map(x => `<li><span><b class="num" style="font-size:17px;color:var(--${x.fixed ? 'good' : 'wait'})">${x.fixed ? '↺' : '−1'}</b> ${esc(x.why)}<span class="hint">${[x.note ? esc(x.note) : '', x.by ? `from ${esc(x.by)}` : '', x.fixed ? 'made it right, point given back' : ''].filter(Boolean).join(' · ')}</span></span>
+  const list = d.deds.length ? `<ul class="hist">${d.deds.map(x => `<li><span><b class="num" style="font-size:17px;color:var(--${x.fixed ? 'good' : 'wait'})">${x.fixed ? '↺' : '−1'}</b> ${esc(dedWhy(x))}<span class="hint">${[dedNote(x) ? esc(dedNote(x)) : '', x.by ? `from ${esc(x.by)}` : '', x.fixed ? 'made it right, point given back' : ''].filter(Boolean).join(' · ')}</span></span>
       <span class="ded-a">${today ? (x.fixed
         ? `<button class="link" data-act="fixded" data-on="0" data-g="${g}" data-id="${esc(x.id)}">Undo</button>`
         : `<button class="btn ghost sm" data-act="fixded" data-on="1" data-g="${g}" data-id="${esc(x.id)}">Made it right</button>`) : ''}<button class="link" data-act="unded" data-g="${g}" data-id="${esc(x.id)}">Remove</button></span></li>`).join('')}</ul>` : '';
@@ -1492,10 +1723,10 @@ function rDed(g, s, d){
   else if (active >= R.dedMax) ctl = '<p class="hint">That’s the most for today.</p>';
   else if (V.dedOpen[g]) ctl = `<div class="ded-pick"><span class="hint">Why? ${name} sees this.</span>
       <div class="ded-r">${PC.DED_REASONS.map(r => `<button class="btn ghost" data-act="take" data-g="${g}" data-why="${esc(r)}">${esc(r)}</button>`).join('')}</div>
-      <input class="in" id="dn-${g}" data-input="dednote" data-g="${g}" placeholder="Extra detail (optional)" value="${esc(V.dedNote[g] || '')}" maxlength="80" aria-label="Extra detail">
+      <input class="in" id="dn-${g}" data-input="dednote" data-g="${g}" placeholder="What happened (needed for Other)" value="${esc(V.dedNote[g] || '')}" maxlength="80" aria-label="What happened">
       <button class="link" data-act="ded-close" data-g="${g}" style="align-self:flex-start">Cancel</button></div>`;
   else ctl = `<button class="btn ghost" data-act="ded-open" data-g="${g}" style="align-self:flex-start">−1 Take a point</button>`;
-  return `<div class="opt col"><div><b>Taking a point away</b> <span class="chip wait" style="margin-left:6px">${active} / ${R.dedMax} today</span><span class="hint">Warn first, out loud. If it happens again, take 1 point. Making it right today gives it back. Only comes off points to spend.</span></div>
+  return `<div class="opt col"><div><b>Taking a point away</b> <span class="chip wait" style="margin-left:6px">${active} / ${R.dedMax} today</span><span class="hint">For something serious enough to skip the warning: lying, being rude, or Other (type what happened first). Making it right today gives it back. Only comes off points to spend.</span></div>
     ${list}${ctl}</div>`;
 }
 function rCRow(g,r,host){
@@ -1504,14 +1735,16 @@ function rCRow(g,r,host){
   const status = memRun ? (chk ? (d.memOk[r.k] ? '🧠 Memory run confirmed' : 'Checked, not from memory') : '🧠 Done from memory: confirm if it was all done without the list')
     : d.peeked[r.k] && done ? (d.practiceDone[r.k] ? 'Peeked, then finished from memory (practice run)' : 'Peeked, then ticked from the list')
     : d.mem[r.k] === 'on' && !done ? '🧠 Doing it from memory' : d.mem[r.k] === 'practice' && !done ? '🧠 Practice run after a peek'
-    : done ? 'All tasks ticked' : `${n} of ${tot} ticked`;
+    : done ? 'All tasks ticked' : r.k === 'chores' && n === tot ? 'All ticked · her self-check isn’t done yet' : `${n} of ${tot} ticked`;
+  const dl = c.deadline(g, r.k, host), fin = d.fin && d.fin[r.k];
+  const when = dl && fin ? ` · finished ${fmt12(fin)}${fin > dl ? ` <b style="color:var(--late)">late (by ${fmt12(dl)})</b>` : ''}` : '';
   const keys = `data-g="${g}" data-r="${r.k}" data-host="${host}"`;
   const act = chk ? `<span class="chip good">${memRun && d.memOk[r.k] ? '🧠 ' : '✓ '}+${pts}</span><button class="link" data-act="uncheck" ${keys}>Undo</button>`
     : memRun ? `<button class="btn primary" data-act="checkmem" ${keys}>🧠 Confirm memory · +${pts}</button><button class="btn ghost" data-act="check" ${keys}>Check, not from memory</button>`
     : done ? `<button class="btn primary" data-act="check" ${keys}>Check · +${pts}</button>`
     : `<button class="btn ghost" data-act="check" ${keys}>Check anyway</button>`;
   return `<div class="crow"><span class="r-icon" aria-hidden="true">${r.icon}</span>
-    <div class="ct"><b>${r.name}</b>${host !== viewDay() ? ' <span class="hint" style="display:inline">(Friday)</span>' : ''}<span class="hint">${status}</span>${miss.length && n && !memRun ? `<span class="miss">Not ticked: ${miss.map(esc).join(', ')}</span>` : ''}</div>
+    <div class="ct"><b>${r.name}</b>${host !== viewDay() ? ' <span class="hint" style="display:inline">(Friday)</span>' : ''}<span class="hint">${status}${when}</span>${miss.length && n && !memRun ? `<span class="miss">Not ticked: ${miss.map(esc).join(', ')}</span>` : ''}</div>
     <div class="ca">${act}</div></div>`;
 }
 
@@ -1542,6 +1775,7 @@ document.addEventListener('click', e => {
   const a = b.dataset.act, g = b.dataset.g, r = b.dataset.r, host = b.dataset.host;
   const keep = e.detail === 0 ? selFor(b) : null;
   const done = () => { render(); if (keep) { const el = $app.querySelector(keep); if (el) el.focus(); } };
+  if (b.closest('.kidview')) return kidTap(b, a, done);
   switch (a) {
     // setup
     case 'pick': V.setup = { step:'pin', person:b.dataset.to, pin:'', err:'', shake:false, busy:false, notice:'' }; return done();
@@ -1577,7 +1811,7 @@ document.addEventListener('click', e => {
       if (act({ op:'warn', g, date:P.today, why, note:(V.warnNote[g] || '').trim(), at })) { V.warnOpen[g] = false; V.warnNote[g] = ''; toast(`⚠️ Warning for ${girlName(g)}: ${why}`); }
       return render();
     }
-    case 'unwarn': if (act({ op:'unwarn', g, date:P.today, id:b.dataset.id })) toast('Warning removed'); return render();
+    case 'unwarn': if (act({ op:'unwarn', g, date:b.dataset.wd || P.today, id:b.dataset.id })) toast(b.dataset.auto === '1' ? 'Excused' : 'Warning removed'); return render();
     case 'strike': {
       const now = new Date(), at24 = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
       if (act({ op:'strike', g, date:P.today, id:b.dataset.id, wdate:b.dataset.wd || P.today, at24 })) {
@@ -1586,7 +1820,7 @@ document.addEventListener('click', e => {
       }
       return render();
     }
-    case 'unstrike': if (act({ op:'unstrike', g, date:P.today, id:b.dataset.id })) toast('Strike undone'); return render();
+    case 'unstrike': if (act({ op:'unstrike', g, date:b.dataset.day || P.today, id:b.dataset.id })) toast(b.dataset.auto === '1' ? 'Excused' : 'Strike undone'); return render();
     case 'hwwk': V.hwwk = Math.max(0, V.hwwk + Number(b.dataset.d)); return done();
     case 'open': V.open[r] = !V.open[r]; return done();
     case 'peek-ask': V.peekAsk = r; return done();
@@ -1597,7 +1831,7 @@ document.addEventListener('click', e => {
     // girl actions
     case 'tick': {
       const on = b.getAttribute('aria-pressed') !== 'true';
-      if (act({ op:'tick', r, host, i:+b.dataset.i, on })) {
+      if (act({ op:'tick', r, host, i:+b.dataset.i, on, at24:nowHM() })) {
         V.fx = { pop:`${r}-${b.dataset.i}` };
         const d = C().day(P.me.who, host);
         if (on && C().allDone(d, r)) { V.fx.done = r; toast(`${ROUT.find(x => x.k === r).name} done! A parent will check it.`); }
@@ -1608,8 +1842,13 @@ document.addEventListener('click', e => {
     case 'startmem': if (act({ op:'startmem', r, host })) toast("Memory mode on. You've got this!"); return done();
     case 'peek': V.peekAsk = null; if (act({ op:'peek', r, host })) toast('List shown. Normal points still count.'); return done();
     case 'hide': if (act({ op:'hide', r, host })) toast('List hidden. Keep going from memory!'); return done();
-    case 'memdone': if (act({ op:'memdone', r, host })) { V.fx = { done:r }; toast(`🧠 ${ROUT.find(x => x.k === r).name} done from memory! A parent will confirm it.`); } return done();
-    case 'practicedone': if (act({ op:'practicedone', r, host })) { V.fx = { done:r }; toast(`${ROUT.find(x => x.k === r).name} done! A parent will check it.`); } return done();
+    case 'memdone': if (act({ op:'memdone', r, host, at24:nowHM() })) { V.fx = { done:r }; toast(`🧠 ${ROUT.find(x => x.k === r).name} done from memory! A parent will confirm it.`); } return done();
+    case 'practicedone': if (act({ op:'practicedone', r, host, at24:nowHM() })) { V.fx = { done:r }; toast(`${ROUT.find(x => x.k === r).name} done! A parent will check it.`); } return done();
+    case 'selfcheck': {
+      const on = b.getAttribute('aria-pressed') !== 'true';
+      if (act({ op:'selfcheck', r, host, on, at24:nowHM() }) && on) { V.fx = { done:r }; toast('Checked your own work. Now a parent will check it.'); }
+      return done();
+    }
     case 'goal': act({ op:'goal', reward:b.dataset.reward }); return done();
     case 'cashin': if (act({ op:'cashin', reward:b.dataset.reward })) toast(`Asked a parent for ${b.dataset.reward}`); return done();
     case 'noteSeen': act({ op:'noteSeen', id:b.dataset.id }); return done();
@@ -1634,7 +1873,9 @@ document.addEventListener('click', e => {
     case 'ded-close': V.dedOpen[g] = false; V.dedNote[g] = ''; return render();
     case 'take': {
       const why = b.dataset.why;
-      if (act({ op:'take', g, date:P.today, why, note:(V.dedNote[g] || '').trim() })) { V.dedOpen[g] = false; V.dedNote[g] = ''; toast(`−1 for ${girlName(g)}: ${why}`); }
+      if (why === 'Other' && !(V.dedNote[g] || '').trim()) { toast('Type what happened first'); const el = document.getElementById('dn-' + g); if (el) el.focus(); return; }
+      const note = (V.dedNote[g] || '').trim();
+      if (act({ op:'take', g, date:P.today, why, note })) { V.dedOpen[g] = false; V.dedNote[g] = ''; toast(`−1 for ${girlName(g)}: ${why === 'Other' ? note : why}`); }
       return render();
     }
     case 'fixded': { const on = b.dataset.on === '1'; if (act({ op:'fixded', g, date:P.today, id:b.dataset.id, on })) toast(on ? `Point given back to ${girlName(g)}` : 'Point taken away again'); return render(); }
@@ -1669,7 +1910,7 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && DEV) refresh(); });
 setInterval(() => { if (DEV && document.visibilityState === 'visible' && !queue.length && (DEV.who === 'parent' || Date.now() % 60000 < 30000)) refresh(); }, 30000);
-setInterval(() => { if (P && !queue.length) render(); }, 5 * 60000); // keeps "Right now" in step with the clock
+setInterval(() => { if (P && !queue.length) { autoLate(); render(); } }, 30000); // keeps "Right now" and the countdowns in step with the clock
 
 render();
 if (DEV) refresh();

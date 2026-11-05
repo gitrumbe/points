@@ -18,10 +18,19 @@ var PointsCore = (function () {
   var STREAK_LEVELS = [5, 10, 20, 40, 60];
   var GIRLS = ['ayla', 'lani'];
   var GIRL_NAMES = { ayla: 'Ayla', lani: 'Lani' };
-  // Reasons a parent can take a point away (the girls see these words).
-  var DED_REASONS = ['Lying', 'Rude or disrespectful', 'Ignoring a warning', 'Not following instructions', 'Asked for help before trying'];
-  // Reasons for a warning (the girls see these words). Ignoring a warning turns it into a strike.
-  var WARN_REASONS = ['Not following instructions', 'Not listening', 'Dragging it out'];
+  // Reasons a parent can take a point away straight away, no warning (the girls see these words).
+  // 'Other' needs the detail typed in (05/11).
+  var DED_REASONS = ['Lying', 'Rude or disrespectful', 'Other'];
+  // Reasons for a warning (the girls see these words). Ignoring a warning, or a repeat that week, is a strike (05/11).
+  var LATE_WHY = 'Not ready on time';
+  var WARN_REASONS = ['Didn’t check for myself', LATE_WHY, 'Dragging it out', 'Not done properly', 'Said done when it wasn’t', 'Not listening'];
+  // Deadlines (05/11): Before school ready by 8am on weekdays, Night done by bedtime every day.
+  // Missing one gives an automatic "Not ready on time" warning (a repeat that week is a strike). Starts Monday 9 Nov.
+  var DEADLINE_FROM = '2026-11-09';
+  var READY_BY = '08:00';
+  var BEDTIME = { ayla: '21:30', lani: '20:30' };
+  // Strikes this week (Monday to Sunday, any reason): 6 = no devices for fun the next day; 9 = no devices or outings at the weekend.
+  var WEEK_STEPS = [6, 9];
   // A 3rd strike at or after this time (24-hour 'HH:MM') moves the earlier bedtime to the next night,
   // because there's no bedtime left to take that night. About 1.5 hours before each girl's bedtime
   // (Lani 8:30pm, Ayla 9:30pm). A Rules row 'late_ayla' / 'late_lani' overrides it.
@@ -47,13 +56,15 @@ var PointsCore = (function () {
   function blankDay(cfg) {
     var t = {};
     ROUTINES.forEach(function (r) { t[r.k] = (cfg.tasks[r.k] || []).map(function () { return false; }); });
-    return { t: t, chk: {}, nc: false, behs: [], deds: [], warns: [], strikes: [], started: {}, mem: {}, memDone: {}, memOk: {}, peeked: {}, practiceDone: {} };
+    // fin: time (HH:MM) a routine's last task was ticked. late: auto-late state per routine ('warn', 'strike', 'cap', 'x' = excused).
+    // self: chore self-check (false = ticked but not self-checked yet, true = self-checked).
+    return { t: t, chk: {}, nc: false, behs: [], deds: [], warns: [], strikes: [], started: {}, mem: {}, memDone: {}, memOk: {}, peeked: {}, practiceDone: {}, fin: {}, late: {}, self: {} };
   }
   // Make a stored day match the current task lists (tasks can be edited in the Sheet).
   function normalizeDay(cfg, d) {
     var b = blankDay(cfg);
     d = d || {};
-    ['chk', 'started', 'mem', 'memDone', 'memOk', 'peeked', 'practiceDone'].forEach(function (key) { b[key] = d[key] || {}; });
+    ['chk', 'started', 'mem', 'memDone', 'memOk', 'peeked', 'practiceDone', 'fin', 'late', 'self'].forEach(function (key) { b[key] = d[key] || {}; });
     b.nc = !!d.nc;
     b.behs = d.behs || [];
     b.deds = d.deds || [];
@@ -84,7 +95,8 @@ var PointsCore = (function () {
       if (!data.days[g][s]) data.days[g][s] = fillSkips(cfg, blankDay(cfg), s);
       return data.days[g][s];
     }
-    function allDone(d, k) { return d.t[k].length > 0 && d.t[k].every(Boolean); }
+    // Chores also need her self-check once she has ticked them on the new page (self.chores === false means not yet).
+    function allDone(d, k) { return d.t[k].length > 0 && d.t[k].every(Boolean) && !(k === 'chores' && d.self && d.self.chores === false); }
     function finished(g, host, k) { var d = pk(g, host); return !!d && (!!d.chk[k] || allDone(d, k)); }
     function full(g, s) { var d = pk(g, s); return !!d && isWk(s) && !!d.chk.before && !!d.chk.after && !!d.chk.night; }
     // Every routine that belongs to the day is checked (weekdays: the same as full).
@@ -151,6 +163,51 @@ var PointsCore = (function () {
       return out;
     }
     function weekDates(s) { var ws = weekStart(s), out = []; for (var i = 0; i < 7; i++) out.push(add(ws, i)); return out; }
+    // ---- weekly strike ladder (any reason, Monday to Sunday) ----
+    function weekStrikes(g, s) {
+      var n = 0, ws = weekStart(s);
+      for (var x = ws; x <= s; x = add(x, 1)) { var d = pk(g, x); if (d) n += (d.strikes || []).length; }
+      return n;
+    }
+    function weekStep(i) { var v = Number(R['weekStrikes' + (i + 1)]); return v > 0 ? v : WEEK_STEPS[i]; }
+    // The day a weekly step was reached (on or before s, this week), or null.
+    function stepDay(g, s, i) {
+      var need = weekStep(i), n = 0, ws = weekStart(s);
+      for (var x = ws; x <= s; x = add(x, 1)) { var d = pk(g, x); if (d) n += (d.strikes || []).length; if (n >= need) return x; }
+      return null;
+    }
+    // No devices for fun on day s: the 6th strike of a week came the day before.
+    function noDevices(g, s) { var y = add(s, -1); return stepDay(g, y, 0) === y; }
+    // No devices or outings at the weekend: 9 strikes this week (shown from the day it happens to Sunday).
+    function weekendBan(g, s) { return !!stepDay(g, s, 1); }
+    // ---- deadlines and lateness ----
+    var HM = /^\d{2}:\d{2}$/;
+    function deadline(g, k, s) {
+      var from = /^\d{4}-\d{2}-\d{2}$/.test(String(R.deadlineFrom || '')) ? String(R.deadlineFrom) : DEADLINE_FROM;
+      if (s < from) return null;
+      if (k === 'before' && isWk(s)) return HM.test(String(R.readyBy || '')) ? String(R.readyBy) : READY_BY;
+      if (k === 'night') { var b = R['bed_' + g]; return HM.test(String(b || '')) ? String(b) : BEDTIME[g]; }
+      return null;
+    }
+    // She used the app that day (so she was home). A day with no ticks or starts is treated as away (e.g. at Mum's).
+    function homeOn(d) {
+      if (!d) return false;
+      var st = d.started || {};
+      if (Object.keys(st).some(function (x) { return st[x]; })) return true;
+      return Object.keys(d.t || {}).some(function (x) { return (d.t[x] || []).some(Boolean); });
+    }
+    // Was routine k on day s late? now = 'HH:MM' on this device, used only for today.
+    function lateDue(g, s, k, now) {
+      var dl = deadline(g, k, s); if (!dl || s > today) return false;
+      if (s === today && !(HM.test(String(now || '')) && now >= dl)) return false;
+      var d = pk(g, s); if (!homeOn(d)) return false;
+      if (d.late && d.late[k]) return false;
+      var fin = d.fin && d.fin[k];
+      if (allDone(d, k) || d.chk[k]) return !!fin && fin > dl; // done: late only if the finish time was after the deadline
+      return true;
+    }
+    // How a routine stands against its deadline, for the screens.
+    function lateState(g, s, k) { var d = pk(g, s); return d && d.late ? d.late[k] || '' : ''; }
     function weekPts(g) { return weekDates(today).reduce(function (a, s) { return a + (s <= today ? dayPts(g, s) : 0); }, 0); }
     function monthPts(g) { return daysOf(g).filter(function (s) { return s.slice(0, 7) === today.slice(0, 7); }).reduce(function (a, s) { return a + dayPts(g, s); }, 0); }
     function curStreak(g) {
@@ -191,7 +248,9 @@ var PointsCore = (function () {
       dailyMasterCount: dailyMasterCount, weeklyMasterCount: weeklyMasterCount, routinesFor: routinesFor,
       nightLocked: nightLocked, isMemRun: isMemRun, waitingOn: waitingOn, checkAllList: checkAllList,
       fullDay: fullDay, noChase: noChase, strikeCount: strikeCount, bedtime: bedtime, bedTomorrow: bedTomorrow, bedFromYesterday: bedFromYesterday, lateCut: lateCut, strikeMax: STRIKE_MAX,
-      weekWarns: weekWarns, warnedFor: warnedFor, strikesFrom: strikesFrom
+      weekWarns: weekWarns, warnedFor: warnedFor, strikesFrom: strikesFrom,
+      weekStrikes: weekStrikes, weekStep: weekStep, stepDay: stepDay, noDevices: noDevices, weekendBan: weekendBan,
+      deadline: deadline, lateDue: lateDue, lateState: lateState, homeOn: homeOn
     };
   }
 
@@ -208,6 +267,14 @@ var PointsCore = (function () {
     function fail(msg) { res.ok = false; res.error = msg; return res; }
     function touch(g, s) { var key = g + '|' + s; if (res.touched.indexOf(key) < 0) res.touched.push(key); }
     function validDate(s) { return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && s <= today; }
+    function hm(v) { return /^\d{2}:\d{2}$/.test(String(v || '')) ? String(v) : ''; }
+    // Keep the time a routine was finished (the device's clock when the last task was ticked).
+    function setFin(d, k, at) {
+      d.fin = d.fin || {};
+      if (C.allDone(d, k)) { if (!d.fin[k] && hm(at)) d.fin[k] = hm(at); }
+      else delete d.fin[k];
+    }
+    function am(t) { var h = Number(t.slice(0, 2)), m = t.slice(3); return (h % 12 || 12) + (m === '00' ? '' : ':' + m) + (h < 12 ? 'am' : 'pm'); }
     function routineSlot(g, r, host, forGirl) {
       if (!r || !cfg.tasks[r]) return null;
       if (forGirl) {
@@ -218,7 +285,7 @@ var PointsCore = (function () {
     }
     var g = parent ? op.g : me.who;
     if (GIRLS.indexOf(g) < 0 && ['approve', 'decline', 'load'].indexOf(op.op) < 0) return fail('Unknown person');
-    var girlOps = ['tick', 'start', 'startmem', 'peek', 'hide', 'memdone', 'practicedone', 'goal', 'cashin', 'noteSeen'];
+    var girlOps = ['tick', 'start', 'startmem', 'peek', 'hide', 'memdone', 'practicedone', 'goal', 'cashin', 'noteSeen', 'selfcheck'];
     var parentOps = ['check', 'checkmem', 'uncheck', 'checkall', 'nochase', 'give', 'unbeh', 'take', 'fixded', 'unded', 'approve', 'decline', 'note', 'warn', 'unwarn', 'strike', 'unstrike'];
     if (girlOps.indexOf(op.op) >= 0 && parent) return fail('That is for the girls’ pages');
     if (parentOps.indexOf(op.op) >= 0 && !parent) return fail('Only a parent can do that');
@@ -232,7 +299,17 @@ var PointsCore = (function () {
         if (d.mem[r] === 'on' || d.mem[r] === 'practice') return fail('The list is hidden in memory mode');
         var i = Number(op.i); if (!(i >= 0 && i < d.t[r].length)) return fail('Unknown task');
         if (skipped(cfg, r, i, op.host)) return fail('That one isn\u2019t needed today');
-        d.t[r][i] = !!op.on; d.started[r] = true; touch(g, op.host); return res;
+        d.t[r][i] = !!op.on; d.started[r] = true;
+        if (r === 'chores') { d.self = d.self || {}; d.self.chores = false; } // any change to chores needs a fresh self-check
+        setFin(d, r, op.at24);
+        touch(g, op.host); return res;
+      }
+      case 'selfcheck': {
+        d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today');
+        if (r !== 'chores') return fail('Self-check is for chores');
+        if (!d.t[r].every(Boolean)) return fail('Tick every chore first');
+        d.self = d.self || {}; d.self.chores = !!op.on; setFin(d, r, op.at24);
+        touch(g, op.host); return res;
       }
       case 'start': {
         d = routineSlot(g, r, op.host, true); if (!d) return fail('Only today can be started');
@@ -263,6 +340,7 @@ var PointsCore = (function () {
         if (r === 'night' && C.nightLocked(g, op.host)) return fail('Finish ' + (dow(op.host) === 0 ? 'Ready for Monday' : 'After school') + ' first');
         d.t[r] = d.t[r].map(function () { return true; });
         if (op.op === 'memdone') d.memDone[r] = true; else d.practiceDone[r] = true;
+        setFin(d, r, op.at24);
         touch(g, op.host); return res;
       }
       case 'goal': {
@@ -316,6 +394,7 @@ var PointsCore = (function () {
       case 'take': {
         if (op.date !== today) return fail('Points can only be taken away today');
         if (DED_REASONS.indexOf(op.why) < 0) return fail('Pick a reason');
+        if (op.why === 'Other' && !String(op.note || '').trim()) return fail('Type what the point is for');
         d = C.day(g, today);
         if (d.deds.filter(function (x) { return !x.fixed; }).length >= C.R.dedMax) return fail('That’s the most for today');
         // The balance can go below 0, so a point still comes off when she has none (03/11).
@@ -347,12 +426,18 @@ var PointsCore = (function () {
         touch(g, today); return res;
       }
       case 'unwarn': {
-        if (op.date !== today) return fail('Only today’s warnings can be removed');
-        d = C.day(g, today);
+        // Parent warnings: only on the day. Automatic "Not ready on time" warnings: any day this week, and the
+        // routine is marked excused so the app doesn't give it again (05/11).
+        var wdt = op.date || today;
+        if (!validDate(wdt) || wdt < add(today, -7)) return fail('Only this week’s warnings can be removed');
+        d = C.day(g, wdt);
         var w0 = d.warns.filter(function (y) { return y.id === op.id; })[0];
         if (!w0) return fail('Not found');
-        if (C.strikesFrom(g, today, w0.id).length) return fail('Undo the strike first');
-        d.warns = d.warns.filter(function (y) { return y.id !== op.id; }); touch(g, today); return res;
+        if (wdt !== today && !w0.auto) return fail('Only today’s warnings can be removed');
+        if (C.strikesFrom(g, wdt, w0.id).length) return fail('Undo the strike first');
+        d.warns = d.warns.filter(function (y) { return y.id !== op.id; });
+        if (w0.auto && w0.late) { d.late = d.late || {}; d.late[w0.late] = 'x'; }
+        touch(g, wdt); return res;
       }
       case 'strike': {
         // A strike goes on today, from any warning given this week (Monday to today).
@@ -373,9 +458,30 @@ var PointsCore = (function () {
         var sx = d.strikes.filter(function (y) { return y.id === op.id; })[0];
         if (!sx) return fail('Not found');
         d.strikes = d.strikes.filter(function (y) { return y.id !== op.id; });
+        if (sx.auto && sx.late) { d.late = d.late || {}; d.late[sx.late] = 'x'; } // excused: the app won't give it again
         var wday = sx.wdate && C.pk(g, sx.wdate) ? C.pk(g, sx.wdate) : d;
         (wday.warns || []).forEach(function (y) { if (y.struck === op.id) y.struck = ''; });
         touch(g, op.date); if (sx.wdate) touch(g, sx.wdate); return res;
+      }
+      case 'autolate': {
+        // Any page can send this when a deadline has passed; the rules here decide. Safe to send twice.
+        var lk = op.r, ls = op.host;
+        if (['before', 'night'].indexOf(lk) < 0 || !validDate(ls)) return fail('Unknown routine or day');
+        if (!C.lateDue(g, ls, lk, hm(op.now))) return res;
+        var dl = C.deadline(g, lk, ls), rn = ROUTINES.filter(function (x) { return x.k === lk; })[0].name;
+        var lnote = rn + ' not finished by ' + am(dl);
+        d = C.day(g, ls); d.late = d.late || {};
+        var prior = C.warnedFor(g, ls, LATE_WHY);
+        if (!prior) {
+          d.warns.push({ id: op.newId, why: LATE_WHY, note: lnote, by: 'the app', at: am(dl), struck: '', auto: true, late: lk });
+          d.late[lk] = 'warn';
+        } else if (d.strikes.length >= C.strikeMax) {
+          d.late[lk] = 'cap';
+        } else {
+          d.strikes.push({ id: op.newId, warn: prior.w.id, wdate: prior.date, why: LATE_WHY, note: lnote, by: 'the app', pt: true, at: dl, auto: true, late: lk });
+          d.late[lk] = 'strike';
+        }
+        touch(g, ls); return res;
       }
       case 'approve':
       case 'decline': {
@@ -402,7 +508,7 @@ var PointsCore = (function () {
 
   return {
     ROUTINES: ROUTINES, MEM_ROUT: MEM_ROUT, MEM_LEVELS: MEM_LEVELS, SELF_LEVELS: SELF_LEVELS, STREAK_LEVELS: STREAK_LEVELS,
-    GIRLS: GIRLS, GIRL_NAMES: GIRL_NAMES, DED_REASONS: DED_REASONS, WARN_REASONS: WARN_REASONS, ownKeys: ownKeys, nightGate: nightGate,
+    GIRLS: GIRLS, GIRL_NAMES: GIRL_NAMES, DED_REASONS: DED_REASONS, WARN_REASONS: WARN_REASONS, LATE_WHY: LATE_WHY, ownKeys: ownKeys, nightGate: nightGate,
     add: add, dow: dow, isWk: isWk, weekStart: weekStart, skipped: skipped, blankDay: blankDay, normalizeDay: normalizeDay,
     make: make, apply: apply,
     levelIn: function (n, levels) { return levels.filter(function (x) { return n >= x; }).length; }
