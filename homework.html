@@ -180,7 +180,9 @@ let S = null, st = null, err = '', errGood = false, flagOpen = false, net = 'ok'
 function sheetFor(g){
   if (DEMO) return SAMPLES[DEMO] || null;
   const h = P && P.homework && P.homework[g];
-  return h && h.page ? h.page : null;
+  if (!h || !h.page) return null;
+  // A page cached on an earlier day is stale: ask the server for tonight's instead
+  return h.page.date && P.today && h.page.date !== P.today ? null : h.page;
 }
 function progKey(){ return 'hw-progress-' + S.id; }
 function load(){
