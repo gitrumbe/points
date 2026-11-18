@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tonight's homework</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Lexend:wght@400;500;600&display=swap">
+<style>
+/* Homework page: one question per screen, built for a Surface with its keyboard. Same colours and fonts as the Points Tracker. */
+:root{
+  --bg:#F2F4F9; --surface:#FFFFFF; --surface-2:#E9EDF5; --line:#D8DEEA;
+  --ink:#1A2132; --ink-2:#525C75; --ink-3:#8790A5;
+  --gold-soft:#FFF0C7; --gold-ink:#3D2A00;
+  --good:#1E9A60; --good-soft:#DBF2E6; --wait:#C46F12; --wait-soft:#FCEAD3; --late:#C8352B; --late-soft:#FBE1DE;
+  --ayla:#D23F76; --ayla-soft:#FBE0EA; --lani:#2A9150; --lani-soft:#DCF1E2; --parent:#3D55D0; --parent-soft:#E1E6FA;
+  --accent:var(--parent); --accent-soft:var(--parent-soft); --on-accent:#FFFFFF;
+  --shadow:0 1px 2px rgba(20,28,50,.06), 0 6px 18px rgba(20,28,50,.06);
+  --f-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Lexend","Segoe UI",system-ui,sans-serif;
+  --r-lg:22px; --r-md:14px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0F121A; --surface:#181C28; --surface-2:#232A3A; --line:#2F3749;
+  --ink:#EDF0F7; --ink-2:#A8B0C3; --ink-3:#737C92;
+  --gold-soft:#372C10; --gold-ink:#F6C244;
+  --good:#4CCB8C; --good-soft:#143326; --wait:#F2A54C; --wait-soft:#3A2914; --late:#FF7B6E; --late-soft:#3D1A17;
+  --ayla:#F2709F; --ayla-soft:#3E1C2A; --lani:#5CCB7F; --lani-soft:#173322; --parent:#8597FF; --parent-soft:#212849;
+  --on-accent:#0F121A; --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
+}}
+[data-who="ayla"]{--accent:var(--ayla);--accent-soft:var(--ayla-soft)}
+[data-who="lani"]{--accent:var(--lani);--accent-soft:var(--lani-soft)}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.5}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:12px}
+h1,h2{font-family:var(--f-display);margin:0;line-height:1.1}
+p{margin:0}
+.app{max-width:1180px;margin:0 auto;padding:12px 24px 40px;display:flex;flex-direction:column;gap:16px;min-height:100vh}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--ink-2);text-decoration:none;font-weight:500;font-size:15px;padding:6px 10px;border-radius:10px}
+.back:hover{background:var(--surface-2)}
+.title{font:800 24px/1.1 var(--f-display);flex:1;min-width:200px}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:6px 14px;font-weight:600;font-size:15px;background:var(--surface-2);color:var(--ink-2)}
+.chip.ok{background:var(--good-soft);color:var(--good)} .chip.over{background:var(--wait-soft);color:var(--wait)} .chip.bad{background:var(--late-soft);color:var(--late)}
+.dots{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.dots span{width:14px;height:14px;border-radius:50%;background:var(--line)}
+.dots span.done{background:var(--good)} .dots span.stuck{background:var(--wait)} .dots span.now{background:var(--accent);outline:3px solid var(--accent-soft)}
+.board{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start;flex:1}
+.board.with-card{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}
+@media (max-width:900px){.board.with-card{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:28px 32px}
+.kicker{font-size:15px;font-weight:600;color:var(--accent);margin-bottom:6px}
+.hint{background:var(--gold-soft);color:var(--gold-ink);border-radius:var(--r-md);padding:10px 16px;font-size:17px;margin-bottom:16px}
+.q{font:700 32px/1.25 var(--f-display);margin-bottom:20px}
+.q b{color:var(--accent)}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{display:flex;align-items:center;gap:16px;width:100%;text-align:left;min-height:66px;padding:12px 18px;border-radius:16px;border:2px solid var(--line);background:var(--surface);font-size:22px;cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt .key{flex:none;display:inline-grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--surface-2);font:700 19px var(--f-display);color:var(--ink-2)}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt[aria-pressed="true"] .key{background:var(--accent);color:var(--on-accent)}
+.opt.check .key{border-radius:50%}
+textarea.ans{width:100%;min-height:96px;resize:vertical;border:2px solid var(--line);border-radius:16px;padding:14px 18px;font-size:22px;line-height:1.4;background:var(--surface)}
+textarea.ans:focus{outline:none;border-color:var(--accent)}
+.ansmeta{display:flex;justify-content:space-between;color:var(--ink-3);font-size:14px;margin-top:6px}
+.err{min-height:26px;color:var(--late);font-weight:600;font-size:16px;margin-top:10px}
+.err.good{color:var(--good)}
+.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.btn{border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:12px 20px;font-size:18px;font-weight:600;cursor:pointer}
+.btn:hover{border-color:var(--ink-3)}
+.btn.go{margin-left:auto;background:var(--accent);border-color:var(--accent);color:var(--on-accent);padding:12px 28px}
+.btn.go kbd{background:rgba(255,255,255,.25);color:inherit}
+.keys{color:var(--ink-3);font-size:14px;margin-top:14px}
+kbd{display:inline-block;min-width:24px;padding:1px 7px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);font:600 13px var(--f-body);color:var(--ink-2);text-align:center}
+.flagbox{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.flagbox input{flex:1;min-width:200px;border:2px solid var(--line);border-radius:12px;padding:10px 14px;font-size:18px;background:var(--surface)}
+.card h2{font-size:22px;margin-bottom:12px}
+.cardrow{display:flex;gap:12px;padding:7px 0;border-top:1px solid var(--line);font-size:18px;line-height:1.4}
+.cardrow:first-of-type{border-top:0}
+.cardrow .ic{flex:none;width:34px;font-size:22px;text-align:center}
+.cardrow b{display:block;font-size:14px;color:var(--ink-2);font-weight:600}
+.cardrow.not{background:var(--late-soft);border-radius:10px;padding:7px 10px;border-top:0;margin-top:4px}
+.words{margin-top:12px;font-size:15px;color:var(--ink-2);background:var(--surface-2);border-radius:10px;padding:8px 12px}
+.example{border:2px dashed var(--line);border-radius:16px;padding:14px 18px;margin-top:8px;font-size:18px}
+.example .exq{font-weight:600;margin-bottom:8px}
+.example div.row{padding:4px 0}
+.info p{font-size:21px;margin-bottom:12px}
+.info .big{font:800 46px/1.1 var(--f-display);margin-bottom:10px}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:18px 0}
+.stat{background:var(--surface-2);border-radius:16px;padding:14px 18px}
+.stat .n{font:800 34px var(--f-display);line-height:1}
+.stat .l{font-size:14px;color:var(--ink-2)}
+.preview{background:var(--parent-soft);color:var(--parent);border-radius:12px;padding:8px 14px;font-size:15px;font-weight:500}
+.empty{max-width:560px;margin:12vh auto;text-align:center}
+.empty p{color:var(--ink-2);margin-top:10px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="app" id="app"><div class="empty"><h1>Loading tonight's homework…</h1></div></div>
+<script>
+/* Homework page for the Points Tracker.
+   Speed rule (Apps Script calls take about 4 s): nothing waits on the server while she works.
+   - The sheet comes with the dashboard's own load (P.homework[girl].page), cached on this device, so it opens at once.
+   - Every answer is saved on this device the moment it changes (survives a closed lid or a refresh).
+   - One write at the end (op 'hwsubmit'), retried until the server says it's saved.
+   Answer keys never reach this page: they stay in Claude's logs on E:. */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyDN1Y8Lr8iHqaa2qeXiA06LfdXH0wOvDcOX1kt5GKsGjmsMJa23n27SHfPHbvUikk0/exec';
+const DEV_KEY = 'points-device', CACHE_KEY = 'points-cache', OUTBOX_KEY = 'hw-outbox';
+const NAMES = { ayla:'Ayla', lani:'Lani' };
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rich = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');   // **word** = bold in the girl's accent colour
+function readLS(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
+function writeLS(k, v){ try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+const params = new URLSearchParams(location.search);
+
+/* ---------- sample sheets for test mode (?demo=lani or ?demo=ayla); real content from the week 4 draft plan ---------- */
+const MONKEY_CARD = { title:'🐒 Monkey card', rows:[
+  { ic:'🏠', label:'Home', text:'Monkeys live in trees in warm forests.' },
+  { ic:'🌿', label:'Food', text:'Most monkeys eat fruit, leaves and insects.' },
+  { ic:'💪', label:'Body', text:'Many monkeys have a long tail that helps them balance.' },
+  { ic:'👶', label:'Babies', text:'A baby monkey holds on to its mum.' },
+  { ic:'👪', label:'Groups', text:'Monkeys live in groups called troops.' },
+  { ic:'🚫', label:'NOT', text:'Monkeys do not live wild in New Zealand.', not:true },
+  { ic:'🚫', label:'NOT', text:"Monkeys can't fly.", not:true } ],
+  words:'troop = a group of monkeys · balance = not fall over' };
+const LUNG_CARD = { title:'🫁 Lungs card', rows:[
+  { ic:'2️⃣', label:'How many', text:'You have 2 lungs, one on each side of your chest.' },
+  { ic:'💨', label:'Gases', text:'Your lungs take in oxygen from the air. When you breathe out, they push out carbon dioxide.' },
+  { ic:'🫁', label:'Windpipe', text:'Air goes down your windpipe (its science name is the trachea) to your lungs.' },
+  { ic:'⬇️', label:'Diaphragm', text:'A muscle under your lungs, the diaphragm, pulls down when you breathe in.' },
+  { ic:'⏱️', label:'Breaths', text:'A grown-up sitting still breathes about 12 to 20 times a minute.' } ] };
+const SAMPLES = {
+  lani: { id:'demo-lani', girl:'lani', date:'2026-11-24', title:'Monkeys, Find Both Things', minutes:15, card:MONKEY_CARD, flagWords:true,
+    stuck:"Stuck? Read it again. Have a go, or press ? and move on. Don't wait for help.",
+    screens:[
+      { type:'info', title:'Read the monkey card', text:['Read every line of the card. It stays on the side while you work.', 'Press Enter when you have read it.'] },
+      { type:'info', title:'Check both things', text:['If it says **and**, there are two things. The first one that fits might be a trick. Check both before you choose.'],
+        example:{ q:'Which one lives in the sea and breathes air?', rows:['🐟 fish: sea ✅ breathes air ❌ (a trick!)', '🐬 dolphin: sea ✅ breathes air ✅ → this one!', '🐶 dog: sea ❌ breathes air ✅'] } },
+      { type:'pick', id:'A1', kicker:'Question 1 · Step 1', hint:'What is it asking?', q:'Which one is a **baby** AND **holds on to its mum**?', options:['which one is a baby','which one is a baby and holds on to its mum','which one holds on to its mum'] },
+      { type:'pick', id:'A2', kicker:'Question 1 · Step 2', hint:'Check both things. The first one that fits might be a trick.', q:'Which one is a **baby** AND **holds on to its mum**?', options:['🐣 chick','🐒 baby monkey','🐒 grown-up monkey'] },
+      { type:'pick', id:'B1', kicker:'Question 2 · Step 2', hint:'Check both things.', q:'Which one **lives in trees** AND **has a long tail**?', options:['🦉 owl','🐒 monkey','🐄 cow'] },
+      { type:'pick', id:'C1', kicker:'Question 3', hint:'Find the line on the card first.', q:'Do monkeys live wild in New Zealand?', options:['yes','no'] },
+      { type:'pick', id:'C2', kicker:'Question 4', hint:'Find the line on the card first.', q:'Does the card say how long monkeys live?', options:['yes, it says','no, it doesn\'t say'] },
+      { type:'text', id:'D1', kicker:'Question 5', hint:'Type your answer. One word is fine.', q:'What is a group of monkeys called?' },
+      { type:'check', id:'CHK', kicker:'Before you finish', q:'Look back. Tick each one that is true.', options:['Every question has an answer, or a ?','For every "and" question, I checked both things','I read the card'] },
+      { type:'pick', id:'HARD', kicker:'Feedback', q:'How hard was it?', options:['😴 too easy','🙂 just right','😣 too hard'] },
+      { type:'pick', id:'LIKE', kicker:'Feedback', q:'How much did you like it?', options:['😩 no','😕 a bit','😐 OK','🙂 happy','😄 loved it'] },
+      { type:'text', id:'NEXT', kicker:'Feedback', q:'What animal do you want to learn about next?', optional:true } ] },
+  ayla: { id:'demo-ayla', girl:'ayla', date:'2026-11-24', title:'Lungs, Answer Just That', minutes:15, card:LUNG_CARD,
+    stuck:"Stuck? Have a go or press ? and move on. Don't wait for help. When the timer goes, write your best guess and move on.",
+    screens:[
+      { type:'info', title:'Answer just that', text:['Each answer is just what was asked: **nothing extra**.', 'Before you answer, say what it wants: what, and in what form (one word, a number, one full sentence).'],
+        example:{ q:'How many lungs do you have? Answer with one number.', rows:['✅ 2', '❌ I have 2 lungs, one on each side of my chest.'] } },
+      { type:'text', id:'A', kicker:'Question 1', hint:'Answer in the form asked.', q:'Which gas do your lungs take in? **One word.**', wants:true },
+      { type:'pick', id:'B', kicker:'Question 2', hint:'Answer the question asked.', q:'Is your heart one of your lungs?', options:['yes','no'] },
+      { type:'text', id:'C', kicker:'Question 3', hint:'Two things are needed.', q:'Name the muscle under your lungs **and** which way it pulls when you breathe in.', wants:true },
+      { type:'text', id:'D', kicker:'Question 4', hint:'Only one of the two questions.', q:'**Answer only the second question.** How many lungs do you have? What is the windpipe\'s science name?', wants:true },
+      { type:'text', id:'E', kicker:'Question 5', hint:'One full sentence that explains. Not a "because…" fragment.', q:'Explain why you breathe faster when you run, **in one full sentence**.', wants:true },
+      { type:'check', id:'CHK', kicker:'Before you finish', q:'Look back. Tick each one that is true.', options:['Every question has an answer, a best guess or a ?','Each answer is just what was asked: nothing extra','Each answer is in the form asked'] },
+      { type:'pick', id:'HARD', kicker:'Feedback', q:'How hard was it?', options:['too easy','just right','too hard'] },
+      { type:'pick', id:'LIKE', kicker:'Feedback', q:'How much did you enjoy it?', options:['1','2','3','4','5'] },
+      { type:'text', id:'KNEW', kicker:'Feedback', q:"I didn't know that…", optional:true },
+      { type:'text', id:'NEXT', kicker:'Feedback', q:'What do you want to learn about next?', optional:true } ] }
+};
+
+/* ---------- state ---------- */
+const DEMO = params.get('demo');
+const DEV = readLS(DEV_KEY);
+let P = DEV ? readLS(CACHE_KEY) : null;
+let me = DEMO ? DEMO : (P && P.me && P.me.who) || null;      // 'ayla' | 'lani' | 'parent'
+let girl = me === 'parent' ? (params.get('girl') || 'ayla') : me;
+const PREVIEW = me === 'parent';                             // a parent can look but never saves
+let S = null, st = null, err = '', errGood = false, flagOpen = false, net = 'ok', tick = null, screenStart = Date.now();
+
+function sheetFor(g){
+  if (DEMO) return SAMPLES[DEMO] || null;
+  const h = P && P.homework && P.homework[g];
+  return h && h.page ? h.page : null;
+}
+function progKey(){ return 'hw-progress-' + S.id; }
+function load(){
+  const fresh = { i:0, a:{}, flags:[], startedAt:null, finishedAt:null, saved:false };
+  st = readLS(progKey()) || fresh;
+  if (PREVIEW) st = fresh;
+  // Already finished on another day or device: the server says so, so open on the "Saved" screen
+  const h = !DEMO && P && P.homework && P.homework[girl];
+  if (!PREVIEW && h && h.done && !st.saved) { st.saved = true; st.i = S.screens.length; }
+}
+function persist(){ if (!PREVIEW) writeLS(progKey(), st); }
+
+/* ---------- answering ---------- */
+function cur(){ return S.screens[st.i]; }
+function ans(id){ return st.a[id]; }
+function setAns(id, patch){
+  const now = Date.now();
+  if (!st.startedAt) st.startedAt = new Date(now).toISOString();
+  const a = st.a[id] || { v:null, ms:0, keys:0 };
+  Object.assign(a, patch, { at:new Date(now).toISOString() });
+  st.a[id] = a; persist();
+}
+function answered(sc){
+  const a = ans(sc.id);
+  if (!sc.id) return true;
+  if (sc.type === 'check') return !!a;
+  if (sc.type === 'pick') return a && a.v != null;
+  if (sc.type === 'text') return sc.optional || (a && String(a.v || '').trim() !== '');
+  return true;
+}
+function leave(){                       // add time spent on this screen to its answer
+  const sc = cur(); if (!sc || !sc.id) return;
+  const a = st.a[sc.id]; if (a) { a.ms = (a.ms || 0) + (Date.now() - screenStart); persist(); }
+}
+function go(n){ leave(); st.i = Math.max(0, Math.min(S.screens.length, n)); err = ''; flagOpen = false; screenStart = Date.now(); persist(); render(); }
+function next(){
+  const sc = cur();
+  if (sc && sc.type === 'text') { const t = document.getElementById('ta'); if (t) saveText(sc, t.value); }
+  if (sc && sc.type === 'info' && !st.startedAt) { st.startedAt = new Date().toISOString(); persist(); }
+  if (sc && !answered(sc)) {
+    err = sc.type === 'pick' ? 'Pick one, or press ? if you\'re stuck.' : sc.type === 'check' ? 'Tick the ones that are true, then press Enter.' : 'Type an answer, or press ? if you\'re stuck.';
+    errGood = false; render(); return;
+  }
+  go(st.i + 1);
+}
+function stuck(){
+  const sc = cur(); if (!sc || !sc.id || sc.type === 'check') return;
+  setAns(sc.id, { v:'?', stuck:true }); go(st.i + 1);
+}
+function saveText(sc, v){
+  const prev = ans(sc.id);
+  if (prev && prev.v === v) return;
+  setAns(sc.id, { v, stuck: v.trim() === '?', chars: v.length });
+}
+function pick(k){
+  const sc = cur();
+  if (sc.type === 'pick') { setAns(sc.id, { v:sc.options[k], idx:k, stuck:false }); err = ''; render(); }
+  if (sc.type === 'check') {
+    const a = ans(sc.id), on = new Set(a ? a.v : []);
+    on.has(k) ? on.delete(k) : on.add(k);
+    setAns(sc.id, { v:[...on].sort() }); err = ''; render();
+  }
+}
+
+/* ---------- saving: one write at the end, kept on this device until the server says yes ---------- */
+function finish(){
+  leave();
+  st.finishedAt = new Date().toISOString(); persist();
+  if (PREVIEW) { err = 'Preview only: nothing is saved from a parent device.'; errGood = true; render(); return; }
+  const box = readLS(OUTBOX_KEY) || [];
+  const item = { op:'hwsubmit', id:S.id, girl, startedAt:st.startedAt, finishedAt:st.finishedAt, answers:st.a, flags:st.flags };
+  writeLS(OUTBOX_KEY, box.filter(x => x.id !== S.id).concat([item]));
+  render(); flush();
+}
+let sending = false;
+function flush(){
+  const box = readLS(OUTBOX_KEY) || [];
+  if (sending || !box.length) return;
+  sending = true; net = 'saving'; render();
+  const item = box[0];
+  const done = ok => {
+    sending = false;
+    if (ok) {
+      writeLS(OUTBOX_KEY, (readLS(OUTBOX_KEY) || []).filter(x => x.id !== item.id));
+      const pk = 'hw-progress-' + item.id, p = readLS(pk); if (p) { p.saved = true; writeLS(pk, p); }
+      if (S && item.id === S.id) st.saved = true;
+      net = 'ok'; render(); flush();
+    } else { net = 'offline'; render(); setTimeout(flush, 8000); }
+  };
+  if (DEMO) { setTimeout(() => done(true), 900); return; }
+  fetch(SCRIPT_URL, { method:'POST', credentials:'omit', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ token: DEV.token }, item)) })
+    .then(r => r.json()).then(r => done(!!(r && r.ok)), () => done(false));
+}
+
+/* ---------- drawing ---------- */
+function mins(){ return st.startedAt ? Math.floor(((st.finishedAt ? Date.parse(st.finishedAt) : Date.now()) - Date.parse(st.startedAt)) / 60000) : 0; }
+function topBar(){
+  const m = mins(), over = m >= S.minutes;
+  const timer = st.startedAt ? `<span class="chip ${over ? 'over' : 'ok'}" aria-live="off">⏱️ ${m} of ${S.minutes} min</span>` : `<span class="chip">⏱️ ${S.minutes} min</span>`;
+  const save = net === 'saving' ? '<span class="chip">Saving…</span>' : net === 'offline' ? '<span class="chip bad">Offline · will save when back online</span>' : '';
+  const dots = S.screens.map((sc, k) => {
+    const a = sc.id && ans(sc.id), c = k === st.i ? 'now' : a && a.stuck ? 'stuck' : (sc.id ? a : k < st.i) ? 'done' : '';
+    return `<span class="${c}"></span>`;
+  }).join('');
+  return `<div class="top"><a class="back" href="./${DEMO ? '' : ''}">← Points Tracker</a>
+    <div class="title">${esc(S.title)}</div>${save}${timer}</div>
+    ${PREVIEW ? `<p class="preview">👀 Preview of ${NAMES[girl]}'s sheet · nothing is saved from a parent device. <a href="?girl=${girl === 'ayla' ? 'lani' : 'ayla'}">See ${NAMES[girl === 'ayla' ? 'lani' : 'ayla']}'s</a></p>` : ''}
+    <div class="dots" aria-label="Question ${Math.min(st.i + 1, S.screens.length)} of ${S.screens.length}">${dots}</div>`;
+}
+function cardPanel(){
+  const c = S.card; if (!c) return '';
+  return `<aside class="panel card" aria-label="${esc(c.title)}"><h2>${esc(c.title)}</h2>
+    ${c.rows.map(r => `<div class="cardrow${r.not ? ' not' : ''}"><span class="ic" aria-hidden="true">${r.ic}</span><div><b>${esc(r.label)}</b>${esc(r.text)}</div></div>`).join('')}
+    ${c.words ? `<p class="words">📖 ${esc(c.words)}</p>` : ''}</aside>`;
+}
+function screenHtml(sc){
+  const kick = sc.kicker ? `<p class="kicker">${esc(sc.kicker)}</p>` : '';
+  const hint = sc.hint ? `<p class="hint">${esc(sc.hint)}</p>` : '';
+  if (sc.type === 'info') {
+    return `<div class="info"><p class="kicker">Read this first</p><h1 class="q">${esc(sc.title)}</h1>
+      ${sc.text.map(t => `<p>${rich(t)}</p>`).join('')}
+      ${sc.example ? `<div class="example"><p class="exq">Example: ${esc(sc.example.q)}</p>${sc.example.rows.map(r => `<div class="row">${esc(r)}</div>`).join('')}</div>` : ''}</div>`;
+  }
+  const a = ans(sc.id);
+  if (sc.type === 'pick' || sc.type === 'check') {
+    const on = sc.type === 'check' ? new Set(a ? a.v : []) : null;
+    return `${kick}${hint}<h1 class="q">${rich(sc.q)}</h1><div class="opts" role="${sc.type === 'pick' ? 'radiogroup' : 'group'}">
+      ${sc.options.map((o, k) => `<button class="opt${sc.type === 'check' ? ' check' : ''}" data-k="${k}" aria-pressed="${sc.type === 'pick' ? !!(a && a.idx === k && !a.stuck) : on.has(k)}"><span class="key">${k + 1}</span><span>${esc(o)}</span></button>`).join('')}</div>`;
+  }
+  if (sc.type === 'text') {
+    const v = a && a.v != null ? a.v : '';
+    return `${kick}${hint}<h1 class="q">${rich(sc.q)}</h1>
+      <label class="sr" for="ta">Your answer</label>
+      <textarea id="ta" class="ans" rows="2" spellcheck="true" autocomplete="off" placeholder="${sc.optional ? 'Type here (you can leave this one blank)' : 'Type your answer here'}">${esc(v)}</textarea>
+      <div class="ansmeta"><span>${sc.wants ? 'Check: is it just what was asked, in the form asked?' : ''}</span><span id="cc">${v.length ? v.length + ' letters' : ''}</span></div>`;
+  }
+  return '';
+}
+function doneHtml(){
+  const qs = S.screens.filter(sc => sc.id && (sc.type === 'pick' || sc.type === 'text') && !sc.optional);
+  const stuckN = qs.filter(sc => ans(sc.id) && ans(sc.id).stuck).length;
+  const doneN = qs.filter(sc => answered(sc) && !(ans(sc.id) && ans(sc.id).stuck)).length;
+  const saved = st.saved, waiting = (readLS(OUTBOX_KEY) || []).some(x => x.id === S.id);
+  const head = saved ? '🎉 Saved!' : waiting ? 'Saving your homework…' : 'All done?';
+  const sub = saved ? 'Great work. Now go back and tick <b>Homework</b> on your Points Tracker.'
+    : waiting ? 'Keep this open for a moment. If the internet is off, it will save when it\'s back.'
+    : 'Press Enter to finish and save. You can still go back to change an answer.';
+  return `<div class="info"><p class="big">${head}</p><p>${sub}</p>
+    <div class="summary"><div class="stat"><div class="n">${doneN}</div><div class="l">answered</div></div>
+      <div class="stat"><div class="n">${stuckN}</div><div class="l">stuck (?)</div></div>
+      <div class="stat"><div class="n">${mins()}</div><div class="l">minutes (set ${S.minutes})</div></div>
+      ${S.flagWords ? `<div class="stat"><div class="n">${st.flags.length}</div><div class="l">words flagged</div></div>` : ''}</div></div>`;
+}
+function render(){
+  const app = document.getElementById('app');
+  document.documentElement.dataset.who = girl || 'parent';
+  if (!S) {
+    const why = !DEV && !DEMO ? 'Open this from the Points Tracker on your own Surface.' : 'There\'s no homework page for tonight. If tonight\'s homework is a Google Doc, open it from your Points Tracker.';
+    app.innerHTML = `<div class="empty"><h1>No homework page tonight</h1><p>${why}</p><p style="margin-top:18px"><a class="back" href="./">← Points Tracker</a></p></div>`;
+    return;
+  }
+  const end = st.i >= S.screens.length, sc = cur();
+  const withCard = S.card && !end && sc.type !== 'check' && !['HARD','LIKE','NEXT','KNEW'].includes(sc.id);
+  const mainBtn = end ? (st.saved ? `<a class="btn go" href="./">Back to Points Tracker</a>` : `<button class="btn go" id="go">Finish and save <kbd>Enter</kbd></button>`)
+    : `<button class="btn go" id="go">Next <kbd>Enter</kbd></button>`;
+  const canStuck = !end && sc.id && sc.type !== 'check' && !sc.optional;
+  const keyHelp = end ? '' : sc.type === 'pick' ? `Press <kbd>1</kbd>${sc.options.length > 2 ? '…' : ' or '}<kbd>${sc.options.length}</kbd> to pick · <kbd>Enter</kbd> for next${canStuck ? ' · <kbd>?</kbd> if stuck' : ''}`
+    : sc.type === 'check' ? 'Press a number to tick or untick · <kbd>Enter</kbd> for next'
+    : sc.type === 'text' ? `Type, then press <kbd>Enter</kbd> for next${canStuck ? ' · type <kbd>?</kbd> on its own if stuck' : ''}` : 'Press <kbd>Enter</kbd> for next';
+  app.innerHTML = `${topBar()}
+    <div class="board${withCard ? ' with-card' : ''}">
+      <section class="panel" aria-live="polite">${end ? doneHtml() : screenHtml(sc)}
+        <p class="err${errGood ? ' good' : ''}" role="alert">${esc(err)}</p>
+        <div class="bar">${st.i > 0 && !st.saved ? '<button class="btn" id="back">← Back</button>' : ''}
+          ${canStuck ? '<button class="btn" id="stuck">Stuck? Skip it <kbd>?</kbd></button>' : ''}
+          ${S.flagWords && !end ? '<button class="btn" id="flag">🚩 Flag a word</button>' : ''}${mainBtn}</div>
+        ${flagOpen ? `<div class="flagbox"><input id="fw" placeholder="A word I didn't know (my best guess is fine)" aria-label="A word I didn't know"><button class="btn" id="fwsave">Save word</button></div>` : ''}
+        ${end ? '' : `<p class="keys">${keyHelp}</p><p class="keys">${esc(S.stuck)}</p>`}
+      </section>${withCard ? cardPanel() : ''}</div>`;
+  wire();
+}
+function wire(){
+  const $ = id => document.getElementById(id);
+  $('go') && ($('go').onclick = () => st.i >= S.screens.length ? finish() : next());
+  $('back') && ($('back').onclick = () => go(st.i - 1));
+  $('stuck') && ($('stuck').onclick = stuck);
+  $('flag') && ($('flag').onclick = () => { flagOpen = !flagOpen; render(); if (flagOpen) $('fw').focus(); });
+  $('fwsave') && ($('fwsave').onclick = saveFlag);
+  $('fw') && ($('fw').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); saveFlag(); } if (e.key === 'Escape') { flagOpen = false; render(); } });
+  document.querySelectorAll('.opt').forEach(b => b.onclick = () => pick(+b.dataset.k));
+  const ta = $('ta');
+  if (ta) {
+    ta.oninput = () => { const sc = cur(); saveText(sc, ta.value); const a = ans(sc.id); if (a) { a.keys = (a.keys || 0) + 1; persist(); } $('cc').textContent = ta.value.length ? ta.value.length + ' letters' : ''; if (err) { err = ''; document.querySelector('.err').textContent = ''; } };
+    if (!flagOpen) { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }
+  }
+}
+function saveFlag(){
+  const w = (document.getElementById('fw').value || '').trim();
+  if (!w) { err = 'Type the word first.'; errGood = false; render(); return; }
+  st.flags.push({ word:w, at:new Date().toISOString(), screen:(cur() || {}).id || null }); persist();
+  flagOpen = false; err = `Flagged "${w}". Your best guess is fine.`; errGood = true; render();
+}
+
+/* ---------- keyboard: everything works without the mouse ---------- */
+document.addEventListener('keydown', e => {
+  if (!S || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.target && e.target.id === 'fw') return;
+  const end = st.i >= S.screens.length, sc = cur();
+  if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.target && e.target.tagName === 'BUTTON' && e.target.id !== 'go' && !e.target.classList.contains('opt')) return;   // Enter on Back/Stuck/Flag runs that button
+    e.preventDefault(); end ? (st.saved ? location.href = './' : finish()) : next(); return;
+  }
+  if (end || !sc) return;
+  if (sc.type === 'text') {
+    if (e.key === 'Enter' && e.shiftKey) return;     // Shift+Enter = new line
+    return;
+  }
+  if ((e.key === '?' || e.key === '/' || e.code === 'Slash') && sc.id && sc.type !== 'check') { e.preventDefault(); stuck(); return; }
+  const n = parseInt(e.key, 10);
+  if (sc.options && n >= 1 && n <= sc.options.length) { e.preventDefault(); pick(n - 1); }
+});
+
+// Some keyboards and on-screen keyboards only send the typed character, not a named key: catch "?" there too.
+document.addEventListener('keypress', e => {
+  if (!S || st.i >= S.screens.length || (e.target && /^(TEXTAREA|INPUT)$/.test(e.target.tagName))) return;
+  const sc = cur();
+  if (e.charCode === 63 && sc.id && sc.type !== 'check' && sc.type !== 'text') { e.preventDefault(); stuck(); }
+});
+
+/* ---------- start ---------- */
+function start(){
+  S = girl ? sheetFor(girl) : null;
+  if (S) { load(); screenStart = Date.now(); }
+  render(); flush();
+  clearInterval(tick); tick = setInterval(() => { if (S && st.startedAt && !st.finishedAt) { const c = document.querySelector('.top .chip:last-child'); if (c) { const m = mins(); c.textContent = `⏱️ ${m} of ${S.minutes} min`; c.className = 'chip ' + (m >= S.minutes ? 'over' : 'ok'); } } }, 15000);
+}
+// If the cached data has no page for tonight yet, ask the server once (about 4 s), then draw.
+if (!DEMO && DEV && girl && !sheetFor(girl)) {
+  fetch(SCRIPT_URL, { method:'POST', credentials:'omit', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify({ token: DEV.token, op:'load' }) })
+    .then(r => r.json()).then(r => { if (r && r.data) { P = r; writeLS(CACHE_KEY, r); } start(); }, start);
+} else start();
+</script>
+</body>
+</html>
