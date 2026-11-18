@@ -346,12 +346,14 @@ function render(){
   }
   const end = st.i >= S.screens.length, sc = cur();
   const withCard = S.card && !end && sc.type !== 'check' && !['HARD','LIKE','NEXT','KNEW'].includes(sc.id);
+  const starting = !end && !st.startedAt && sc.type === 'info';   // the clock starts on Start, not when the page opens
   const mainBtn = end ? (st.saved ? `<a class="btn go" href="./">Back to Points Tracker</a>` : `<button class="btn go" id="go">Finish and save <kbd>Enter</kbd></button>`)
-    : `<button class="btn go" id="go">Next <kbd>Enter</kbd></button>`;
+    : `<button class="btn go" id="go">${starting ? 'Start ⏱️' : 'Next'} <kbd>Enter</kbd></button>`;
   const canStuck = !end && sc.id && sc.type !== 'check' && !sc.optional;
   const keyHelp = end ? '' : sc.type === 'pick' ? `Press <kbd>1</kbd>${sc.options.length > 2 ? '…' : ' or '}<kbd>${sc.options.length}</kbd> to pick · <kbd>Enter</kbd> for next${canStuck ? ' · <kbd>?</kbd> if stuck' : ''}`
     : sc.type === 'check' ? 'Press a number to tick or untick · <kbd>Enter</kbd> for next'
-    : sc.type === 'text' ? `Type, then press <kbd>Enter</kbd> for next${canStuck ? ' · type <kbd>?</kbd> on its own if stuck' : ''}` : 'Press <kbd>Enter</kbd> for next';
+    : sc.type === 'text' ? `Type, then press <kbd>Enter</kbd> for next${canStuck ? ' · type <kbd>?</kbd> on its own if stuck' : ''}`
+    : starting ? `Read this first. Your ${S.minutes} minutes start when you press Start or <kbd>Enter</kbd>.` : 'Press <kbd>Enter</kbd> for next';
   app.innerHTML = `${topBar()}
     <div class="board${withCard ? ' with-card' : ''}">
       <section class="panel" aria-live="polite">${end ? doneHtml() : screenHtml(sc)}
