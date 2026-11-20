@@ -301,6 +301,13 @@ p{margin:0}
 .memcard .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .chip.mem{background:var(--parent-soft);color:var(--parent)}
 /* badges */
+/* wins strip (block 2, 20/11): today's wins, praise moments */
+.wins{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.wins .wl{display:flex;flex-wrap:wrap;gap:8px}
+.chip.win{background:var(--gold-soft);color:var(--ink)}
+.chip.praise{background:var(--gold);color:var(--gold-ink)}
+.chip.ghost{background:transparent;color:var(--ink-2);border:1.5px dashed var(--line, #c9c9c9)}
+.wins-pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px}
 .badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:16px}
 .medal{flex:none;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:28px;position:relative;background:var(--surface-2);border:3px dashed var(--line)}
 .medal.on{background:radial-gradient(circle at 34% 30%,#FFE69A,#F3B21C 58%,#C88A06);border:3px solid var(--gold-deep)}
@@ -1120,6 +1127,61 @@ function badgeCard(icon, title, desc, n, levels, unit, extra){
     <div class="bar gold"><i style="width:${Math.round(Math.max(0, Math.min(p, 1))*100)}%"></i></div>
     <p class="hint"><b style="color:var(--ink)">${lv ? `Level ${lv}` : 'Not earned yet'}</b> · ${next ? `${next - n} more ${next - n === 1 ? unit[0] : unit[1]} to Level ${lv + 1}` : 'Top level reached!'}${extra ? ` · ${extra}` : ''}</p></article>`;
 }
+// ---------- wins (block 2, from Mon 23/11; agreed 19/11 and 20/11) ----------
+// Display only: reads the Days data, never changes points, warnings or the PointsCore block (ISC-72).
+const WINS_FROM = '2026-11-23', WIN_LEVELS = [1, 5, 10, 20, 40];
+const winsFrom = () => { const v = String((P.cfg.rules || {}).winsFrom || ''); return /^d{4}-d{2}-d{2}$/.test(v) ? v : WINS_FROM; };
+const WIN_KINDS = [
+  { k: 'sheet',  icon: '✅', name: 'First time', desc: 'Homework done exactly as asked, first time', won: 'Followed the sheet' },
+  { k: 'before', icon: '⏰', name: 'On time: Before school', desc: 'Before school done by 8am', won: 'Before school on time' },
+  { k: 'night',  icon: '🌙', name: 'On time: Night', desc: 'Night done by bedtime', won: 'Night on time' }
+];
+// Did she earn win kind k on day s?
+function wonOn(g, s, k){
+  const c = C(), d = c.pk(g, s); if (!d || s < winsFrom() || s > P.today) return false;
+  if (k === 'sheet') return (d.behs || []).some(b => /^followed the sheet/i.test(String(b.for || '')));
+  const dl = c.deadline(g, k, s), fin = d.fin && d.fin[k];
+  if (!dl || !fin || !c.allDone(d, k) || (d.late && d.late[k])) return false;
+  if (k === 'night' && fin < '12:00') return false;   // a Night tick after midnight isn't before bedtime
+  return fin <= dl;
+}
+const winCount = (g, k, upTo) => Object.keys(P.data.days[g] || {}).filter(s => s <= upTo && wonOn(g, s, k)).length;
+// Today's wins for girl g on day s: [{icon, text, praise}] plus wins still possible today.
+function winsOn(g, s){
+  const c = C(), won = [], open = [], now = nowHM();
+  for (const w of WIN_KINDS) {
+    if (wonOn(g, s, w.k)) {
+      const n = winCount(g, w.k, s), before = n - 1, lv = PC.levelIn(n, WIN_LEVELS), lv0 = PC.levelIn(before, WIN_LEVELS);
+      const praise = before === 0 ? `First ever ${w.name} badge!` : lv > lv0 ? `${w.name} level ${lv}!` : '';
+      won.push({ icon: w.icon, text: w.won, praise });
+    } else if (s === P.today && s >= winsFrom()) {
+      if (w.k === 'sheet') { if (PC.isWk(s)) open.push({ icon: w.icon, text: 'Do your homework exactly as asked' }); continue; }
+      const dl = c.deadline(g, w.k, s), d = c.pk(g, s);
+      if (dl && now < dl && !(d && c.allDone(d, w.k))) open.push({ icon: w.icon, text: `${w.k === 'before' ? 'Before school' : 'Night'} done by ${fmt12(dl)}` });
+    }
+  }
+  return { won, open };
+}
+function winChips(r, parent){
+  return r.won.map(w => `<span class="chip ${w.praise ? 'praise' : 'win'}">${w.icon} ${esc(w.text)}${w.praise ? ` · 🎉 ${esc(w.praise)}` : ''}</span>`).join('')
+    + (parent ? '' : r.open.map(w => `<span class="chip ghost">${w.icon} ${esc(w.text)}</span>`).join(''));
+}
+// The girl's strip on her Today screen.
+function rWins(g, s){
+  if (s < winsFrom()) return '';
+  const r = winsOn(g, s); if (!r.won.length && !r.open.length) return '';
+  const head = r.won.length ? `${r.won.length} ${r.won.length === 1 ? 'win' : 'wins'} ${s === P.today ? 'today' : 'this day'}` : 'Wins you can still get today';
+  return `<section class="card wins"><span class="lbl">Today's wins</span><b>${head}</b><div class="wl">${winChips(r)}</div></section>`;
+}
+// Both girls in the parent Check view; praise moments marked for the parent.
+function rWinsParent(s){
+  if (s < winsFrom()) return '';
+  const cards = PC.GIRLS.map(g => { const r = winsOn(g, s), pr = r.won.filter(w => w.praise).length;
+    return `<div class="card wins"><span class="lbl">${girlName(g)} · today's wins</span>
+      ${r.won.length ? `<div class="wl">${winChips(r, true)}</div>` : '<span class="hint">No wins yet.</span>'}
+      ${pr ? `<span class="hint">🎉 Praise moment: tell her what she did well.</span>` : ''}</div>`; }).join('');
+  return `<div class="wins-pg">${cards}</div>`;
+}
 function rFooter(){
   return `<p class="hint" style="text-align:center;margin-top:8px">${V.signoutAsk
     ? `Sign this device out? You'll need a PIN to use it again. <button class="link" data-act="selfout-yes">Sign out</button> · <button class="link" data-act="selfout-no">Cancel</button>`
@@ -1325,7 +1387,7 @@ function rToday(g){
       : `<section class="card alldone rest"><div class="big-emo">🎉</div><h2>All done for now!</h2><p class="hint">Nothing left to do at the moment. Enjoy your free time.</p></section>`;
     main = `${head}${others.length ? `<div class="rest-list"><div class="section-lbl"><span class="lbl">Rest of today</span></div>${others.map(x => V.open[x.r.k] ? rRoutine(g, x.r, x.host) : rMini(g, x.r, x.host)).join('')}</div>` : ''}`;
   }
-  return `<div class="layout"><div style="min-width:0">${main}</div><aside class="rail">${rPoints(g,s)}${rGoal(g)}${rJar()}</aside></div>`;
+  return `<div class="layout"><div style="min-width:0">${rWins(g, s)}${main}</div><aside class="rail">${rPoints(g,s)}${rGoal(g)}${rJar()}</aside></div>`;
 }
 const ptsOf = r => { const v = P.cfg.rules[r.rule]; return v == null ? ({ wkmorn:1, monday:2 })[r.rule] || 0 : v; };
 const gateName = host => PC.nightGate(PC.dow(host)) === 'monday' ? 'Ready for Monday' : 'After school';
@@ -1471,8 +1533,11 @@ function rBadges(g){
   const mem = PC.MEM_ROUT.map(k => { const r = ROUT.find(x => x.k === k), n = c.memCount(g,k);
     return badgeCard(r.icon, MEM_NAMES[k], `${n} confirmed memory ${n === 1 ? 'run' : 'runs'}`, n, PC.MEM_LEVELS, ['memory run','memory runs']); }).join('');
   const dmc = c.dailyMasterCount(g), wmc = c.weeklyMasterCount(g);
+  const wins = WIN_KINDS.map(w => badgeCard(w.icon, w.name, w.desc, winCount(g, w.k, P.today), WIN_LEVELS, ['win','wins'])).join('');
   return `<div class="layout"><div style="min-width:0;display:flex;flex-direction:column;gap:16px">
-      <div class="section-lbl" style="margin:0"><span class="lbl">Every day</span></div>
+      <div class="section-lbl" style="margin:0"><span class="lbl">Wins · from ${longDate(winsFrom())}</span></div>
+      <div class="badges">${wins}</div>
+      <div class="section-lbl" style="margin:8px 0 0"><span class="lbl">Every day</span></div>
       <div class="badges">${everyday}</div>
       <div class="section-lbl" style="margin:8px 0 0"><span class="lbl">Memory</span></div>
       <section class="card"><span class="lbl">Memory challenge</span><h2>Do it without the list</h2>
@@ -1537,6 +1602,7 @@ function rCheck(){
     ${rBacklog(bl)}
     ${rWeek('parent')}
     ${reqs ? `<div class="reqs">${reqs}</div>` : ''}
+    ${rWinsParent(s)}
     <div class="seg hw-girls cg-girls">${PC.GIRLS.map(x => { const n = c.waitingOn(x,s).length; return `<button class="btn ${x === V.cg ? 'soft hw-on' : 'ghost'}" data-act="cg" data-to="${x}" aria-pressed="${x === V.cg}" aria-label="${girlName(x)}${n ? `, ${n} to check` : ''}">${girlName(x)}${n ? ` <span class="chip wait cg-n">${n}</span>` : ''}</button>`; }).join('')}</div>
     <div class="girls">${rGP(V.cg, s)}</div>
     ${rDevices()}`;
